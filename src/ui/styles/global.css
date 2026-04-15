@@ -1,0 +1,11 @@
+
+:root {
+  font-family: 'Courier New', Courier, monospace; /* fuente */
+  background-color: #242424; /* Color base */
+  color: white;
+}
+
+/* Para que los personajes (sprites) no se vean borrosos al escalarlos */
+img {
+  image-rendering: pixelated;
+}
