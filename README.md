@@ -71,3 +71,6 @@ export default defineConfig([
   },
 ])
 ```
+=======
+# StudyRoom-Proyect
+>>>>>>> 490b150ada84a68f82fd9813e418892c2b5e3c48
