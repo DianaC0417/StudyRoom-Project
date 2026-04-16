@@ -1,0 +1,414 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --deep-night: #0a0a1a;
+  --midnight: #10103a;
+  --dusk: #1e1050;
+  --twilight: #2d1b6e;
+  --mist: #6b4fa0;
+  --glow: #c9a227;
+  --warm-white: #f5f0e8;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.15);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.login-scene {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Raleway', sans-serif;
+  overflow: hidden;
+}
+
+/* ─── SKY ─── */
+.sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #06061a 0%,
+    #0e0b35 25%,
+    #1a0e50 50%,
+    #2a1260 65%,
+    #3d1f6e 75%,
+    #5c2d7a 85%,
+    #7a3a80 92%,
+    #9b4a78 100%
+  );
+  z-index: 0;
+}
+
+/* ─── STARS ─── */
+.stars {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--duration, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: var(--max-opacity, 0.9); transform: scale(1.2); }
+}
+
+/* ─── MOON ─── */
+.moon {
+  position: absolute;
+  top: 8%;
+  right: 15%;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at 40% 40%, #fff9e6, #f0d060);
+  border-radius: 50%;
+  box-shadow:
+    0 0 20px rgba(240, 208, 96, 0.6),
+    0 0 60px rgba(240, 208, 96, 0.3),
+    0 0 120px rgba(240, 208, 96, 0.15);
+  z-index: 2;
+  animation: moonFloat 8s ease-in-out infinite;
+}
+
+@keyframes moonFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ─── MOUNTAINS ─── */
+.mountains {
+  position: absolute;
+  bottom: 28%;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}
+
+.mountains svg {
+  width: 100%;
+  height: 200px;
+  display: block;
+}
+
+/* ─── TREES ─── */
+.trees-back {
+  position: absolute;
+  bottom: 20%;
+  left: 0;
+  right: 0;
+  z-index: 4;
+}
+
+.trees-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+}
+
+.trees-back svg,
+.trees-front svg {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+/* ─── GROUND GLOW ─── */
+.ground-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 22%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(60, 20, 80, 0.4) 50%,
+    rgba(30, 10, 50, 0.9) 100%
+  );
+  z-index: 5;
+}
+
+/* ─── CARD ─── */
+.login-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(15, 10, 40, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 2.8rem 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(100, 50, 150, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: cardReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ─── CARD HEADER ─── */
+.card-icon {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 0.4rem;
+  animation: iconBob 4s ease-in-out infinite;
+}
+
+@keyframes iconBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--warm-white);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+  text-shadow: 0 0 30px rgba(201, 162, 39, 0.4);
+}
+
+.card-subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+/* ─── INPUTS ─── */
+.input-group {
+  position: relative;
+  margin-bottom: 1.1rem;
+}
+
+.input-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.study-input {
+  width: 100%;
+  padding: 0.85rem 2.8rem 0.85rem 1.1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  color: var(--warm-white);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+
+.study-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.study-input:focus {
+  border-color: rgba(201, 162, 39, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.12);
+}
+
+.study-input.error {
+  border-color: rgba(255, 100, 100, 0.6);
+}
+
+.input-error {
+  color: rgba(255, 140, 140, 0.9);
+  font-size: 0.78rem;
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+/* ─── OPTIONS ROW ─── */
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.8rem 0 1.5rem;
+  padding: 0 0.2rem;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.remember-label input[type="checkbox"] {
+  accent-color: var(--glow);
+  width: 14px;
+  height: 14px;
+}
+
+.forgot-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.forgot-btn:hover {
+  color: var(--glow);
+}
+
+/* ─── LOGIN BUTTON ─── */
+.btn-enter {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f0e8d0 100%);
+  border: none;
+  border-radius: 50px;
+  color: #1a0a40;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-enter:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.25);
+}
+
+.btn-enter:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-enter:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── REGISTER LINK ─── */
+.register-row {
+  text-align: center;
+  margin-top: 1.4rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+}
+
+.register-row button {
+  background: none;
+  border: none;
+  color: rgba(201, 162, 39, 0.9);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.register-row button:hover {
+  color: var(--glow);
+}
+
+/* spinner */
+.spin {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(26, 10, 64, 0.3);
+  border-top-color: #1a0a40;
+  border-radius: 50%;
+  animation: rotate 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* success state */
+.success-message {
+  text-align: center;
+  color: var(--warm-white);
+  padding: 1rem 0;
+}
+
+.success-message .success-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.8rem;
+  animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+.success-message h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.success-message p {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    margin: 1rem;
+    padding: 2rem 1.5rem;
+  }
+}
