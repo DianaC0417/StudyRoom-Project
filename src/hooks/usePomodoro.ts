@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
+// IMPORTANTE: Conectamos con el trabajo de Diana
+import { localStorageAdapter } from '../adapters/localStorageAdapter';
 
 export const usePomodoro = (workMinutes: number = 25, breakMinutes: number = 5) => {
-  const [seconds, setSeconds] = useState(workMinutes * 60);
+  // 1. Intentamos leer si ya había un tiempo guardado por Diana
+  const initialSeconds = localStorageAdapter.getPomodoro() * 60;
+  const [seconds, setSeconds] = useState(initialSeconds || workMinutes * 60);
+  
   const [isActive, setIsActive] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
 
@@ -10,14 +15,24 @@ export const usePomodoro = (workMinutes: number = 25, breakMinutes: number = 5) 
 
     if (isActive && seconds > 0) {
       interval = setInterval(() => {
-        setSeconds((s) => s - 1);
+        setSeconds((s: number) => {
+          const newSeconds = s - 1;
+          // OPCIONAL: Guardar cada segundo puede ser pesado, 
+          // pero podrías guardar el progreso aquí usando Diana's adapter
+          return newSeconds;
+        });
       }, 1000);
     } else if (seconds === 0) {
-      // Cambio automático: de trabajo a descanso o viceversa
       const nextIsBreak = !isBreak;
       setIsBreak(nextIsBreak);
-      setSeconds(nextIsBreak ? breakMinutes * 60 : workMinutes * 60);
-      setIsActive(false); // Pausa al terminar para que el usuario inicie el siguiente bloque
+      const nextMinutes = nextIsBreak ? breakMinutes : workMinutes;
+      
+      setSeconds(nextMinutes * 60);
+      setIsActive(false);
+
+      // Usamos el adaptador para guardar que el ciclo cambió
+      localStorageAdapter.savePomodoro(nextMinutes);
+      
       alert(nextIsBreak ? "¡Tiempo de descanso!" : "¡A trabajar!");
     }
 
@@ -25,13 +40,15 @@ export const usePomodoro = (workMinutes: number = 25, breakMinutes: number = 5) 
   }, [isActive, seconds, isBreak, workMinutes, breakMinutes]);
 
   const toggleTimer = () => setIsActive(!isActive);
+  
   const resetTimer = () => {
     setIsActive(false);
     setIsBreak(false);
-    setSeconds(workMinutes * 60);
+    const defaultTime = workMinutes * 60;
+    setSeconds(defaultTime);
+    localStorageAdapter.savePomodoro(workMinutes);
   };
 
-  // Formato MM:SS
   const formatTime = () => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
