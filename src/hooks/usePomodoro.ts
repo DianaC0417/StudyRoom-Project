@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-// IMPORTANTE: Conectamos con el trabajo de Diana
+//  Conectamos con el trabajo de Di
 import { localStorageAdapter } from '../adapters/localStorageAdapter';
 
 export const usePomodoro = (workMinutes: number = 25, breakMinutes: number = 5) => {
-  // 1. Intentamos leer si ya había un tiempo guardado por Diana
+  // 1. Intentamos leer si ya había un tiempo guardado 
   const initialSeconds = localStorageAdapter.getPomodoro() * 60;
   const [seconds, setSeconds] = useState(initialSeconds || workMinutes * 60);
   
