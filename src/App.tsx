@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LoginPage from './ui/pages/LoginPage';
-import { userAdapter } from './adapters/userAdapter';
+import { localStorageAdapter } from './adapters/localStorageAdapter';
 
 function LoginWithRedirect() {
   const navigate = useNavigate();
 
   const handleLogin = (username: string) => {
     console.log('Usuario logueado:', username);
+    localStorageAdapter.saveUser(username);
     navigate('/room');
   };
 
@@ -14,7 +15,7 @@ function LoginWithRedirect() {
 }
 
 function RoomPage() {
-  const username = userAdapter.getUserId() ?? 'invitado';
+  const username = localStorageAdapter.getUser() ?? 'invitado';
 
   return (
     <div style={{ padding: '32px', textAlign: 'center' }}>
