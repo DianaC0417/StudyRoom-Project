@@ -5,16 +5,18 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
-import { RoomPage } from './ui/pages/RoomPage';
-import LoginPage from './ui/pages/LoginPage';
+
 import Customization from './ui/pages/Customization';
+import LoginPage from './ui/pages/LoginPage';
+import { RoomPage } from './ui/pages/RoomPage';
+import { localStorageAdapter } from './adapters/localStorageAdapter';
 
 function LoginWithRedirect() {
   const navigate = useNavigate();
 
   const handleLogin = (username: string) => {
     console.log('Usuario logueado:', username);
-    // Paso 2: Después del login, a elegir personaje
+    localStorageAdapter.saveUser(username);
     navigate('/customization');
   };
 
@@ -25,18 +27,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* 1. Redirección Inicial: Si alguien entra a la raíz, lo mandamos al Login */}
+        {/* lo mandamos al Login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* 2. Pantalla de Login 1-bit */}
+        {/*Pantalla de Login*/}
         <Route path="/login" element={<LoginWithRedirect />} />
 
-        {/* 3. Pantalla de Selección (Nao) */}
+        {/* Pantalla de Seleccion */}
         <Route path="/customization" element={<Customization />} />
 
-        {/* 4. Tu Sala de Estudio (Phaser + Tu Arte) */}
+        {/* Sala de Estudio*/}
         <Route path="/room" element={<RoomPage />} />
-        {/* Ruta de seguridad: si escriben cualquier cosa rara, al Login */}
+        {/*  si escriben cualquier cosa rara, al Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

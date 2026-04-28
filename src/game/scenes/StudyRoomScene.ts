@@ -19,20 +19,43 @@ export class StudyRoomScene extends Phaser.Scene {
   //aca cambiar a ranita y demas
   private characterKey: string = 'ranita';
   private salaKey: string = 'salaestudio1';
-
+  private nickname: string = 'Estudiante';
+  private nameText!: Phaser.GameObjects.Text;
   constructor() {
     super({ key: 'StudyRoomScene' });
   }
 
+  // preload() {
+  //   // 1. LEER LOS DATOS DE LA CUSTOMIZACIÓN
+  //   const savedConfig = localStorage.getItem('user_study_config');
+  //   if (savedConfig) {
+  //     const config = JSON.parse(savedConfig);
+  //     this.characterKey = config.personaje; // 'gatito', 'ranita' o 'perrito'
+  //     this.salaKey = config.sala; // 'salaestudio1', 'salaestudio2', etc.
+  //   }
+  //   // 2. CARGAR DINÁMICAMENTE BASADO EN LA ELECCIÓN
+  //   this.load.image('study-room', `/assets/salas/${this.salaKey}.png`);
+  //   this.load.atlas(
+  //     this.characterKey,
+  //     `/assets/personajes/${this.characterKey}.png`,
+  //     `/assets/personajes/${this.characterKey}.json`
+  //   );
+  //   this.nickname = config.nombre || 'Invitado';
+  // }
   preload() {
-    // 1. LEER LOS DATOS DE LA CUSTOMIZACIÓN
+    // 1. RECUPERAMOS LA CONFIGURACIÓN (Igual que en tu React)
     const savedConfig = localStorage.getItem('user_study_config');
     if (savedConfig) {
       const config = JSON.parse(savedConfig);
-      this.characterKey = config.personaje; // 'gatito', 'ranita' o 'perrito'
-      this.salaKey = config.sala; // 'salaestudio1', 'salaestudio2', etc.
+      this.characterKey = config.personaje;
+      this.salaKey = config.sala;
+
+      this.nickname = config.nombre || 'Invitado';
+    } else {
+      console.warn('No se encontró configuración de customización');
     }
-    // 2. CARGAR DINÁMICAMENTE BASADO EN LA ELECCIÓN
+
+    // 2. CARGAR DINÁMICAMENTE
     this.load.image('study-room', `/assets/salas/${this.salaKey}.png`);
     this.load.atlas(
       this.characterKey,
@@ -40,7 +63,6 @@ export class StudyRoomScene extends Phaser.Scene {
       `/assets/personajes/${this.characterKey}.json`
     );
   }
-
   // preload() {
   //   this.load.image('study-room', '/assets/salas/salaestudio1.png');
   //   this.load.atlas(
@@ -71,6 +93,16 @@ export class StudyRoomScene extends Phaser.Scene {
     );
     this.player.setScale(5);
     this.player.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+    // Crear el texto del nombre
+    this.nameText = this.add
+      .text(this.player.x, this.player.y - 60, this.nickname, {
+        fontFamily: 'monospace', // O tu fuente pixelada si tienes una
+        fontSize: '16px',
+        color: '#ffffff',
+        backgroundColor: '#00000000', // Fondo negro semi-transparente
+        padding: { x: 6, y: 4 },
+      })
+      .setOrigin(0.5); // Para que quede centrado
 
     this.clockZone = this.add.zone(width * 0.75, height * 0.15, 150, 150);
 
@@ -92,6 +124,9 @@ export class StudyRoomScene extends Phaser.Scene {
   update() {
     this.handleMovement();
     this.checkCollision();
+    if (this.nameText && this.player) {
+      this.nameText.setPosition(this.player.x, this.player.y - 60);
+    }
   }
 
   private createAnimations() {
