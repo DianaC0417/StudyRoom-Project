@@ -43,7 +43,7 @@ export class StudyRoomScene extends Phaser.Scene {
   //   this.nickname = config.nombre || 'Invitado';
   // }
   preload() {
-    // 1. RECUPERAMOS LA CONFIGURACIÓN (Igual que en tu React)
+    // 1. RECUPERAMOS LA CONFIGURACIÓN
     const savedConfig = localStorage.getItem('user_study_config');
     if (savedConfig) {
       const config = JSON.parse(savedConfig);
@@ -55,7 +55,6 @@ export class StudyRoomScene extends Phaser.Scene {
       console.warn('No se encontró configuración de customización');
     }
 
-    // 2. CARGAR DINÁMICAMENTE
     this.load.image('study-room', `/assets/salas/${this.salaKey}.png`);
     this.load.atlas(
       this.characterKey,
@@ -120,7 +119,6 @@ export class StudyRoomScene extends Phaser.Scene {
     this.player.anims.play('idle_frente');
   }
 
-  // --- ¡ESTO ES LO QUE FALTABA! ---
   update() {
     this.handleMovement();
     this.checkCollision();
