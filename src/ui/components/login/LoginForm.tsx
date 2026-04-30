@@ -1,9 +1,9 @@
+// ui/components/login/LoginForm.tsx
 import { type FormEvent, useState } from 'react';
-import { localStorageAdapter } from '../../../adapters/localStorageAdapter';
+import { userService } from '../../../config/dependencies'; // 👈 CAMBIO IMPORTANTE
 import fondo from '../login/fondo.png';
 import './LoginForm.css';
 
-// ─── Componente principal ────────────────────────────────────────────────────
 interface Props {
   onLogin?: (username: string) => void;
 }
@@ -11,6 +11,7 @@ interface Props {
 const LoginForm = ({ onLogin }: Props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false); // 👈 NUEVO
   const [errors, setErrors] = useState<{
     username?: string;
     password?: string;
@@ -34,26 +35,30 @@ const LoginForm = ({ onLogin }: Props) => {
     // Simulación de delay de red
     await new Promise((r) => setTimeout(r, 1500));
 
-    // ── Llamada al adaptador: guarda el userId ──
-    localStorageAdapter.saveUser(username.trim());
+    try {
+      // 👈 USAMOS EL SERVICIO en lugar de localStorage directo
+      const user = userService.login(username.trim(), remember);
+      console.log('Usuario logueado:', user);
 
-    setLoading(false);
-    setSuccess(true);
+      setLoading(false);
+      setSuccess(true);
 
-    // Redirige a la siguiente pantalla después de 1.2s
-    setTimeout(() => {
-      onLogin?.(username.trim());
-      // Si usas React Router: navigate('/dashboard')
-      console.log('✅ Usuario guardado, redirigir a /dashboard');
-    }, 1200);
+      setTimeout(() => {
+        onLogin?.(username.trim());
+      }, 1200);
+    } catch (error) {
+      setErrors({
+        username:
+          error instanceof Error ? error.message : 'Error al iniciar sesión',
+      });
+      setLoading(false);
+    }
   };
 
   return (
     <div className="login-scene">
-      {/* Fondo */}
       <div className="sky" style={{ backgroundImage: `url(${fondo})` }} />
 
-      {/* Card */}
       <div className="login-card">
         {success ? (
           <div className="success-message">
@@ -104,6 +109,14 @@ const LoginForm = ({ onLogin }: Props) => {
               </div>
 
               <div className="options-row">
+                <label className="remember-label">
+                  <input
+                    type="checkbox"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                  />
+                  Recordarme
+                </label>
                 <button type="button" className="forgot-btn">
                   Forgot password?
                 </button>

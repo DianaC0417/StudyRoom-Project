@@ -1,7 +1,7 @@
-// src/game/scenes/StudyRoomScene.ts
+// game/scenes/StudyRoomScene.ts
 import * as Phaser from 'phaser';
+import { studyConfigService } from '../../config/dependencies'; // 👈 CAMBIO
 
-// Definimos un tipo para nuestras teclas personalizadas
 interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
   down: Phaser.Input.Keyboard.Key;
@@ -16,44 +16,21 @@ export class StudyRoomScene extends Phaser.Scene {
   private clockZone!: Phaser.GameObjects.Zone;
   private showPomodoro: boolean = false;
   private currentDirection: string = 'down';
-  //aca cambiar a ranita y demas
-  private characterKey: string = 'ranita';
+  private characterKey: string = 'gatito';
   private salaKey: string = 'salaestudio1';
   private nickname: string = 'Estudiante';
   private nameText!: Phaser.GameObjects.Text;
+
   constructor() {
     super({ key: 'StudyRoomScene' });
   }
 
-  // preload() {
-  //   // 1. LEER LOS DATOS DE LA CUSTOMIZACIÓN
-  //   const savedConfig = localStorage.getItem('user_study_config');
-  //   if (savedConfig) {
-  //     const config = JSON.parse(savedConfig);
-  //     this.characterKey = config.personaje; // 'gatito', 'ranita' o 'perrito'
-  //     this.salaKey = config.sala; // 'salaestudio1', 'salaestudio2', etc.
-  //   }
-  //   // 2. CARGAR DINÁMICAMENTE BASADO EN LA ELECCIÓN
-  //   this.load.image('study-room', `/assets/salas/${this.salaKey}.png`);
-  //   this.load.atlas(
-  //     this.characterKey,
-  //     `/assets/personajes/${this.characterKey}.png`,
-  //     `/assets/personajes/${this.characterKey}.json`
-  //   );
-  //   this.nickname = config.nombre || 'Invitado';
-  // }
   preload() {
-    // 1. RECUPERAMOS LA CONFIGURACIÓN
-    const savedConfig = localStorage.getItem('user_study_config');
-    if (savedConfig) {
-      const config = JSON.parse(savedConfig);
-      this.characterKey = config.personaje;
-      this.salaKey = config.sala;
-
-      this.nickname = config.nombre || 'Invitado';
-    } else {
-      console.warn('No se encontró configuración de customización');
-    }
+    // 👈 USAMOS EL SERVICIO en lugar de localStorage directo
+    const config = studyConfigService.loadConfig();
+    this.characterKey = config.personaje;
+    this.salaKey = config.sala;
+    this.nickname = config.nombre;
 
     this.load.image('study-room', `/assets/salas/${this.salaKey}.png`);
     this.load.atlas(
@@ -62,15 +39,6 @@ export class StudyRoomScene extends Phaser.Scene {
       `/assets/personajes/${this.characterKey}.json`
     );
   }
-  // preload() {
-  //   this.load.image('study-room', '/assets/salas/salaestudio1.png');
-  //   this.load.atlas(
-  //     this.characterKey,
-  //     `/assets/personajes/${this.characterKey}.png`,
-  //     `/assets/personajes/${this.characterKey}.json`
-  //   );
-  // }
-
   create() {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
@@ -92,20 +60,19 @@ export class StudyRoomScene extends Phaser.Scene {
     );
     this.player.setScale(5);
     this.player.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-    // Crear el texto del nombre
+
     this.nameText = this.add
       .text(this.player.x, this.player.y - 60, this.nickname, {
-        fontFamily: 'monospace', // O tu fuente pixelada si tienes una
+        fontFamily: 'monospace',
         fontSize: '16px',
         color: '#ffffff',
-        backgroundColor: '#00000000', // Fondo negro semi-transparente
+        backgroundColor: '#00000000',
         padding: { x: 6, y: 4 },
       })
-      .setOrigin(0.5); // Para que quede centrado
+      .setOrigin(0.5);
 
     this.clockZone = this.add.zone(width * 0.75, height * 0.15, 150, 150);
 
-    // Inicializar controles
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
       this.wasd = this.input.keyboard.addKeys({
@@ -138,7 +105,6 @@ export class StudyRoomScene extends Phaser.Scene {
     ];
 
     animsConfig.forEach((anim) => {
-      // Evitar duplicados si la escena se reinicia
       if (!this.anims.exists(anim.key)) {
         this.anims.create({
           key: anim.key,
@@ -156,15 +122,13 @@ export class StudyRoomScene extends Phaser.Scene {
   }
 
   private handleMovement() {
-    // Seguridad: si no hay controles, no hacer nada
     if (!this.cursors || !this.wasd) return;
 
-    const speed = 300; // Un poco más rápido para pantallas grandes
+    const speed = 300;
     let vx = 0;
     let vy = 0;
     let moving = false;
 
-    // Movimiento Horizontal
     if (this.cursors.left.isDown || this.wasd.left.isDown) {
       vx = -speed;
       this.currentDirection = 'left';
@@ -177,7 +141,6 @@ export class StudyRoomScene extends Phaser.Scene {
       moving = true;
     }
 
-    // Movimiento Vertical
     if (this.cursors.up.isDown || this.wasd.up.isDown) {
       vy = -speed;
       this.currentDirection = 'up';
@@ -188,12 +151,10 @@ export class StudyRoomScene extends Phaser.Scene {
       moving = true;
     }
 
-    // Aplicar el movimiento real
     const dt = this.game.loop.delta / 1000;
     this.player.x += vx * dt;
     this.player.y += vy * dt;
 
-    // Animaciones
     if (moving) {
       const animKey =
         this.currentDirection === 'up'
@@ -212,7 +173,6 @@ export class StudyRoomScene extends Phaser.Scene {
       this.player.anims.play(idleKey, true);
     }
 
-    // Límites de pantalla
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
     this.player.x = Phaser.Math.Clamp(this.player.x, 40, width - 40);

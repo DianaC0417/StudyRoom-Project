@@ -1,3 +1,4 @@
+// App.tsx
 import {
   BrowserRouter as Router,
   Routes,
@@ -5,18 +6,26 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Customization from './ui/pages/Customization';
 import LoginPage from './ui/pages/LoginPage';
 import { RoomPage } from './ui/pages/RoomPage';
-import { localStorageAdapter } from './adapters/localStorageAdapter';
+import { userService } from './config/dependencies'; // 👈 CAMBIO
 
 function LoginWithRedirect() {
   const navigate = useNavigate();
 
+  // 👈 Verificar si ya hay sesión
+  useEffect(() => {
+    const user = userService.getCurrentUser();
+    if (user) {
+      navigate('/customization');
+    }
+  }, [navigate]);
+
   const handleLogin = (username: string) => {
     console.log('Usuario logueado:', username);
-    localStorageAdapter.saveUser(username);
     navigate('/customization');
   };
 
@@ -27,18 +36,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* lo mandamos al Login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-
-        {/*Pantalla de Login*/}
         <Route path="/login" element={<LoginWithRedirect />} />
-
-        {/* Pantalla de Seleccion */}
         <Route path="/customization" element={<Customization />} />
-
-        {/* Sala de Estudio*/}
         <Route path="/room" element={<RoomPage />} />
-        {/*  si escriben cualquier cosa rara, al Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

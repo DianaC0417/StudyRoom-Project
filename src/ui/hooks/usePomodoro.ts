@@ -1,6 +1,7 @@
+// ui/hooks/usePomodoro.ts
 import { useState, useEffect } from 'react';
+import { pomodoroService } from '../../config/dependencies'; // 👈 CAMBIO
 
-// 1. Definimos qué estructura tiene lo que devuelve el hook
 interface PomodoroHook {
   timeDisplay: string;
   isActive: boolean;
@@ -9,22 +10,19 @@ interface PomodoroHook {
   resetTimer: () => void;
 }
 
-// 2. Aplicamos el tipo al hook
 export const usePomodoro = (
   workMinutes: number = 25,
   breakMinutes: number = 5
 ): PomodoroHook => {
-  const getInitialSeconds = (): number => {
-    const saved = localStorage.getItem('pomodoro_time');
-    return saved ? parseInt(saved) * 60 : workMinutes * 60;
-  };
-
-  const [seconds, setSeconds] = useState<number>(getInitialSeconds());
+  const [seconds, setSeconds] = useState<number>(() => {
+    // 👈 USAMOS EL SERVICIO
+    return pomodoroService.getWorkSeconds();
+  });
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isBreak, setIsBreak] = useState<boolean>(false);
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>; // Tipo específico para intervalos
+    let interval: ReturnType<typeof setInterval>;
 
     if (isActive) {
       interval = setInterval(() => {
@@ -36,7 +34,8 @@ export const usePomodoro = (
           setIsActive(false);
 
           const nextMinutes = nextIsBreak ? breakMinutes : workMinutes;
-          localStorage.setItem('pomodoro_time', nextMinutes.toString());
+          // 👈 USAMOS EL SERVICIO
+          pomodoroService.saveTime(nextMinutes);
 
           alert(nextIsBreak ? '¡Tiempo de descanso!' : '¡A trabajar!');
 
@@ -52,9 +51,9 @@ export const usePomodoro = (
   const resetTimer = () => {
     setIsActive(false);
     setIsBreak(false);
-    const defaultSeconds = workMinutes * 60;
-    setSeconds(defaultSeconds);
-    localStorage.setItem('pomodoro_time', workMinutes.toString());
+    setSeconds(workMinutes * 60);
+    // 👈 USAMOS EL SERVICIO
+    pomodoroService.saveTime(workMinutes);
   };
 
   const formatTime = (): string => {

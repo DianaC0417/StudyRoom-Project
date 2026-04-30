@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as Phaser from 'phaser';
 import { StudyRoomScene } from '../../game/scenes/StudyRoomScene';
 import { gameConfig } from '../../game/config';
-import { usePomodoro } from '../../hooks/usePomodoro'; // 1. Importamos el hook
+import { usePomodoro } from '../hooks/usePomodoro'; // 1. Importamos el hook
 import '../styles/RoomPage.css';
 
 export const RoomPage: React.FC = () => {

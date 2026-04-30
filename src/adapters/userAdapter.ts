@@ -1,23 +1,27 @@
-// Adaptador para guardar y obtener el userId del usuario
-//src/adapters/userAdapter.ts
-export const userAdapter = {
-  saveUserId: (username: string, remember = true): void => {
-    if (remember) {
-      localStorage.setItem('studyroom_user', username);
-    } else {
-      sessionStorage.setItem('studyroom_user', username);
-    }
+// adapters/userAdapter.ts
+import { type UserRepository } from '../aplication/ports/UserRepository';
+import type { User } from '../domain/User';
+
+const USER_KEY = 'studyroom_user';
+
+export const userAdapter: UserRepository = {
+  save: (user: User): void => {
+    const storage = user.remember ? localStorage : sessionStorage;
+    storage.setItem(USER_KEY, JSON.stringify(user));
   },
 
-  getUserId: (): string | null => {
-    return (
-      localStorage.getItem('studyroom_user') ??
-      sessionStorage.getItem('studyroom_user')
-    );
+  get: (): User | null => {
+    const local = localStorage.getItem(USER_KEY);
+    if (local) return JSON.parse(local);
+
+    const session = sessionStorage.getItem(USER_KEY);
+    if (session) return JSON.parse(session);
+
+    return null;
   },
 
-  clearUserId: (): void => {
-    localStorage.removeItem('studyroom_user');
-    sessionStorage.removeItem('studyroom_user');
+  clear: (): void => {
+    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(USER_KEY);
   },
 };
