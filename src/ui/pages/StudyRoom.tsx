@@ -1,6 +1,6 @@
 /* eslint-disable */
 //src/ui/pages/StudyRoom.tsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const StudyRoom = () => {
