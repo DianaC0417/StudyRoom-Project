@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "phaser": "^4.0.0",
+    "phaser": "^4.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.14.1"
@@ -30,11 +30,7 @@
     "prettier": "^3.8.3",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.0",
-<<<<<<< HEAD
-    "vite": "5.4.11"
-=======
-    "vite": "^8.0.10"
->>>>>>> 71d6576e82f1f7c6320901c8578f39c41400417a
+    "vite": "^5.4.11"
   },
   "optionalDependencies": {
     "@rolldown/binding-win32-ia32-msvc": "^1.0.0-beta.52"
