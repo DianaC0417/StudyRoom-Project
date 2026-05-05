@@ -1,5 +1,3 @@
-// adapters/pomodoroAdapter.ts
-// adapters/pomodoroAdapter.ts
 import type { PomodoroRepository } from '../aplication/ports/PomodoroRepository';
 
 const POMODORO_KEY = 'pomodoro_time';

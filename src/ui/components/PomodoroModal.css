@@ -1,0 +1,434 @@
+/* PomodoroModal.css - Tema Místico Pixel Art */
+/* Paleta: Púrpura (#6b46c1, #805ad5), Azul (#3b82f6, #60a5fa), Acentos (#a78bfa) */
+
+/* Overlay */
+.pomodoro-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 10, 30, 0.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: pixelFadeIn 0.3s steps(4);
+}
+
+@keyframes pixelFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modal Principal */
+.pomodoro-modal {
+  width: 520px;
+  max-width: 90vw;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+/* Pixel Border - Morado */
+.pixel-border {
+  position: relative;
+  background: linear-gradient(135deg, #1a1028 0%, #0f0a1e 100%);
+  border: 4px solid #4c1d95;
+  padding: 24px;
+  box-shadow: 8px 8px 0px #2d1b69;
+}
+
+.pixel-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+}
+
+.pixel-corner.tl {
+  top: -4px;
+  left: -4px;
+  background: linear-gradient(135deg, #a78bfa, #6b46c1);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.pixel-corner.tr {
+  top: -4px;
+  right: -4px;
+  background: linear-gradient(225deg, #a78bfa, #6b46c1);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0);
+}
+
+.pixel-corner.bl {
+  bottom: -4px;
+  left: -4px;
+  background: linear-gradient(45deg, #a78bfa, #6b46c1);
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);
+}
+
+.pixel-corner.br {
+  bottom: -4px;
+  right: -4px;
+  background: linear-gradient(315deg, #a78bfa, #6b46c1);
+  clip-path: polygon(100% 100%, 100% 0, 0 0, 0 100%);
+}
+
+/* Header - Modo Estudio (Morado) */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #1e1a3a, #16122e);
+  border: 2px solid #4c1d95;
+  border-radius: 0;
+}
+
+.modal-header.work-mode {
+  border-left: 8px solid #7c3aed;
+  background: linear-gradient(135deg, #1e1a3a, #16122e);
+}
+
+.modal-header.break-mode {
+  border-left: 8px solid #3b82f6;
+  background: linear-gradient(135deg, #1a2a4a, #121e3a);
+}
+
+/* Session Indicator */
+.session-indicator {
+  font-family: 'Courier New', 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #a78bfa;
+}
+
+.session-label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #8b5cf6;
+}
+
+.session-number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #c4b5fd;
+  text-shadow: 2px 2px 0px #2d1b69;
+}
+
+/* Status Badge */
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #2d1b69;
+  padding: 8px 16px;
+  border-radius: 0;
+  border: 2px solid #7c3aed;
+  box-shadow: inset 0 0 8px rgba(124, 58, 237, 0.2);
+}
+
+.status-icon {
+  font-size: 24px;
+  filter: drop-shadow(2px 2px 0px #1a1028);
+}
+
+.status-text {
+  font-family: 'Courier New', 'Press Start 2P', monospace;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #a78bfa;
+}
+
+/* Mensaje Motivacional */
+.modal-message {
+  text-align: center;
+  margin: 20px 0;
+  padding: 12px;
+  background: linear-gradient(135deg, #2d1b69, #1e1a3a);
+  border: 2px solid #7c3aed;
+  box-shadow: inset 0 0 10px rgba(124, 58, 237, 0.1);
+}
+
+.pixel-text {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #e0d5ff;
+  text-shadow: 2px 2px 0px #1a1028;
+  margin: 0;
+}
+
+/* Timer Container */
+.timer-container {
+  margin: 24px 0;
+}
+
+/* Pantalla Pixeleada del Timer */
+.pixel-screen {
+  position: relative;
+  background: #0a0618;
+  border: 6px solid #4c1d95;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+.screen-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(
+    135deg,
+    rgba(167, 139, 250, 0.15) 0%,
+    rgba(167, 139, 250, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.timer-digits {
+  font-family: 'Courier New', monospace;
+  font-size: 68px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+  letter-spacing: 8px;
+}
+
+/* Modo Break - Timer más azul */
+.modal-header.break-mode ~ .timer-container .timer-digits {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Progress Bar Mágica */
+.progress-container {
+  margin-top: 20px;
+}
+
+.progress-label {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #a78bfa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.pixel-progress-bar {
+  background: #1a1028;
+  border: 3px solid #4c1d95;
+  height: 24px;
+  padding: 2px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.pixel-progress-fill {
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  height: 100%;
+  position: relative;
+  transition: width 0.3s steps(20);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+}
+
+.progress-pixel {
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 4px;
+  height: 28px;
+  background: #c4b5fd;
+  box-shadow: 0 0 6px #c4b5fd;
+  animation: pixelPulse 1s infinite;
+}
+
+@keyframes pixelPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Botones Místicos */
+.modal-controls {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+  justify-content: center;
+}
+
+.pixel-btn {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.05s linear;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+}
+
+.btn-icon {
+  font-size: 16px;
+}
+
+/* Botón Principal (Empezar/Pausar) - Púrpura */
+.pixel-btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #6b21a5);
+  color: #f0e6ff;
+  box-shadow: 4px 4px 0px #371b6e;
+  border: 2px solid #a78bfa;
+}
+
+.pixel-btn-primary:hover {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #ffffff;
+  box-shadow: 2px 2px 0px #371b6e;
+}
+
+/* Botón Saltar - Azul */
+.pixel-btn-secondary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #e0f2fe;
+  box-shadow: 4px 4px 0px #1e3a8a;
+  border: 2px solid #60a5fa;
+}
+
+.pixel-btn-secondary:hover {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: #ffffff;
+}
+
+/* Botón Reiniciar - Púrpura Oscuro */
+.pixel-btn-danger {
+  background: linear-gradient(135deg, #6d28d9, #4c1d95);
+  color: #e9d5ff;
+  box-shadow: 4px 4px 0px #2d1b69;
+  border: 2px solid #a78bfa;
+}
+
+.pixel-btn-danger:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+}
+
+/* Footer Místico */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid #4c1d95;
+}
+
+.pixel-tip {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #a78bfa;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, #1e1a3a, #16122e);
+  border: 1px solid #4c1d95;
+  text-shadow: 1px 1px 0px #1a1028;
+}
+
+.close-btn {
+  font-family: 'Courier New', monospace;
+  background: transparent;
+  border: 2px solid #4c1d95;
+  color: #a78bfa;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 2px;
+  transition: all 0.05s linear;
+  text-shadow: 1px 1px 0px #1a1028;
+}
+
+.close-btn:active {
+  transform: translate(2px, 2px);
+}
+
+.close-btn:hover {
+  background: #4c1d95;
+  color: #e9d5ff;
+  border-color: #a78bfa;
+}
+
+/* Efecto de Brillo Mágico */
+@keyframes magicalGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+  }
+}
+
+.pixel-screen {
+  animation: magicalGlow 2s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .timer-digits {
+    font-size: 40px;
+    letter-spacing: 4px;
+  }
+
+  .pixel-btn {
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+
+  .btn-icon {
+    font-size: 12px;
+  }
+
+  .modal-controls {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pixel-tip {
+    font-size: 8px;
+  }
+
+  .status-text {
+    font-size: 10px;
+  }
+
+  .session-number {
+    font-size: 20px;
+  }
+}

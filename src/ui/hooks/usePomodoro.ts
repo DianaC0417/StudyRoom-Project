@@ -1,60 +1,200 @@
 // ui/hooks/usePomodoro.ts
-import { useState, useEffect } from 'react';
-import { pomodoroService } from '../../config/dependencies'; // 👈 CAMBIO
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { pomodoroService } from '../../config/dependencies';
 
 interface PomodoroHook {
   timeDisplay: string;
   isActive: boolean;
   isBreak: boolean;
+  currentSession: number;
+  totalSessions: number;
+  progress: number;
   toggleTimer: () => void;
   resetTimer: () => void;
+  skipToNext: () => void;
 }
 
 export const usePomodoro = (
   workMinutes: number = 25,
-  breakMinutes: number = 5
+  breakMinutes: number = 5,
+  longBreakMinutes: number = 15,
+  sessionsUntilLongBreak: number = 4
 ): PomodoroHook => {
-  const [seconds, setSeconds] = useState<number>(() => {
-    // 👈 USAMOS EL SERVICIO
-    return pomodoroService.getWorkSeconds();
-  });
+  const [seconds, setSeconds] = useState<number>(workMinutes * 60);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isBreak, setIsBreak] = useState<boolean>(false);
+  const [currentSession, setCurrentSession] = useState<number>(1);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
+  // Calcular progreso (0-100)
+  const progress = isBreak
+    ? ((breakMinutes * 60 - seconds) / (breakMinutes * 60)) * 100
+    : ((workMinutes * 60 - seconds) / (workMinutes * 60)) * 100;
+
+  //
+  const showNotification = useCallback(
+    (message: string, type: 'work' | 'break' | 'complete') => {
+      // Disparar evento personalizado para la UI
+      window.dispatchEvent(
+        new CustomEvent('pomodoroNotification', {
+          detail: { message, type },
+        })
+      );
+
+      // Log para debug
+      console.log(`🔔 [Pomodoro] ${type}: ${message}`);
+    },
+    []
+  );
+
+  // 🔧 CORRECCIÓN 2: handleSessionComplete declarada ANTES de usarla en efectos
+  const handleSessionComplete = useCallback(() => {
+    setIsActive(false);
+    localStorage.removeItem('pomodoro_target');
+
+    if (!isBreak) {
+      // Sesión de trabajo completada
+      const nextBreak =
+        currentSession % sessionsUntilLongBreak === 0
+          ? longBreakMinutes
+          : breakMinutes;
+
+      setIsBreak(true);
+      setSeconds(nextBreak * 60);
+
+      // Notificación visual
+      showNotification('✅ ¡Sesión completada! Toma un descanso', 'break');
+    } else {
+      // Descanso completado
+      const nextSession = currentSession + 1;
+
+      if (nextSession > sessionsUntilLongBreak) {
+        // Ciclo completo, reiniciar
+        setCurrentSession(1);
+        showNotification(
+          '🎉 ¡Ciclo completado! Comienza nuevo ciclo',
+          'complete'
+        );
+      } else {
+        setCurrentSession(nextSession);
+        showNotification('📚 ¡Descanso terminado! A estudiar', 'work');
+      }
+
+      setIsBreak(false);
+      setSeconds(workMinutes * 60);
+    }
+
+    // Guardar estado en localStorage
+    const nextBreakType = !isBreak;
+    const savedMinutes = nextBreakType
+      ? currentSession % sessionsUntilLongBreak === 0
+        ? longBreakMinutes
+        : breakMinutes
+      : workMinutes;
+    pomodoroService.saveTime(savedMinutes);
+  }, [
+    isBreak,
+    currentSession,
+    workMinutes,
+    breakMinutes,
+    longBreakMinutes,
+    sessionsUntilLongBreak,
+    showNotification,
+  ]);
+
+  // 🔧 CORRECCIÓN 3: Efecto para cargar estado persistente (sin setState sincrónico)
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
+    const loadPersistedState = () => {
+      const savedTarget = localStorage.getItem('pomodoro_target');
+      const savedBreak = localStorage.getItem('pomodoro_is_break');
+      const savedSession = localStorage.getItem('pomodoro_session');
 
-    if (isActive) {
+      if (savedTarget) {
+        const targetTime = parseInt(savedTarget);
+        const remaining = Math.round((targetTime - Date.now()) / 1000);
+
+        if (remaining > 0) {
+          // Usamos una función de actualización para evitar el warning
+          setSeconds(remaining);
+          setIsActive(true);
+          if (savedBreak === 'true') setIsBreak(true);
+          if (savedSession) setCurrentSession(parseInt(savedSession));
+        } else {
+          localStorage.removeItem('pomodoro_target');
+        }
+      }
+      setIsInitialized(true);
+    };
+
+    loadPersistedState();
+  }, []); // Solo se ejecuta una vez al montar
+
+  // 🔧 CORRECCIÓN 4: Motor del cronómetro (con dependencias correctas)
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    if (isActive && seconds > 0) {
       interval = setInterval(() => {
-        setSeconds((prev: number) => {
-          if (prev > 1) return prev - 1;
-
-          const nextIsBreak = !isBreak;
-          setIsBreak(nextIsBreak);
-          setIsActive(false);
-
-          const nextMinutes = nextIsBreak ? breakMinutes : workMinutes;
-          // 👈 USAMOS EL SERVICIO
-          pomodoroService.saveTime(nextMinutes);
-
-          alert(nextIsBreak ? '¡Tiempo de descanso!' : '¡A trabajar!');
-
-          return nextMinutes * 60;
+        setSeconds((prev) => {
+          if (prev <= 1) {
+            // Cuando llegue a 0, detenemos el intervalo y completamos la sesión
+            if (interval) clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
         });
       }, 1000);
     }
 
-    return () => clearInterval(interval);
-  }, [isActive, isBreak, workMinutes, breakMinutes]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isActive, seconds, isInitialized]);
 
-  const toggleTimer = () => setIsActive(!isActive);
-  const resetTimer = () => {
+  // 🔧 CORRECCIÓN 5: Efecto separado para manejar cuando seconds llega a 0
+  useEffect(() => {
+    if (!isInitialized) return;
+    if (seconds <= 0 && isActive) {
+      const timeoutId = setTimeout(() => {
+        handleSessionComplete();
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [seconds, isActive, isInitialized, handleSessionComplete]);
+
+  // Funciones de control
+  const toggleTimer = useCallback(() => {
+    if (!isActive) {
+      const targetTime = Date.now() + seconds * 1000;
+      localStorage.setItem('pomodoro_target', targetTime.toString());
+      localStorage.setItem('pomodoro_is_break', isBreak.toString());
+      localStorage.setItem('pomodoro_session', currentSession.toString());
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+      localStorage.removeItem('pomodoro_target');
+    }
+  }, [isActive, seconds, isBreak, currentSession]);
+
+  const resetTimer = useCallback(() => {
     setIsActive(false);
     setIsBreak(false);
+    setCurrentSession(1);
     setSeconds(workMinutes * 60);
-    // 👈 USAMOS EL SERVICIO
-    pomodoroService.saveTime(workMinutes);
-  };
+    pomodoroService.saveTime(0);
+    localStorage.removeItem('pomodoro_target');
+    localStorage.removeItem('pomodoro_is_break');
+    localStorage.removeItem('pomodoro_session');
+  }, [workMinutes]);
+
+  const skipToNext = useCallback(() => {
+    setIsActive(false);
+    handleSessionComplete();
+  }, [handleSessionComplete]);
 
   const formatTime = (): string => {
     const mins = Math.floor(seconds / 60);
@@ -66,7 +206,11 @@ export const usePomodoro = (
     timeDisplay: formatTime(),
     isActive,
     isBreak,
+    currentSession,
+    totalSessions: sessionsUntilLongBreak,
+    progress: Math.min(100, Math.max(0, progress)),
     toggleTimer,
     resetTimer,
+    skipToNext,
   };
 };
