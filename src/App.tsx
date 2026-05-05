@@ -8,10 +8,11 @@ import {
 } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import Customization from './ui/pages/Customization';
+import CustomizationPage from './ui/pages/Customization';
 import LoginPage from './ui/pages/LoginPage';
 import { RoomPage } from './ui/pages/RoomPage';
-import { userService } from './config/dependencies'; // 👈 CAMBIO
+import { userService } from './config/dependencies';
+import type { StudyConfig } from './domain/StudyConfig';
 
 function LoginWithRedirect() {
   const navigate = useNavigate();
@@ -32,13 +33,25 @@ function LoginWithRedirect() {
   return <LoginPage onLogin={handleLogin} />;
 }
 
+function CustomizationWithRedirect() {
+  const navigate = useNavigate();
+
+  const handleStart = (config: StudyConfig) => {
+    console.log('Configuración elegida:', config);
+    // TODO: Guardar la configuración y navegar a la sala
+    navigate('/room');
+  };
+
+  return <CustomizationPage onStart={handleStart} />;
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginWithRedirect />} />
-        <Route path="/customization" element={<Customization />} />
+        <Route path="/customization" element={<CustomizationWithRedirect />} />
         <Route path="/room" element={<RoomPage />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
