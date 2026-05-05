@@ -1,6 +1,42 @@
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Corregimos la ruta según la nueva arquitectura hexagonal
 import { usePomodoro } from './ui/hooks/usePomodoro';
+=======
+// App.tsx
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom';
+import { useEffect } from 'react';
+
+import Customization from './ui/pages/Customization';
+import LoginPage from './ui/pages/LoginPage';
+import { RoomPage } from './ui/pages/RoomPage';
+import { userService } from './config/dependencies'; // 👈 CAMBIO
+
+function LoginWithRedirect() {
+  const navigate = useNavigate();
+
+  // 👈 Verificar si ya hay sesión
+  useEffect(() => {
+    const user = userService.getCurrentUser();
+    if (user) {
+      navigate('/customization');
+    }
+  }, [navigate]);
+
+  const handleLogin = (username: string) => {
+    console.log('Usuario logueado:', username);
+    navigate('/customization');
+  };
+
+  return <LoginPage onLogin={handleLogin} />;
+}
+>>>>>>> 71d6576e82f1f7c6320901c8578f39c41400417a
 
 // --- COMPONENTE DE TU SALA (Capa de UI) ---
 const StudyRoom = () => {
@@ -43,11 +79,19 @@ function App() {
   return (
     <Router>
       <Routes>
+<<<<<<< HEAD
         <Route path="/" element={<div style={{color: 'white', padding: '20px'}}>Página de Inicio (En construcción)</div>} />
         <Route path="/login" element={<div style={{color: 'white', padding: '20px'}}>Login Falso</div>} />
         <Route path="/customization" element={<div style={{color: 'white', padding: '20px'}}>Configuración de Avatar</div>} />
         {/* Tu ruta principal ya conectada al componente con lógica */}
         <Route path="/room" element={<StudyRoom />} />
+=======
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<LoginWithRedirect />} />
+        <Route path="/customization" element={<Customization />} />
+        <Route path="/room" element={<RoomPage />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+>>>>>>> 71d6576e82f1f7c6320901c8578f39c41400417a
       </Routes>
     </Router>
   );

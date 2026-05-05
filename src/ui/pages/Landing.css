@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.landing-container {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #c0c0c0;
+  /* Gray retro OS background */
+  color: #000;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.customization-window {
+  background-color: #fcf8f2;
+  /* Cream */
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0px #000;
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  flex-wrap: wrap;
+}
+
+/* Diorama */
+.diorama-section {
+  flex: 1;
+  min-width: 300px;
+  border-right: 4px solid #000;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #888;
+  padding: 2rem;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+@media (max-width: 650px) {
+  .diorama-section {
+    border-right: none;
+    border-bottom: 4px solid #000;
+    min-height: 300px;
+  }
+}
+
+/* Room backgrounds */
+.room-bg-classic {
+  background-color: #d2b48c;
+}
+
+/* Tan */
+.room-bg-zen {
+  background-color: #8fbc8f;
+}
+
+/* DarkSeaGreen */
+.room-bg-nature {
+  background-color: #87ceeb;
+}
+
+/* SkyBlue */
+
+.speech-bubble {
+  background-color: #fff;
+  border: 4px solid #000;
+  padding: 1rem;
+  position: absolute;
+  top: 15%;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  box-shadow: 4px 4px 0px #000;
+  word-break: break-all;
+  max-width: 80%;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Character sprite placeholder */
+.character-sprite {
+  width: 120px;
+  height: 120px;
+  border: 4px solid #000;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  box-shadow: 4px 4px 0px #000;
+  font-size: 3rem;
+  /* large emoji */
+}
+
+/* Controls */
+.controls-section {
+  flex: 1;
+  min-width: 300px;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  background-color: #fcf8f2;
+}
+
+.control-module {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.module-title {
+  font-size: 0.9rem;
+  margin: 0;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.pixel-input {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #fff;
+  border: 4px solid #000;
+  padding: 1rem;
+  font-size: 0.8rem;
+  box-shadow: 4px 4px 0px #000;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.pixel-input:focus {
+  background-color: #e0f8e0;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 1rem;
+}
+
+.option-btn {
+  background-color: #fff;
+  border: 4px solid #000;
+  padding: 1rem 0.5rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #000;
+  transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+  text-align: center;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.option-btn:active {
+  transform: translateY(2px) translateX(2px);
+  box-shadow: 2px 2px 0px #000;
+}
+
+.option-btn.active {
+  background-color: #000;
+  color: #32cd32;
+  /* white/green text */
+  box-shadow: 2px 2px 0px #888;
+  transform: translateY(2px) translateX(2px);
+}
+
+.btn-start {
+  background-color: #000;
+  color: #fff;
+  border: 4px solid #000;
+  padding: 1.5rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 6px 6px 0px #888;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+}
+
+.btn-start:active {
+  transform: translateY(2px) translateX(2px);
+  box-shadow: 4px 4px 0px #888;
+}
+
+.btn-start:hover {
+  background-color: #333;
+}

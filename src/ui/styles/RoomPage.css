@@ -1,0 +1,163 @@
+.room-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Eliminamos el gradiente de fondo para que no se vea si la imagen carga lento */
+  background: #000;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  /* Quitamos bordes redondeados y sombras para que sea Full Screen total */
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Estilos del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  min-width: 400px;
+  max-width: 500px;
+  text-align: center;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 28px;
+}
+
+.modal-content p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.pomodoro-placeholder {
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 2px dashed #ddd;
+}
+
+.close-modal-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s;
+}
+
+.close-modal-btn:hover {
+  transform: scale(1.05);
+}
+
+.pomodoro-timer-container {
+    background: #00000000;
+    color: rgb(0, 37, 118); /* Verde estilo terminal vieja */
+    padding: 10px 20px;
+    border: 4px solid #fff;
+    margin: 15px 0;
+    display: inline-block;
+}
+
+.control-btn {
+    /* Estética Pixel Art */
+    image-rendering: pixelated;
+    cursor: pointer;
+    
+    /* Colores y Fuente */
+    background-color: #73d2d1; /* Negro suave */
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    /* El truco del borde de píxel: Borde doble */
+    border: 4px solid #000000;
+    outline: 2px solid #ffffff;
+    outline-offset: -6px;
+
+    /* Sombra sólida (le da profundidad) */
+    box-shadow: 6px 6px 0px #888888;
+    
+    padding: 12px 24px;
+    position: relative;
+    transition: all 0.1s;
+    display: inline-block;
+}
+
+/* Efecto Hover (cuando pasas el mouse) */
+.control-btn:hover {
+    background-color: #70b1e7;
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #666666;
+}
+
+/* Efecto Click (cuando presionas) */
+.control-btn:active {
+    background-color: #00809a;
+    box-shadow: 0px 0px 0px #888888; /* Desaparece la sombra */
+    transform: translate(6px, 6px); /* Se mueve hacia la posición de la sombra */
+}
+
+/* Estilo especial para el botón de RESET (Rojo) */
+.control-btn.secondary {
+    background-color: #dd77a8;
+    color: #fff;
+}
+
+.control-btn.secondary:hover {
+    background-color: #c05a5a;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
