@@ -1,262 +1,374 @@
-/* PomodoroModal.css - Tema Místico Pixel Art */
-/* Paleta: Púrpura (#6b46c1, #805ad5), Azul (#3b82f6, #60a5fa), Acentos (#a78bfa) */
+@font-face {
+  font-family: 'Retrobit';
+  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GamePaused';
+  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf')
+    format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-/* Overlay */
+/* ============================= */
+/* TOKENS */
+/* ============================= */
+
+:root {
+  --bs-canvas: #efe8e2;
+  --bs-canvas-soft: #fef9e7;
+  --bs-card-cream: #fffaf2;
+  --bs-option-selected: #e0ecda;
+
+  --bs-black: #000000;
+  --bs-ink: #222222;
+  --bs-ink-strong: #1a1a1a;
+  --bs-panel-dark: rgba(71, 68, 68, 0.94);
+  --bs-overlay-dark: rgba(0, 0, 0, 0.72);
+  --bs-screen-dark: #141414;
+
+  --bs-white: #ffffff;
+  --bs-white-soft: rgba(255, 255, 255, 0.72);
+  --bs-white-muted: rgba(255, 255, 255, 0.55);
+
+  --bs-border-dark: #222222;
+  --bs-border-soft: #d4c5b2;
+  --bs-border-soft-hover: #b8a590;
+
+  --bs-accent-gold: #c9a227;
+  --bs-accent-gold-soft: #e4c766;
+  --bs-success: #e0ecda;
+  --bs-error: #ff6b6b;
+
+  --bs-radius-sm: 6px;
+  --bs-radius-md: 8px;
+  --bs-radius-lg: 10px;
+  --bs-radius-panel: 16px;
+  --bs-radius-pill: 50px;
+
+  --bs-font-pixel-primary: 'Retrobit', 'Courier New', monospace;
+  --bs-font-pixel-secondary: 'GamePaused', 'Courier New', monospace;
+  --bs-font-readable: 'Comfortaa', 'Courier New', monospace;
+
+  --bs-shadow-pixel: 6px 6px 0 rgba(0, 0, 0, 0.28);
+  --bs-shadow-button: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  --bs-shadow-button-active: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ============================= */
+/* OVERLAY */
+/* ============================= */
+
 .pomodoro-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(15, 10, 30, 0.92);
-  backdrop-filter: blur(4px);
+  inset: 0;
+  background: var(--bs-overlay-dark);
+  backdrop-filter: blur(3px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: pixelFadeIn 0.3s steps(4);
+  padding: 1rem;
+  animation: bitstudyFadeIn 0.25s steps(4);
 }
 
-@keyframes pixelFadeIn {
+@keyframes bitstudyFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
   }
+
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
-/* Modal Principal */
+/* ============================= */
+/* MODAL */
+/* ============================= */
+
 .pomodoro-modal {
   width: 520px;
-  max-width: 90vw;
-  image-rendering: crisp-edges;
+  max-width: 92vw;
+  image-rendering: pixelated;
+  font-family: var(--bs-font-pixel-secondary);
+}
+
+/* Caja principal pixel */
+.pixel-border {
+  position: relative;
+  background: var(--bs-panel-dark);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-panel);
+  padding: 1.5rem;
+  box-shadow: var(--bs-shadow-pixel);
+  animation: modalReveal 0.35s steps(6);
+}
+
+@keyframes modalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Esquinas decorativas pixel */
+.pixel-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--bs-accent-gold);
+  border: 2px solid var(--bs-border-dark);
   image-rendering: pixelated;
 }
 
-/* Pixel Border - Morado */
-.pixel-border {
-  position: relative;
-  background: linear-gradient(135deg, #1a1028 0%, #0f0a1e 100%);
-  border: 4px solid #4c1d95;
-  padding: 24px;
-  box-shadow: 8px 8px 0px #2d1b69;
-}
-
-.pixel-corner {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-}
-
 .pixel-corner.tl {
-  top: -4px;
-  left: -4px;
-  background: linear-gradient(135deg, #a78bfa, #6b46c1);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  top: -7px;
+  left: -7px;
 }
 
 .pixel-corner.tr {
-  top: -4px;
-  right: -4px;
-  background: linear-gradient(225deg, #a78bfa, #6b46c1);
-  clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0);
+  top: -7px;
+  right: -7px;
 }
 
 .pixel-corner.bl {
-  bottom: -4px;
-  left: -4px;
-  background: linear-gradient(45deg, #a78bfa, #6b46c1);
-  clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 0);
+  bottom: -7px;
+  left: -7px;
 }
 
 .pixel-corner.br {
-  bottom: -4px;
-  right: -4px;
-  background: linear-gradient(315deg, #a78bfa, #6b46c1);
-  clip-path: polygon(100% 100%, 100% 0, 0 0, 0 100%);
+  bottom: -7px;
+  right: -7px;
 }
 
-/* Header - Modo Estudio (Morado) */
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #1e1a3a, #16122e);
-  border: 2px solid #4c1d95;
-  border-radius: 0;
+  gap: 1rem;
+
+  background: rgba(0, 0, 0, 0.38);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
+
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .modal-header.work-mode {
-  border-left: 8px solid #7c3aed;
-  background: linear-gradient(135deg, #1e1a3a, #16122e);
+  border-left: 8px solid var(--bs-accent-gold);
 }
 
 .modal-header.break-mode {
-  border-left: 8px solid #3b82f6;
-  background: linear-gradient(135deg, #1a2a4a, #121e3a);
+  border-left: 8px solid var(--bs-option-selected);
 }
 
-/* Session Indicator */
+/* Sesión */
 .session-indicator {
-  font-family: 'Courier New', 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: #a78bfa;
+  font-family: var(--bs-font-pixel-secondary);
+  color: var(--bs-white);
 }
 
 .session-label {
   display: block;
-  font-size: 9px;
-  letter-spacing: 3px;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: #8b5cf6;
+  color: var(--bs-white-muted);
 }
 
 .session-number {
   display: block;
-  font-size: 24px;
-  font-weight: bold;
-  color: #c4b5fd;
-  text-shadow: 2px 2px 0px #2d1b69;
+  margin-top: 0.25rem;
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 1.5rem;
+  color: var(--bs-canvas-soft);
+  text-shadow: 2px 2px 0 var(--bs-black);
 }
 
-/* Status Badge */
+/* Badge de estado */
 .status-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #2d1b69;
-  padding: 8px 16px;
-  border-radius: 0;
-  border: 2px solid #7c3aed;
-  box-shadow: inset 0 0 8px rgba(124, 58, 237, 0.2);
+  gap: 0.5rem;
+
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-pill);
+
+  padding: 0.45rem 0.9rem;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.25);
 }
 
 .status-icon {
-  font-size: 24px;
-  filter: drop-shadow(2px 2px 0px #1a1028);
+  font-size: 1.25rem;
+  image-rendering: pixelated;
 }
 
 .status-text {
-  font-family: 'Courier New', 'Press Start 2P', monospace;
-  font-weight: bold;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #a78bfa;
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--bs-ink);
+  text-transform: uppercase;
 }
 
-/* Mensaje Motivacional */
+/* ============================= */
+/* MENSAJE */
+/* ============================= */
+
 .modal-message {
   text-align: center;
-  margin: 20px 0;
-  padding: 12px;
-  background: linear-gradient(135deg, #2d1b69, #1e1a3a);
-  border: 2px solid #7c3aed;
-  box-shadow: inset 0 0 10px rgba(124, 58, 237, 0.1);
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+
+  background: rgba(0, 0, 0, 0.28);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
 }
 
 .pixel-text {
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  color: #e0d5ff;
-  text-shadow: 2px 2px 0px #1a1028;
+  font-family: var(--bs-font-readable);
+  font-size: 0.85rem;
+  color: var(--bs-white);
   margin: 0;
+  line-height: 1.5;
 }
 
-/* Timer Container */
+/* ============================= */
+/* TIMER */
+/* ============================= */
+
 .timer-container {
-  margin: 24px 0;
+  margin: 1.3rem 0;
 }
 
-/* Pantalla Pixeleada del Timer */
 .pixel-screen {
   position: relative;
-  background: #0a0618;
-  border: 6px solid #4c1d95;
-  padding: 30px;
+  overflow: hidden;
+
+  background: var(--bs-screen-dark);
+  border: 4px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-lg);
+
+  padding: 1.7rem 1rem;
   text-align: center;
-  margin-bottom: 20px;
+
   box-shadow:
-    inset 0 0 20px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(124, 58, 237, 0.3);
+    inset 0 0 0 3px rgba(255, 255, 255, 0.06),
+    0 0 0 3px rgba(212, 197, 178, 0.35);
 }
 
 .screen-glare {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 30%;
+  inset: 0 0 auto 0;
+  height: 35%;
   background: linear-gradient(
     135deg,
-    rgba(167, 139, 250, 0.15) 0%,
-    rgba(167, 139, 250, 0) 100%
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0)
   );
   pointer-events: none;
 }
 
 .timer-digits {
-  font-family: 'Courier New', monospace;
-  font-size: 68px;
-  font-weight: bold;
-  background: linear-gradient(135deg, #a78bfa, #60a5fa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
-  letter-spacing: 8px;
+  position: relative;
+  z-index: 1;
+
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 3.9rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+
+  color: var(--bs-canvas-soft);
+  text-shadow:
+    3px 3px 0 var(--bs-black),
+    0 0 10px rgba(201, 162, 39, 0.35);
 }
 
-/* Modo Break - Timer más azul */
+/* En descanso, el timer se siente más suave */
 .modal-header.break-mode ~ .timer-container .timer-digits {
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: var(--bs-option-selected);
+  text-shadow:
+    3px 3px 0 var(--bs-black),
+    0 0 10px rgba(224, 236, 218, 0.35);
 }
 
-/* Progress Bar Mágica */
+/* ============================= */
+/* PROGRESS BAR */
+/* ============================= */
+
 .progress-container {
-  margin-top: 20px;
+  margin-top: 1rem;
 }
 
 .progress-label {
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: #a78bfa;
-  margin-bottom: 8px;
+  font-family: var(--bs-font-pixel-secondary);
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  color: var(--bs-white-soft);
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
 
 .pixel-progress-bar {
-  background: #1a1028;
-  border: 3px solid #4c1d95;
-  height: 24px;
-  padding: 2px;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+  height: 22px;
+  padding: 3px;
+
+  background: rgba(0, 0, 0, 0.38);
+  border: 3px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-sm);
+
+  overflow: hidden;
 }
 
 .pixel-progress-fill {
-  background: linear-gradient(90deg, #7c3aed, #a78bfa);
   height: 100%;
-  position: relative;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--bs-accent-gold) 0px,
+    var(--bs-accent-gold) 8px,
+    var(--bs-accent-gold-soft) 8px,
+    var(--bs-accent-gold-soft) 16px
+  );
   transition: width 0.3s steps(20);
-  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+  position: relative;
+}
+
+.modal-header.break-mode ~ .timer-container .pixel-progress-fill {
+  background: repeating-linear-gradient(
+    90deg,
+    #afcda8 0px,
+    #afcda8 8px,
+    var(--bs-option-selected) 8px,
+    var(--bs-option-selected) 16px
+  );
 }
 
 .progress-pixel {
   position: absolute;
+  top: -3px;
   right: 0;
-  top: -2px;
-  width: 4px;
-  height: 28px;
-  background: #c4b5fd;
-  box-shadow: 0 0 6px #c4b5fd;
-  animation: pixelPulse 1s infinite;
+
+  width: 5px;
+  height: 22px;
+
+  background: var(--bs-white);
+  box-shadow: 0 0 8px var(--bs-white);
+  animation: pixelPulse 1s steps(2) infinite;
 }
 
 @keyframes pixelPulse {
@@ -264,171 +376,228 @@
   100% {
     opacity: 1;
   }
+
   50% {
-    opacity: 0.5;
+    opacity: 0.45;
   }
 }
 
-/* Botones Místicos */
+/* ============================= */
+/* BOTONES */
+/* ============================= */
+
 .modal-controls {
   display: flex;
-  gap: 12px;
-  margin: 24px 0;
   justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
 }
 
 .pixel-btn {
-  font-family: 'Courier New', monospace;
-  font-weight: bold;
-  font-size: 12px;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  transition: all 0.05s linear;
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 0.45rem;
+
+  min-height: 42px;
+  padding: 0.65rem 1rem;
+
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-lg);
+
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition:
+    transform 0.08s steps(2),
+    box-shadow 0.08s steps(2),
+    background 0.15s linear;
 }
 
 .pixel-btn:active {
   transform: translate(2px, 2px);
+  box-shadow: var(--bs-shadow-button-active);
 }
 
 .btn-icon {
-  font-size: 16px;
+  font-size: 1rem;
 }
 
-/* Botón Principal (Empezar/Pausar) - Púrpura */
+/* Botón principal */
 .pixel-btn-primary {
-  background: linear-gradient(135deg, #7c3aed, #6b21a5);
-  color: #f0e6ff;
-  box-shadow: 4px 4px 0px #371b6e;
-  border: 2px solid #a78bfa;
+  background: var(--bs-white);
+  color: var(--bs-ink-strong);
+  box-shadow: var(--bs-shadow-button);
 }
 
 .pixel-btn-primary:hover {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-  color: #ffffff;
-  box-shadow: 2px 2px 0px #371b6e;
+  background: var(--bs-canvas-soft);
+  transform: translateY(-2px);
 }
 
-/* Botón Saltar - Azul */
+/* Botón secundario */
 .pixel-btn-secondary {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #e0f2fe;
-  box-shadow: 4px 4px 0px #1e3a8a;
-  border: 2px solid #60a5fa;
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border-color: var(--bs-border-soft);
+  box-shadow: var(--bs-shadow-button);
 }
 
 .pixel-btn-secondary:hover {
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  color: #ffffff;
+  border-color: var(--bs-border-soft-hover);
+  background: var(--bs-canvas-soft);
+  transform: translateY(-2px);
 }
 
-/* Botón Reiniciar - Púrpura Oscuro */
+/* Botón reiniciar / peligro suave */
 .pixel-btn-danger {
-  background: linear-gradient(135deg, #6d28d9, #4c1d95);
-  color: #e9d5ff;
-  box-shadow: 4px 4px 0px #2d1b69;
-  border: 2px solid #a78bfa;
+  background: var(--bs-ink-strong);
+  color: var(--bs-white);
+  box-shadow: var(--bs-shadow-button);
 }
 
 .pixel-btn-danger:hover {
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
-  color: #ffffff;
+  background: #3d3d3d;
+  transform: translateY(-2px);
 }
 
-/* Footer Místico */
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
 .modal-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 2px solid #4c1d95;
+  gap: 0.8rem;
+
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+
+  border-top: 2px solid rgba(212, 197, 178, 0.55);
 }
 
 .pixel-tip {
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  color: #a78bfa;
-  padding: 6px 10px;
-  background: linear-gradient(135deg, #1e1a3a, #16122e);
-  border: 1px solid #4c1d95;
-  text-shadow: 1px 1px 0px #1a1028;
+  font-family: var(--bs-font-readable);
+  font-size: 0.68rem;
+  color: var(--bs-white-soft);
+
+  background: rgba(0, 0, 0, 0.28);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-md);
+
+  padding: 0.45rem 0.6rem;
+  line-height: 1.4;
 }
 
 .close-btn {
-  font-family: 'Courier New', monospace;
   background: transparent;
-  border: 2px solid #4c1d95;
-  color: #a78bfa;
-  padding: 6px 12px;
+  color: var(--bs-white);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-md);
+
+  padding: 0.45rem 0.7rem;
+
+  font-family: var(--bs-font-pixel-secondary);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
   cursor: pointer;
-  font-size: 11px;
-  letter-spacing: 2px;
-  transition: all 0.05s linear;
-  text-shadow: 1px 1px 0px #1a1028;
+
+  transition:
+    background 0.15s linear,
+    color 0.15s linear,
+    transform 0.08s steps(2);
+}
+
+.close-btn:hover {
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
 }
 
 .close-btn:active {
   transform: translate(2px, 2px);
 }
 
-.close-btn:hover {
-  background: #4c1d95;
-  color: #e9d5ff;
-  border-color: #a78bfa;
-}
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
 
-/* Efecto de Brillo Mágico */
-@keyframes magicalGlow {
-  0%,
-  100% {
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
-  }
-}
-
-.pixel-screen {
-  animation: magicalGlow 2s ease-in-out infinite;
-}
-
-/* Responsive */
 @media (max-width: 600px) {
-  .timer-digits {
-    font-size: 40px;
-    letter-spacing: 4px;
+  .pomodoro-modal {
+    width: 100%;
+    max-width: 94vw;
   }
 
-  .pixel-btn {
-    padding: 6px 12px;
-    font-size: 10px;
+  .pixel-border {
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.28);
   }
 
-  .btn-icon {
-    font-size: 12px;
+  .modal-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 0.75rem;
   }
 
-  .modal-controls {
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .pixel-tip {
-    font-size: 8px;
-  }
-
-  .status-text {
-    font-size: 10px;
+  .status-badge {
+    justify-content: center;
   }
 
   .session-number {
-    font-size: 20px;
+    font-size: 1.25rem;
+  }
+
+  .timer-digits {
+    font-size: 2.4rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pixel-screen {
+    padding: 1.3rem 0.5rem;
+  }
+
+  .modal-controls {
+    gap: 0.5rem;
+  }
+
+  .pixel-btn {
+    flex: 1 1 100%;
+    font-size: 0.68rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .close-btn {
+    width: 100%;
+  }
+
+  .pixel-tip {
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .timer-digits {
+    font-size: 2rem;
+  }
+
+  .status-text {
+    font-size: 0.62rem;
+  }
+
+  .pixel-text {
+    font-size: 0.78rem;
   }
 }

@@ -1,19 +1,18 @@
 @font-face {
   font-family: 'Retrobit';
-  src: url('../../../assets/retrobit-pixel-font/retrobit.ttf') format('truetype');
+  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf')
+    format('truetype');
   font-weight: normal;
   font-style: normal;
 }
-
 @font-face {
   font-family: 'GamePaused';
-  src: url('../../../assets/game_paused/Game Paused DEMO.otf') format('opentype');
+  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf')
+    format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 
-
-*,
 *::before,
 *::after {
   margin: 0;
@@ -21,23 +20,23 @@
   box-sizing: border-box;
 }
 
-html ,body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #EFE8E2;
+  background-color: #efe8e2;
 }
-
 
 .login-page {
   width: 100%;
   min-height: 100vh;
-  background-color: #EFE8E2;
+  background-color: #efe8e2;
   display: flex;
   flex-direction: column;
   font-family: 'GamePaused', 'Courier New', monospace;
 }
-
 
 .login-navbar {
   width: 100%;
@@ -76,7 +75,6 @@ html ,body, #root {
   color: #c9a227;
 }
 
-
 .hamburger-btn {
   display: none;
   background: none;
@@ -93,7 +91,9 @@ html ,body, #root {
   background-color: #ffffff;
   margin: 5px 0;
   border-radius: 2px;
-  transition: transform 0.3s, opacity 0.3s;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
 }
 
 .hamburger-btn.open span:nth-child(1) {
@@ -107,7 +107,6 @@ html ,body, #root {
 .hamburger-btn.open span:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
 }
-
 
 .mobile-nav {
   display: none;
@@ -129,7 +128,7 @@ html ,body, #root {
 }
 
 .mobile-nav a {
-  color: #EFE8E2;
+  color: #efe8e2;
   text-decoration: none;
   font-family: 'GamePaused', 'Courier New', monospace;
   font-size: 1.1rem;
@@ -142,7 +141,6 @@ html ,body, #root {
 .mobile-nav a:hover {
   color: #c9a227;
 }
-
 
 .login-content {
   flex: 1;
@@ -190,7 +188,6 @@ html ,body, #root {
   z-index: 10;
 }
 
-
 .login-card {
   background-color: rgba(71, 68, 68, 0.92);
   border-radius: 16px;
@@ -213,7 +210,6 @@ html ,body, #root {
   }
 }
 
-
 .card-title {
   font-family: 'Retrobit', 'Courier New', monospace;
   font-size: 1.35rem;
@@ -229,7 +225,6 @@ html ,body, #root {
 .input-group {
   position: relative;
   margin-bottom: 1rem;
-  
 }
 
 .study-input {
@@ -242,7 +237,9 @@ html ,body, #root {
   font-family: 'Comfortaa';
   font-size: 0.85rem;
   outline: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
 .study-input::placeholder {
@@ -268,7 +265,6 @@ html ,body, #root {
   font-family: 'Comfortaa', 'Courier New', monospace;
 }
 
-
 .options-row {
   display: flex;
   justify-content: flex-start;
@@ -288,10 +284,8 @@ html ,body, #root {
 }
 
 .forgot-btn:hover {
-  
   color: #ffffff;
 }
-
 
 .btn-enter {
   width: 100%;
@@ -305,7 +299,10 @@ html ,body, #root {
   font-weight: 800;
   letter-spacing: 0.08em;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
   box-shadow: 0 0px 1px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
 }
@@ -324,7 +321,6 @@ html ,body, #root {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
 
 .register-row {
   text-align: center;
@@ -350,7 +346,6 @@ html ,body, #root {
   color: #ffffff;
 }
 
-
 .spin {
   display: inline-block;
   width: 14px;
@@ -368,7 +363,6 @@ html ,body, #root {
     transform: rotate(360deg);
   }
 }
-
 
 .success-message {
   text-align: center;
@@ -420,7 +414,6 @@ html ,body, #root {
   }
 }
 
-
 @media (max-width: 900px) {
   .room-logo-diagonal {
     display: none;
@@ -441,9 +434,7 @@ html ,body, #root {
   }
 }
 
-
 @media (max-width: 600px) {
-
   .login-navbar {
     padding: 0.5rem 1rem;
   }
@@ -459,7 +450,6 @@ html ,body, #root {
   .hamburger-btn {
     display: block;
   }
-
 
   .login-content {
     flex-direction: column;
@@ -500,7 +490,6 @@ html ,body, #root {
     font-size: 0.9rem;
   }
 }
-
 
 @media (max-width: 400px) {
   .login-navbar {

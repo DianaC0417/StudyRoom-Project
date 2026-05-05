@@ -1,16 +1,17 @@
 @font-face {
   font-family: 'Retrobit';
-  src: url('src/game/assets/retrobit-pixel-font/retrobit.ttf') format('truetype');
+  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf')
+    format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'GamePaused';
-  src: url('src/game/assets/game_paused/Game Paused DEMO.otf') format('opentype');
+  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf')
+    format('opentype');
   font-weight: normal;
   font-style: normal;
 }
-
 /* ========== RESET ========== */
 * {
   margin: 0;
@@ -18,25 +19,26 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
-  overflow-y: auto; 
-  background-color: #EFE8E2;
-  
+  overflow-y: auto;
+  background-color: #efe8e2;
 }
 
 /* ========== PÁGINA ========== */
 .page {
   min-height: 100vh;
   min-height: 100dvh;
-  background: #EFE8E2;
-  font-family: 'RetroBit' ,'GamePaused', 'Courier New', monospace;
+  background: #efe8e2;
+  font-family: 'RetroBit', 'GamePaused', 'Courier New', monospace;
   color: #222222;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 2rem;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 /* ========== BARRA NEGRA (TÍTULO) ========== */
@@ -276,7 +278,7 @@ html, body, #root {
 
   .right-col {
     width: 100%;
-    align-items: center; 
+    align-items: center;
   }
 
   .left-col {
@@ -299,7 +301,6 @@ html, body, #root {
   .preview-box {
     max-width: 300px;
   }
-
 
   .options {
     justify-content: center;

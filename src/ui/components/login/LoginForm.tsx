@@ -1,8 +1,9 @@
 import { type FormEvent, useState } from 'react';
 import { userService } from '../../../config/dependencies';
-import logoWhite from '../../../assets/BIT_STUDY_WHITE.png';
-import logoBlack from '../../../assets/BIT_STUDY_BLACK.png';
-import roomImg from '../../../assets/ISOMETRIC_ROOM.png';
+import logoWhite from '../../../../public/assets//BIT_STUDY_WHITE.png';
+import logoBlack from '../../../../public/assets/BIT_STUDY_BLACK.png';
+import roomImg from '../../../../public/assets/ISOMETRIC_ROOM.png';
+
 import './LoginForm.css';
 
 interface Props {
