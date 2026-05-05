@@ -1,9 +1,10 @@
 import { type FormEvent, useState } from 'react';
 import { localStorageAdapter } from '../../../adapters/localStorageAdapter';
-import fondo from '../login/fondo.png';
+import logoWhite from '../../../assets/BIT_STUDY_WHITE.png';
+import logoBlack from '../../../assets/BIT_STUDY_BLACK.png';
+import roomImg from '../../../assets/ISOMETRIC_ROOM.png';
 import './LoginForm.css';
 
-// ─── Componente principal ────────────────────────────────────────────────────
 interface Props {
   onLogin?: (username: string) => void;
 }
@@ -14,6 +15,7 @@ const LoginForm = ({ onLogin }: Props) => {
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const validate = () => {
     const e: typeof errors = {};
@@ -28,95 +30,124 @@ const LoginForm = ({ onLogin }: Props) => {
     if (!validate()) return;
     setLoading(true);
 
-    // Simulación de delay de red
     await new Promise(r => setTimeout(r, 1500));
 
-    // ── Llamada al adaptador: guarda el userId ──
     localStorageAdapter.saveUser(username.trim());
-
     setLoading(false);
     setSuccess(true);
 
-    // Redirige a la siguiente pantalla después de 1.2s
     setTimeout(() => {
       onLogin?.(username.trim());
-      // Si usas React Router: navigate('/dashboard')
       console.log('✅ Usuario guardado, redirigir a /dashboard');
     }, 1200);
   };
 
   return (
-    <div className="login-scene">
-      {/* Fondo */}
-      <div className="sky" style={{ backgroundImage: `url(${fondo})` }} />
+    <div className="login-page">
+      {/* ═══ NAVBAR ═══ */}
+      <nav className="login-navbar">
+        <img src={logoWhite} alt="BitStudy" className="navbar-logo" />
 
-      {/* Card */}
-      <div className="login-card">
-        {success ? (
-          <div className="success-message">
-            <span className="success-icon">📖</span>
-            <h3>¡Bienvenido, {username}!</h3>
-            <p>Entrando a tu sala de estudio...</p>
-          </div>
-        ) : (
-          <>
-            
-            <h1 className="card-title">Study Room</h1>
-            <p className="card-subtitle">Tu espacio de aprendizaje</p>
+        {/* Desktop nav links */}
+        <ul className="navbar-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Join Us</a></li>
+        </ul>
 
-            <form onSubmit={handleSubmit} noValidate>
-              <div className="input-group">
-                <input
-                  className={`study-input ${errors.username ? 'error' : ''}`}
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={e => {
-                    setUsername(e.target.value);
-                    setErrors(prev => ({ ...prev, username: undefined }));
-                  }}
-                  autoComplete="username"
-                />
-                <span className="input-icon">👤</span>
-                {errors.username && <span className="input-error">{errors.username}</span>}
-              </div>
+        {/* Hamburger (mobile) */}
+        <button
+          className={`hamburger-btn ${menuOpen ? 'open' : ''}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </nav>
 
-              <div className="input-group">
-                <input
-                  className={`study-input ${errors.password ? 'error' : ''}`}
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={e => {
-                    setPassword(e.target.value);
-                    setErrors(prev => ({ ...prev, password: undefined }));
-                  }}
-                  autoComplete="current-password"
-                />
-                <span className="input-icon">🔒</span>
-                {errors.password && <span className="input-error">{errors.password}</span>}
-              </div>
+      {/* Mobile nav overlay */}
+      <div className={`mobile-nav ${menuOpen ? 'open' : ''}`}>
+        <a href="#" onClick={() => setMenuOpen(false)}>Home</a>
+        <a href="#" onClick={() => setMenuOpen(false)}>About</a>
+        <a href="#" onClick={() => setMenuOpen(false)}>Join Us</a>
+      </div>
 
-              <div className="options-row">
-                <button type="button" className="forgot-btn">
-                  Forgot password?
+      {/* ═══ MAIN CONTENT ═══ */}
+      <div className="login-content">
+        {/* Room illustration */}
+        <div className="room-illustration">
+          <img src={roomImg} alt="Isometric Study Room" />
+          <img src={logoBlack} alt="BitStudy" className="room-logo-diagonal" />
+        </div>
+
+        {/* Login card */}
+        <div className="login-card">
+          {success ? (
+            <div className="success-message">
+              <span className="success-icon">📖</span>
+              <h3>¡Bienvenido, {username}!</h3>
+              <p>Entrando a tu sala de estudio...</p>
+            </div>
+          ) : (
+            <>
+              <h1 className="card-title">
+                Tu espacio de<br />aprendizaje
+              </h1>
+
+              <form onSubmit={handleSubmit} noValidate>
+                <div className="input-group">
+                  <input
+                    className={`study-input ${errors.username ? 'error' : ''}`}
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={e => {
+                      setUsername(e.target.value);
+                      setErrors(prev => ({ ...prev, username: undefined }));
+                    }}
+                    autoComplete="username"
+                  />
+                  {errors.username && <span className="input-error">{errors.username}</span>}
+                </div>
+
+                <div className="input-group">
+                  <input
+                    className={`study-input ${errors.password ? 'error' : ''}`}
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={e => {
+                      setPassword(e.target.value);
+                      setErrors(prev => ({ ...prev, password: undefined }));
+                    }}
+                    autoComplete="current-password"
+                  />
+                  {errors.password && <span className="input-error">{errors.password}</span>}
+                </div>
+
+                <div className="options-row">
+                  <button type="button" className="forgot-btn">
+                    Forgot password?
+                  </button>
+                </div>
+
+                <button type="submit" className="btn-enter" disabled={loading}>
+                  {loading && <span className="spin" />}
+                  {loading ? 'Entering...' : 'LOGIN'}
+                </button>
+              </form>
+
+              <div className="register-row">
+                Don't have an account?{' '}
+                <button type="button" onClick={() => console.log('→ ir a registro')}>
+                  Register
                 </button>
               </div>
-
-              <button type="submit" className="btn-enter" disabled={loading}>
-                {loading && <span className="spin" />}
-                {loading ? 'Entering...' : 'Login'}
-              </button>
-            </form>
-
-            <div className="register-row">
-              Don't have an account?{' '}
-              <button type="button" onClick={() => console.log('→ ir a registro')}>
-                Register
-              </button>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
