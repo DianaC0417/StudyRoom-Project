@@ -5,6 +5,9 @@ import { StudyRoomScene } from '../../game/scenes/StudyRoomScene';
 import { gameConfig } from '../../game/config';
 import { usePomodoro } from '../hooks/usePomodoro';
 import { PomodoroModal } from '../components/PomodoroModal';
+
+import { useNavigate } from 'react-router-dom'; // + Importar navegación
+
 import '../styles/RoomPage.css';
 
 export const RoomPage: React.FC = () => {
@@ -12,7 +15,10 @@ export const RoomPage: React.FC = () => {
   const phaserGameRef = useRef<Phaser.Game | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
+  
+  const navigate = useNavigate(); // + Hook para salir
+  const [showExitBtn, setShowExitBtn] = useState(false); // + Estado del botón
+  
   const {
     timeDisplay,
     isActive,
@@ -46,6 +52,10 @@ export const RoomPage: React.FC = () => {
       console.log('Notificación:', event.detail);
     };
 
+    const handleExitPrompt = (event: any) => {
+      setShowExitBtn(event.detail.show);
+    };//+++
+
     window.addEventListener(
       'openPomodoro',
       handleOpenPomodoro as EventListener
@@ -55,7 +65,18 @@ export const RoomPage: React.FC = () => {
       handleNotification as EventListener
     );
 
+    window.addEventListener(
+      'nearExit',
+       handleExitPrompt as EventListener
+    );//+++
+
     return () => {
+
+      window.removeEventListener(
+        'nearExit', 
+        handleExitPrompt as EventListener
+      );//+++
+
       window.removeEventListener(
         'openPomodoro',
         handleOpenPomodoro as EventListener
@@ -69,13 +90,24 @@ export const RoomPage: React.FC = () => {
         phaserGameRef.current = null;
       }
     };
-  }, []);
+  }, [navigate]);
 
   const closeModal = () => setShowModal(false);
 
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
+
+      {/* BOTÓN DE SALIDA PIXELADO (Sin assets nuevos) */}
+      {showExitBtn && (
+  <button 
+    onClick={() => navigate('/customization')}
+    className="exit-button-pixel"
+  >
+    <span className="exit-icon"></span>
+    <span>SALIR</span>
+  </button>
+)}
 
       <PomodoroModal
         show={showModal}
