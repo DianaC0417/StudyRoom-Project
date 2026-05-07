@@ -5,7 +5,7 @@ import { StudyRoomScene } from '../../game/scenes/StudyRoomScene';
 import { gameConfig } from '../../game/config';
 import { usePomodoro } from '../hooks/usePomodoro';
 import { PomodoroModal } from '../components/PomodoroModal';
-import { useNavigate, useLocation } from 'react-router-dom'; // ← useLocation
+import { useNavigate } from 'react-router-dom';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useSound } from '../hooks/useSound';
 import type { Room, StudyConfig } from '../../domain/StudyConfig';
@@ -17,11 +17,7 @@ export const RoomPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const navigate = useNavigate();
-  const location = useLocation(); // ← obtenemos el estado de navegación
   const [showExitBtn, setShowExitBtn] = useState(false);
-
-  // Configuración desde el estado de navegación (sin localStorage)
-  const config = location.state as StudyConfig | undefined;
 
   const {
     timeDisplay,
@@ -35,14 +31,26 @@ export const RoomPage: React.FC = () => {
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
 
+  const [config] = useState<StudyConfig | null>(() => {
+    const data = localStorage.getItem('user_study_config');
+    if (data) {
+      try {
+        return JSON.parse(data) as StudyConfig;
+      } catch {
+        //xxx
+      }
+    }
+    return null;
+  });
+
   const musicMap: Record<Room, string> = {
-    salaestudio1: '/sounds/music/sala1.mp3',
-    salaestudio2: '/sounds/music/sala2.mp3',
-    salaestudio3: '/sounds/music/sala3.mp3',
+    salaestudio1: 'assets/sounds/sala1.mp3',
+    salaestudio2: 'assets/sounds/sala2.mp3',
+    salaestudio3: 'assets/sounds/sala3.mp3',
   };
   const musicSrc = config?.sala ? musicMap[config.sala] : null;
   const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
-    musicSrc || '/sounds/music/sala1.mp3'
+    musicSrc || 'assets/sounds/sala1.mp3'
   );
 
   useEffect(() => {
@@ -52,10 +60,10 @@ export const RoomPage: React.FC = () => {
     return () => pauseMusic();
   }, [musicSrc, playMusic, pauseMusic]);
 
-  const playPomodoroOpen = useSound('/sounds/ui/pomodoro_open.mp3');
+  const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
 
-  const playClick = useSound('/sounds/ui/click.mp3');
-  const playClose = useSound('/sounds/ui/close.mp3');
+  const playClick = useSound('assets/sounds/select_personaje.mp3');
+  //const playClose = useSound('assets/sounds/close.mp3');
 
   const handleToggle = () => {
     playClick();
@@ -70,12 +78,13 @@ export const RoomPage: React.FC = () => {
     skipToNext();
   };
   const handleCloseModal = () => {
-    playClose();
+    playClick();
     setShowModal(false);
   };
 
+  const playExit = useSound('assets/sounds/close.mp3');
   const handleExit = () => {
-    playClose();
+    playExit();
     navigate('/customization');
   };
 
@@ -93,7 +102,7 @@ export const RoomPage: React.FC = () => {
     const handleOpenPomodoro = (event: CustomEvent) => {
       setModalMessage(event.detail.message);
       setShowModal(true);
-      playPomodoroOpen();
+      playPomodoroOpen(); // 🔊 sonido al abrir
     };
 
     const handleNotification = (event: CustomEvent) => {
@@ -129,12 +138,13 @@ export const RoomPage: React.FC = () => {
         phaserGameRef.current = null;
       }
     };
-  }, [navigate, playPomodoroOpen]);
+  }, [navigate, playPomodoroOpen]); // agregamos playPomodoroOpen como dependencia
 
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
 
+      {/* Botón SALIR*/}
       {showExitBtn && (
         <button onClick={handleExit} className="exit-button-pixel">
           <span className="exit-icon"></span>
