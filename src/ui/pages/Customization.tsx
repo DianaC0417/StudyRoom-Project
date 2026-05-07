@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
+import { useSound } from '../../ui/hooks/useSound';
 import './CustomizationPage.css';
 
 const PETS: { id: Character; label: string; img: string }[] = [
@@ -33,6 +34,9 @@ interface CustomizationPageProps {
 
 const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
   const [config, setConfig] = useState<StudyConfig>(DEFAULT_CONFIG);
+  const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
+  const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
+  const playStart = useSound('/assets/sounds/start.mp3');
 
   const updateConfig = <K extends keyof StudyConfig>(
     key: K,
@@ -63,7 +67,10 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
                 <button
                   key={pet.id}
                   className={`opt ${config.personaje === pet.id ? 'opt-on' : ''}`}
-                  onClick={() => updateConfig('personaje', pet.id)}
+                  onClick={() => {
+                    playSelectPersonaje();
+                    updateConfig('personaje', pet.id);
+                  }}
                 >
                   <img src={pet.img} alt={pet.label} className="opt-img-pet" />
                   <span>{pet.label}</span>
@@ -79,7 +86,10 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
                 <button
                   key={room.id}
                   className={`opt ${config.sala === room.id ? 'opt-on' : ''}`}
-                  onClick={() => updateConfig('sala', room.id)}
+                  onClick={() => {
+                    playSelectRoom();
+                    updateConfig('sala', room.id);
+                  }}
                 >
                   <img
                     src={room.img}
@@ -113,7 +123,13 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
             className="name-input"
           />
 
-          <button className="btn-go" onClick={() => onStart(config)}>
+          <button
+            className="btn-go"
+            onClick={() => {
+              playStart();
+              onStart(config);
+            }}
+          >
             EMPEZAR A ESTUDIAR!
           </button>
         </div>
