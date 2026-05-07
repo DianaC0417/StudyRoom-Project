@@ -21,12 +21,15 @@ export class StudyRoomScene extends Phaser.Scene {
   private nickname: string = 'Estudiante';
   private nameText!: Phaser.GameObjects.Text;
 
+  private exitZone!: Phaser.GameObjects.Zone; // +nueva zona pa salir
+  private showExitPrompt: boolean = false;    // +pa salir
+
   constructor() {
     super({ key: 'StudyRoomScene' });
   }
 
   preload() {
-    // 👈 USAMOS EL SERVICIO en lugar de localStorage directo
+    // USAMOS EL SERVICIO en lugar de localStorage directo
     const config = studyConfigService.loadConfig();
     this.characterKey = config.personaje;
     this.salaKey = config.sala;
@@ -40,6 +43,7 @@ export class StudyRoomScene extends Phaser.Scene {
     );
   }
   create() {
+
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
@@ -51,6 +55,8 @@ export class StudyRoomScene extends Phaser.Scene {
     background.setScale(scale).setScrollFactor(0);
 
     this.createAnimations();
+
+    this.exitZone = this.add.zone(width / 2, height - 80, width, 100); //+ zona en la parte inferior
 
     this.player = this.add.sprite(
       width / 2,
@@ -199,5 +205,25 @@ export class StudyRoomScene extends Phaser.Scene {
     } else {
       this.showPomodoro = false;
     }
+
+    const distExit = Phaser.Math.Distance.Between(
+      this.player.x,
+      this.player.y,
+      this.exitZone.x,
+      this.exitZone.y
+    );
+
+  if (distExit < 60) {
+    if (!this.showExitPrompt) {
+      this.showExitPrompt = true;
+      window.dispatchEvent(new CustomEvent('nearExit', { detail: { show: true } }));
+    }
+  } else {
+    if (this.showExitPrompt) {
+      this.showExitPrompt = false;
+      window.dispatchEvent(new CustomEvent('nearExit', { detail: { show: false } }));
+    }
+  }
+
   }
 }

@@ -5,6 +5,10 @@ import { StudyRoomScene } from '../../game/scenes/StudyRoomScene';
 import { gameConfig } from '../../game/config';
 import { usePomodoro } from '../hooks/usePomodoro';
 import { PomodoroModal } from '../components/PomodoroModal';
+import { useNavigate } from 'react-router-dom';
+import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
+import { useSound } from '../hooks/useSound';
+import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
 
 export const RoomPage: React.FC = () => {
@@ -12,6 +16,8 @@ export const RoomPage: React.FC = () => {
   const phaserGameRef = useRef<Phaser.Game | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const navigate = useNavigate();
+  const [showExitBtn, setShowExitBtn] = useState(false);
 
   const {
     timeDisplay,
@@ -24,6 +30,63 @@ export const RoomPage: React.FC = () => {
     resetTimer,
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
+
+  const [config] = useState<StudyConfig | null>(() => {
+    const data = localStorage.getItem('user_study_config');
+    if (data) {
+      try {
+        return JSON.parse(data) as StudyConfig;
+      } catch {
+        //xxx
+      }
+    }
+    return null;
+  });
+
+  const musicMap: Record<Room, string> = {
+    salaestudio1: 'assets/sounds/sala1.mp3',
+    salaestudio2: 'assets/sounds/sala2.mp3',
+    salaestudio3: 'assets/sounds/sala3.mp3',
+  };
+  const musicSrc = config?.sala ? musicMap[config.sala] : null;
+  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
+    musicSrc || 'assets/sounds/sala1.mp3'
+  );
+
+  useEffect(() => {
+    if (musicSrc) {
+      playMusic();
+    }
+    return () => pauseMusic();
+  }, [musicSrc, playMusic, pauseMusic]);
+
+  const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
+
+  const playClick = useSound('assets/sounds/select_personaje.mp3');
+  //const playClose = useSound('assets/sounds/close.mp3');
+
+  const handleToggle = () => {
+    playClick();
+    toggleTimer();
+  };
+  const handleReset = () => {
+    playClick();
+    resetTimer();
+  };
+  const handleSkip = () => {
+    playClick();
+    skipToNext();
+  };
+  const handleCloseModal = () => {
+    playClick();
+    setShowModal(false);
+  };
+
+  const playExit = useSound('assets/sounds/close.mp3');
+  const handleExit = () => {
+    playExit();
+    navigate('/customization');
+  };
 
   useEffect(() => {
     if (!gameRef.current || phaserGameRef.current) return;
@@ -39,11 +102,15 @@ export const RoomPage: React.FC = () => {
     const handleOpenPomodoro = (event: CustomEvent) => {
       setModalMessage(event.detail.message);
       setShowModal(true);
+      playPomodoroOpen(); // 🔊 sonido al abrir
     };
 
     const handleNotification = (event: CustomEvent) => {
-      // Puedes mostrar notificaciones visuales adicionales aquí
       console.log('Notificación:', event.detail);
+    };
+
+    const handleExitPrompt = (event: CustomEvent<{ show: boolean }>) => {
+      setShowExitBtn(event.detail.show);
     };
 
     window.addEventListener(
@@ -54,8 +121,10 @@ export const RoomPage: React.FC = () => {
       'pomodoroNotification',
       handleNotification as EventListener
     );
+    window.addEventListener('nearExit', handleExitPrompt as EventListener);
 
     return () => {
+      window.removeEventListener('nearExit', handleExitPrompt as EventListener);
       window.removeEventListener(
         'openPomodoro',
         handleOpenPomodoro as EventListener
@@ -69,13 +138,19 @@ export const RoomPage: React.FC = () => {
         phaserGameRef.current = null;
       }
     };
-  }, []);
-
-  const closeModal = () => setShowModal(false);
+  }, [navigate, playPomodoroOpen]); // agregamos playPomodoroOpen como dependencia
 
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
+
+      {/* Botón SALIR*/}
+      {showExitBtn && (
+        <button onClick={handleExit} className="exit-button-pixel">
+          <span className="exit-icon"></span>
+          <span>SALIR</span>
+        </button>
+      )}
 
       <PomodoroModal
         show={showModal}
@@ -86,10 +161,10 @@ export const RoomPage: React.FC = () => {
         currentSession={currentSession}
         totalSessions={totalSessions}
         progress={progress}
-        onToggle={toggleTimer}
-        onReset={resetTimer}
-        onSkip={skipToNext}
-        onClose={closeModal}
+        onToggle={handleToggle}
+        onReset={handleReset}
+        onSkip={handleSkip}
+        onClose={handleCloseModal}
       />
     </div>
   );
