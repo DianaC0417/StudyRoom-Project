@@ -1,3 +1,4 @@
+// src/ui/components/login/LoginForm.tsx
 import { type FormEvent, useState } from 'react';
 import { userService } from '../../../config/dependencies';
 import logoWhite from '../../../../public/assets//BIT_STUDY_WHITE.png';
@@ -28,17 +29,16 @@ const LoginForm = ({ onLogin }: Props) => {
     setErrors(e);
     return Object.keys(e).length === 0;
   };
+  //esta función se encarga de manejar el submit del formulario, ahora con la lógica de login real
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-
-    await new Promise((r) => setTimeout(r, 1500));
-
     try {
-      const user = userService.login(username.trim(), false);
-      console.log('Usuario logueado:', user);
+      //Agregamos 'await' y pasamos el 'password'
+      const user = await userService.login(username.trim(), password, false);
+      console.log('Usuario logueado exitosamente:', user);
       setLoading(false);
       setSuccess(true);
 
@@ -48,7 +48,9 @@ const LoginForm = ({ onLogin }: Props) => {
     } catch (error) {
       setErrors({
         username:
-          error instanceof Error ? error.message : 'Error al iniciar sesión',
+          error instanceof Error
+            ? error.message
+            : 'Usuario o contraseña incorrectos',
       });
       setLoading(false);
     }
