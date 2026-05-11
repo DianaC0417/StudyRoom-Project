@@ -19,7 +19,7 @@ function AppRoutes() {
   const handleStart = (config: StudyConfig) => {
     console.log('Guardando configuración:', config);
     studyConfigService.saveConfig(config);
-    navigate('/room');
+    navigate('/room', { state: config });
   };
 
   const handleLogin = (username: string) => {

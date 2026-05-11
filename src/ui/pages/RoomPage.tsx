@@ -5,7 +5,7 @@ import { StudyRoomScene } from '../../game/scenes/StudyRoomScene';
 import { gameConfig } from '../../game/config';
 import { usePomodoro } from '../hooks/usePomodoro';
 import { PomodoroModal } from '../components/PomodoroModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useSound } from '../hooks/useSound';
 import type { Room, StudyConfig } from '../../domain/StudyConfig';
@@ -17,7 +17,10 @@ export const RoomPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const [showExitBtn, setShowExitBtn] = useState(false);
+
+  const config = location.state as StudyConfig | undefined;
 
   const {
     timeDisplay,
@@ -31,18 +34,7 @@ export const RoomPage: React.FC = () => {
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
 
-  const [config] = useState<StudyConfig | null>(() => {
-    const data = localStorage.getItem('user_study_config');
-    if (data) {
-      try {
-        return JSON.parse(data) as StudyConfig;
-      } catch {
-        //xxx
-      }
-    }
-    return null;
-  });
-
+  // Música de fondo por sala
   const musicMap: Record<Room, string> = {
     salaestudio1: 'assets/sounds/sala1.mp3',
     salaestudio2: 'assets/sounds/sala2.mp3',
@@ -60,10 +52,10 @@ export const RoomPage: React.FC = () => {
     return () => pauseMusic();
   }, [musicSrc, playMusic, pauseMusic]);
 
+  // Sonidos
   const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
-
   const playClick = useSound('assets/sounds/select_personaje.mp3');
-  //const playClose = useSound('assets/sounds/close.mp3');
+  const playExit = useSound('assets/sounds/close.mp3');
 
   const handleToggle = () => {
     playClick();
@@ -82,7 +74,6 @@ export const RoomPage: React.FC = () => {
     setShowModal(false);
   };
 
-  const playExit = useSound('assets/sounds/close.mp3');
   const handleExit = () => {
     playExit();
     navigate('/customization');
@@ -99,52 +90,42 @@ export const RoomPage: React.FC = () => {
 
     phaserGameRef.current = new Phaser.Game(config);
 
-    const handleOpenPomodoro = (event: CustomEvent) => {
-      setModalMessage(event.detail.message);
+    const handleOpenPomodoro = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      setModalMessage(customEvent.detail.message);
       setShowModal(true);
-      playPomodoroOpen(); // 🔊 sonido al abrir
+      playPomodoroOpen();
     };
 
-    const handleNotification = (event: CustomEvent) => {
-      console.log('Notificación:', event.detail);
+    const handleNotification = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      console.log('Notificación:', customEvent.detail);
     };
 
-    const handleExitPrompt = (event: CustomEvent<{ show: boolean }>) => {
-      setShowExitBtn(event.detail.show);
+    const handleExitPrompt = (event: Event) => {
+      const customEvent = event as CustomEvent<{ show: boolean }>;
+      setShowExitBtn(customEvent.detail.show);
     };
 
-    window.addEventListener(
-      'openPomodoro',
-      handleOpenPomodoro as EventListener
-    );
-    window.addEventListener(
-      'pomodoroNotification',
-      handleNotification as EventListener
-    );
-    window.addEventListener('nearExit', handleExitPrompt as EventListener);
+    window.addEventListener('openPomodoro', handleOpenPomodoro);
+    window.addEventListener('pomodoroNotification', handleNotification);
+    window.addEventListener('nearExit', handleExitPrompt);
 
     return () => {
-      window.removeEventListener('nearExit', handleExitPrompt as EventListener);
-      window.removeEventListener(
-        'openPomodoro',
-        handleOpenPomodoro as EventListener
-      );
-      window.removeEventListener(
-        'pomodoroNotification',
-        handleNotification as EventListener
-      );
+      window.removeEventListener('nearExit', handleExitPrompt);
+      window.removeEventListener('openPomodoro', handleOpenPomodoro);
+      window.removeEventListener('pomodoroNotification', handleNotification);
       if (phaserGameRef.current) {
         phaserGameRef.current.destroy(true);
         phaserGameRef.current = null;
       }
     };
-  }, [navigate, playPomodoroOpen]); // agregamos playPomodoroOpen como dependencia
+  }, [playPomodoroOpen]);
 
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
 
-      {/* Botón SALIR*/}
       {showExitBtn && (
         <button onClick={handleExit} className="exit-button-pixel">
           <span className="exit-icon"></span>
