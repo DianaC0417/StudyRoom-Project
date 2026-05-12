@@ -1,4 +1,4 @@
-// adapters/userAdapter.ts
+//src/adapters/userAdapter.ts
 import { type UserRepository } from '../aplication/ports/UserRepository';
 import type { User } from '../domain/User';
 
@@ -23,5 +23,19 @@ export const userAdapter: UserRepository = {
   clear: (): void => {
     localStorage.removeItem(USER_KEY);
     sessionStorage.removeItem(USER_KEY);
+  },
+  //esta es la función que se conectará al backend para hacer login
+  login: async (username, password): Promise<User> => {
+    const data = await apiClient('/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+
+    // Supongamos que Joseam te devuelve { user: {...}, token: "ey..." }
+    if (data.token) {
+      localStorage.setItem('auth_token', data.token); // 👈 Guardamos el pase VIP
+    }
+
+    return data.user;
   },
 };
