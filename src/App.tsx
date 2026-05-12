@@ -1,4 +1,3 @@
-// App.tsx - Versión corregida para Opción 1
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,6 +10,9 @@ import LoginPage from './ui/pages/LoginPage';
 import { RoomPage } from './ui/pages/RoomPage';
 import { studyConfigService } from './config/dependencies';
 import type { StudyConfig } from './domain/StudyConfig';
+import HomePage from './ui/pages/HomePage';
+import AboutPage from './ui/pages/AboutPage';
+import JoinUsPage from './ui/pages/JoinUsPage';
 
 // Componente separado para usar useNavigate
 function AppRoutes() {
@@ -37,6 +39,9 @@ function AppRoutes() {
       />
       <Route path="/room" element={<RoomPage />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/join" element={<JoinUsPage />} />
     </Routes>
   );
 }

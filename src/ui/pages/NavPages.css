@@ -1,0 +1,372 @@
+/*-------------HOME PAGE--------------*/
+
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  gap: 1.8rem;
+  color: #2d2d2d;
+  font-family: 'GamePaused', 'Courier New', monospace;
+}
+
+/* ---------- TÍTULO PRINCIPAL ---------- */
+.home-title {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 2.2rem;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  color: #2d2d2d;
+}
+
+/* ---------- FRASE INSPIRADORA ---------- */
+.home-idea {
+  font-size: 1rem;
+  color: #4b4b4b;
+  letter-spacing: 0.04em;
+  max-width: 500px;
+}
+
+/* ---------- NOMBRES GRANDES DE MASCOTAS ---------- */
+.mascotas-texto {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.mascota-nombre-grande {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 3rem;                    /* bien grandes */
+  font-weight: bold;
+  color: #5a5a5a;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  transition: transform 0.2s, color 0.2s;
+}
+
+.mascota-nombre-grande:hover {
+  transform: scale(1.1);
+  color: #303030;
+}
+
+/* ---------- SALAS (imágenes + nombre) ---------- */
+.salas-row {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sala-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sala-img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  image-rendering: pixelated;
+  border: 3px solid #d4c5b2;
+  border-radius: 12px;
+  background: #f0ebe0;
+}
+
+.sala-nombre {
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #303030;
+}
+
+/* ---------- TARJETAS (elige mascota / personaliza sala) ---------- */
+.cards-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info-card {
+  background-color: rgba(71, 68, 68, 0.92);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 180px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  cursor: pointer;
+}
+
+.info-card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  background-color: rgba(90, 85, 85, 0.95);
+}
+
+.emoji {
+  font-size: 2rem;
+}
+
+.card-text {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.1rem;
+}
+
+/* ---------- FRASE FINAL ---------- */
+.home-footer-text {
+  font-size: 0.95rem;
+  color: #5d4037;
+  margin-top: 0.5rem;
+}
+
+/* ---------- ENLACE SECUNDARIO ---------- */
+.home-link {
+  color: #5d4037;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.home-link:hover {
+  color: #c9a227;
+}
+
+/* ---------- RESPONSIVE (móviles) ---------- */
+@media (max-width: 600px) {
+  .home-title {
+    font-size: 1.6rem;
+  }
+
+  .mascota-nombre-grande {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .mascotas-texto {
+    gap: 1.5rem;
+  }
+
+  .sala-img {
+    width: 100px;
+    height: 70px;
+  }
+
+  .cards-row {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+
+
+/*----------------ABOUT US PAGE------------------*/
+
+.about-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+  color: #2d2d2d;
+  font-family: 'GamePaused', 'Courier New', monospace;
+}
+
+.about-heading {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #2d2d2d;
+}
+
+.about-row {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.about-text {
+  flex: 1;
+  min-width: 260px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #222222;
+}
+
+.about-text p {
+  margin-bottom: 1.5rem;
+}
+
+.about-image {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+}
+
+.about-illustration {
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;     
+  border-radius: 2px;
+}
+
+/* ===== EQUIPO ===== */
+.about-equipo-desc {
+  font-size: 1rem;
+  color: #272727;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.equipo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.member-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100px;
+}
+
+.member-img {
+  width: 75px;
+  height: 75px;
+  image-rendering: pixelated;
+  object-fit: contain;
+  background: #f0ebe0;
+  border-radius: 50%;
+  border: 2px solid #d4c5b2;  
+  border-radius: 8px;   
+  padding: 0.3rem;
+}
+
+.member-name {
+  font-size: 0.7rem;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  letter-spacing: 0.04em;
+  color: #272727;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ===== BOTÓN UNIRTE ===== */
+.about-join-btn {
+  display: inline-block;
+  margin: 2rem auto 0;
+  background-color: rgba(71, 68, 68, 0.92);
+  color: #ffffff;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 0.7rem 1.8rem;
+  border-radius: 50px;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  transition: background-color 0.2s, transform 0.2s;
+  align-self: center;
+}
+
+.about-join-btn:hover {
+  background-color: rgba(71, 71, 71, 0.95);
+  transform: scale(1.05);
+}
+
+
+/*------------JOIN US PAGE-------------*/
+.join-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+  color: #2d2d2d;
+  font-family: 'GamePaused', 'Courier New', monospace;
+}
+
+.join-heading {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 2rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #2d2d2d;
+}
+
+.join-row {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.join-text {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.join-intro {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #222222;
+  font-weight: bold;
+}
+
+.join-desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #222222;
+}
+
+.join-btn {
+  background-color: rgba(71, 68, 68, 0.92);
+  border: none;
+  color: #ffffff;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.join-btn:hover {
+  background-color: rgba(90, 85, 85, 0.95);
+  transform: scale(1.05);
+}
+
+.join-image {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+}
+
+.join-illustration {
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;     
+  border-radius: 12px;
+}
