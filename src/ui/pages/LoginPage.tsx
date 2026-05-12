@@ -1,5 +1,4 @@
 import LoginForm from "../components/login/LoginForm";
-import "./LoginPage.css";
 import useSound from "use-sound";
 
 import loginSound from "/assets/login-sound.mp3";
