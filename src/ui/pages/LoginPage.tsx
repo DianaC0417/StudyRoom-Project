@@ -1,6 +1,4 @@
 import LoginForm from "../components/login/LoginForm";
-import logoWhite from "../../public/assets/BIT_STUDY_WHITE.png";
-import roomImg from "../../public/assets/ISOMETRIC_ROOM.png";
 import "./LoginPage.css";
 
 interface Props {
@@ -12,7 +10,7 @@ const LoginPage = ({ onLogin }: Props) => {
     <div className="login-page">
       {/* Navbar */}
       <nav className="login-navbar">
-        <img src={logoWhite} alt="BitStudy" className="navbar-logo" />
+        <img src="/assets/BIT_STUDY_WHITE.png" alt="BitStudy" className="navbar-logo" />
         <ul className="navbar-links">
           <li><a href="#">Home</a></li>
           <li><a href="#">About</a></li>
@@ -22,7 +20,7 @@ const LoginPage = ({ onLogin }: Props) => {
 
       {/* Ilustración */}
       <div className="room-illustration">
-        <img src={roomImg} alt="Isometric Study Room" />
+        <img src="/assets/ISOMETRIC_ROOM.png" alt="Isometric Study Room" />
       </div>
 
       {/* Login card */}
