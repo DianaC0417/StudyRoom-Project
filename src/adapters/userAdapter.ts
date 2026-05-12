@@ -1,6 +1,7 @@
 //src/adapters/userAdapter.ts
 import { type UserRepository } from '../aplication/ports/UserRepository';
 import type { User } from '../domain/User';
+import { apiClient } from './apiClient';
 
 const USER_KEY = 'studyroom_user';
 
@@ -26,16 +27,18 @@ export const userAdapter: UserRepository = {
   },
   //esta es la función que se conectará al backend para hacer login
   login: async (username, password): Promise<User> => {
-    const data = await apiClient('/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      // Hacemos el POST /login usando el apiClient hacia el backend
+      const data = await apiClient('/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      });
 
-    // Supongamos que Joseam te devuelve { user: {...}, token: "ey..." }
-    if (data.token) {
-      localStorage.setItem('auth_token', data.token); // 👈 Guardamos el pase VIP
+      // El backend nos debería devolver los datos del usuario (User).
+      return data;
+    } catch (error) {
+      console.error('Error al intentar iniciar sesión en el backend:', error);
+      throw error;
     }
-
-    return data.user;
   },
 };

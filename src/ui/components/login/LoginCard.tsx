@@ -28,19 +28,25 @@ const LoginCard = ({ onLogin }: Props) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
+
+    // Eliminamos el Promise tonto (delay falso) porque ahora tenemos un delay real de red
+
     try {
-      const user = userService.login(username.trim(), false);
-      console.log('Usuario logueado:', user);
+      // 🚀 AQUÍ ESTÁ EL CAMBIO CLAVE: Agregamos await y pasamos el password
+      const user = await userService.login(username.trim(), password, false);
+      console.log('Usuario logueado exitosamente:', user);
       setLoading(false);
       setSuccess(true);
+
       setTimeout(() => {
-        onLogin?.(username.trim());
+        onLogin?.(username.trim()); // Esto es lo que le avisa a App.tsx que te mande a Customización
       }, 1200);
     } catch (error) {
       setErrors({
         username:
-          error instanceof Error ? error.message : 'Error al iniciar sesión',
+          error instanceof Error
+            ? error.message
+            : 'Usuario o contraseña incorrectos',
       });
       setLoading(false);
     }
