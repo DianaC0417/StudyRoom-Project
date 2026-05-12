@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
+import { useEffect } from 'react';
+import { useBackgroundMusic } from '../../ui/hooks/useBackgroundMusic';
 import './CustomizationPage.css';
 
 const PETS: { id: Character; label: string; img: string }[] = [
@@ -38,6 +40,14 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
   const playStart = useSound('/assets/sounds/start.mp3');
 
+  const musicSrc = '/assets/sounds/background_music.mp3';
+  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(musicSrc);
+
+  useEffect(() => {
+    playMusic();
+    return () => pauseMusic();
+  }, [playMusic, pauseMusic]);
+
   const updateConfig = <K extends keyof StudyConfig>(
     key: K,
     value: StudyConfig[K]
@@ -50,15 +60,11 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
 
   return (
     <div className="page">
-      {/* TÍTULO con fondo negro */}
       <div className="title-bar">Personaliza tu experiencia</div>
 
-      {/* Subtítulo sin fondo */}
       <h2 className="subtitle">BIENVENIDO ESTUDIANTE!</h2>
 
-      {/* CONTENIDO */}
       <div className="content">
-        {/* IZQUIERDA: Selectores */}
         <div className="left-col">
           <div className="section">
             <h3 className="section-title">1. ELIGE TU COMPAÑERO</h3>
@@ -103,7 +109,6 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
           </div>
         </div>
 
-        {/* DERECHA: Preview + Nombre + Botón */}
         <div className="right-col">
           <h3 className="preview-title">Vista Previa</h3>
           <div className="preview-box">
