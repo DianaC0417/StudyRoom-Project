@@ -1,0 +1,22 @@
+
+:root {
+  font-family: 'Courier New', Courier, monospace; /* fuente */
+  color: white;
+}
+
+/* Para que los personajes (sprites) no se vean borrosos al escalarlos */
+img {
+  image-rendering: pixelated;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  background-color: #fef9e7;
+}
