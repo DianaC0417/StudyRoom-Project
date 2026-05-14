@@ -10,7 +10,7 @@ interface Props {
 
 const LoginPage = ({ onLogin }: Props) => {
   const playLogin = useSound('assets/sounds/start.mp3');
-  const musicSrc = 'assets/sounds/background_music.mp3';
+  const musicSrc = '/assets/sounds/background_music.mp3';
   const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(musicSrc);
   const musicStartedRef = useRef(false);
 

@@ -1,3 +1,4 @@
+
 import * as Phaser from 'phaser';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
