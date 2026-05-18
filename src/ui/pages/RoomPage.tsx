@@ -8,19 +8,24 @@ import { PomodoroModal } from '../components/PomodoroModal';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useSound } from '../hooks/useSound';
+import { useMusic } from '../hooks/useMusic';
+import { MusicPlayer } from '../components/music/MusicPlayer';
+import { MusicSelector } from '../components/music/MusicSelector';
 import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
+import '../components/music/MusicPlayer.css';
 
 export const RoomPage: React.FC = () => {
   const gameRef = useRef<HTMLDivElement>(null);
   const phaserGameRef = useRef<Phaser.Game | null>(null);
+
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const [showExitBtn, setShowExitBtn] = useState(false);
 
-  const config = location.state as StudyConfig | undefined;
+  const studyConfig = location.state as StudyConfig | undefined;
 
   const {
     timeDisplay,
@@ -34,23 +39,43 @@ export const RoomPage: React.FC = () => {
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
 
+  const {
+    mood,
+    tracks,
+    selectedTrack,
+    isPlaying,
+    isLoading,
+    volume,
+    error,
+    loadMoodTracks,
+    selectTrack,
+    togglePlay,
+    changeVolume,
+    playNextTrack,
+  } = useMusic();
+
   // Música de fondo por sala
   const musicMap: Record<Room, string> = {
     salaestudio1: 'assets/sounds/sala1.mp3',
     salaestudio2: 'assets/sounds/sala2.mp3',
     salaestudio3: 'assets/sounds/sala3.mp3',
   };
-  const musicSrc = config?.sala ? musicMap[config.sala] : null;
+  const musicSrc = studyConfig?.sala ? musicMap[studyConfig.sala] : null;
   const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
     musicSrc || 'assets/sounds/sala1.mp3'
   );
 
   useEffect(() => {
-    if (musicSrc) {
+    if (!musicSrc) return;
+
+    if (isPlaying) {
+      pauseMusic();
+    } else {
       playMusic();
     }
+
     return () => pauseMusic();
-  }, [musicSrc, playMusic, pauseMusic]);
+  }, [musicSrc, isPlaying, playMusic, pauseMusic]);
 
   // Sonidos
   const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
@@ -125,6 +150,26 @@ export const RoomPage: React.FC = () => {
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
+      <aside className="music-panel room-music-panel">
+        <MusicSelector
+          mood={mood}
+          tracks={tracks}
+          selectedTrack={selectedTrack}
+          isLoading={isLoading}
+          onSelectMood={loadMoodTracks}
+          onSelectTrack={selectTrack}
+        />
+
+        <MusicPlayer
+          selectedTrack={selectedTrack}
+          isPlaying={isPlaying}
+          volume={volume}
+          error={error}
+          onTogglePlay={togglePlay}
+          onChangeVolume={changeVolume}
+          onNextTrack={playNextTrack}
+        />
+      </aside>
 
       {showExitBtn && (
         <button onClick={handleExit} className="exit-button-pixel">
