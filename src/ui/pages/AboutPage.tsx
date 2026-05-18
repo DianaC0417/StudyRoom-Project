@@ -34,7 +34,7 @@ const AboutPage = () => (
         </div>
         <div className="about-image">
           <img
-            src="/assets/arbol_vision.png"
+            src="/assets/extras/arbol_vision.png"
             alt="Árbol de ideas creciendo sobre un libro"
             className="about-illustration"
           />

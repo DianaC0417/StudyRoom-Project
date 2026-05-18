@@ -1,4 +1,3 @@
-//src/adapters/userAdapter.ts
 import { type UserRepository } from '../aplication/ports/UserRepository';
 import type { User } from '../domain/User';
 import { apiClient } from './apiClient';

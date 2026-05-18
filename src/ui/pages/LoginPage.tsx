@@ -43,12 +43,12 @@ const LoginPage = ({ onLogin }: Props) => {
         <div className="room-illustration">
           <div className="room-wrapper">
             <img
-              src="/assets/ISOMETRIC_ROOM.png"
+              src="/assets/extras/ISOMETRIC_ROOM.png"
               alt="Isometric Study Room"
               className="room-img"
             />
             <img
-              src="/assets/BIT_STUDY_BLACK.png"
+              src="/assets/extras/BIT_STUDY.png"
               alt="BitStudy"
               className="room-logo-diagonal"
             />

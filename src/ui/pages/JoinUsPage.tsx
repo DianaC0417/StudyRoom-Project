@@ -25,7 +25,7 @@ const JoinUsPage = () => (
 
         <div className="join-image">
           <img
-            src="/assets/libro_joinus.png"
+            src="/assets/extras/libro_joinus.png"
             alt="Libro abierto con ideas brillando"
             className="join-illustration"
           />
