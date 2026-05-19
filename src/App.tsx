@@ -14,7 +14,6 @@ import HomePage from './ui/pages/HomePage';
 import AboutPage from './ui/pages/AboutPage';
 import JoinUsPage from './ui/pages/JoinUsPage';
 
-// Componente separado para usar useNavigate
 function AppRoutes() {
   const navigate = useNavigate();
 
@@ -29,13 +28,18 @@ function AppRoutes() {
     navigate('/customization');
   };
 
+  const handleLogout = () => {
+    console.log('Regresando al login...');
+    navigate('/login');
+  };
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
       <Route
         path="/customization"
-        element={<CustomizationPage onStart={handleStart} />}
+        element={<CustomizationPage onStart={handleStart} onLogout={handleLogout} />}
       />
       <Route path="/room" element={<RoomPage />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
@@ -46,7 +50,6 @@ function AppRoutes() {
   );
 }
 
-// Componente principal sin useNavigate directamente
 function App() {
   return (
     <Router>

@@ -32,9 +32,10 @@ const ROOMS: { id: Room; label: string; img: string }[] = [
 
 interface CustomizationPageProps {
   onStart: (config: StudyConfig) => void;
+  onLogout: () => void; // 👈 AGREGA ESTA LÍNEA AQUÍ
 }
 
-const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
+const CustomizationPage = ({ onStart,onLogout }: CustomizationPageProps) => {
   const [config, setConfig] = useState<StudyConfig>(DEFAULT_CONFIG);
   const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
@@ -60,8 +61,12 @@ const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
 
   return (
     <div className="page">
-      <div className="title-bar">Personaliza tu experiencia</div>
-
+    <div className="title-bar">
+            <span>Personaliza tu experiencia</span>
+            <button className="btn-logout" onClick={onLogout}>
+              VOLVER
+            </button>
+          </div>
       <h2 className="subtitle">BIENVENIDO ESTUDIANTE!</h2>
 
       <div className="content">
