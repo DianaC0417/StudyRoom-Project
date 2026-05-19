@@ -1,41 +1,42 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { audioAdapter } from '../../adapters/audioAdapter';
 
 /**
  * Hook para manejar música de fondo en bucle.
+ * Consumiendo el adapter centralizado para evitar duplicación.
  * @param src - Ruta del archivo de audio
  * @returns Objeto con `play`, `pause`, `toggle` y el estado `isPlaying`.
  */
 export const useBackgroundMusic = (src: string) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(
+    audioAdapter.isPlayingBackgroundMusic()
+  );
 
+  // Sincronizar el estado local con el estado real del audio (por si cambió en otra vista)
   useEffect(() => {
-    audioRef.current = new Audio(src);
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.2; // Volumen
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    audioAdapter.bgAudio.addEventListener('play', handlePlay);
+    audioAdapter.bgAudio.addEventListener('pause', handlePause);
 
     return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
-      setIsPlaying(false);
+      audioAdapter.bgAudio.removeEventListener('play', handlePlay);
+      audioAdapter.bgAudio.removeEventListener('pause', handlePause);
     };
-  }, [src]);
+  }, []);
 
   const play = () => {
-    audioRef.current
-      ?.play()
-      .then(() => setIsPlaying(true))
-      .catch(() => {});
+    audioAdapter.playBackgroundMusic(src);
   };
 
   const pause = () => {
-    audioRef.current?.pause();
-    setIsPlaying(false);
+    audioAdapter.pauseBackgroundMusic();
   };
 
   const toggle = () => {
-    if (isPlaying) pause();
-    else play();
+    const isNowPlaying = audioAdapter.toggleBackgroundMusic(src);
+    setIsPlaying(isNowPlaying);
   };
 
   return { play, pause, toggle, isPlaying };

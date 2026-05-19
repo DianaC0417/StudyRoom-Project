@@ -1,6 +1,5 @@
-// game/config.ts
+//src/game/config/gameConfig.ts
 import * as Phaser from 'phaser';
-
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 1024,
