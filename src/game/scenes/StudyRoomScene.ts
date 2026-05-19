@@ -15,6 +15,8 @@ export class StudyRoomScene extends Phaser.Scene {
   private wasd!: WASDKeys;
   private clockZone!: Phaser.GameObjects.Zone;
   private showPomodoro: boolean = false;
+  private musicZone!: Phaser.GameObjects.Zone;
+  private showMusicPlayer: boolean = false;
   private currentDirection: string = 'down';
   private characterKey: string = 'gatito';
   private salaKey: string = 'salaestudio1';
@@ -77,6 +79,7 @@ export class StudyRoomScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.clockZone = this.add.zone(width * 0.75, height * 0.15, 150, 150);
+    this.musicZone = this.add.zone(width * 0.1, height - 40, 100, 100);
 
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
@@ -226,6 +229,22 @@ export class StudyRoomScene extends Phaser.Scene {
           new CustomEvent('nearExit', { detail: { show: false } })
         );
       }
+    }
+
+    const distMusic = Phaser.Math.Distance.Between(
+      this.player.x,
+      this.player.y,
+      this.musicZone.x,
+      this.musicZone.y
+    );
+
+    if (distMusic < 100) {
+      if (!this.showMusicPlayer) {
+        this.showMusicPlayer = true;
+        window.dispatchEvent(new CustomEvent('openMusicPlayer'));
+      }
+    } else {
+      this.showMusicPlayer = false;
     }
   }
 }

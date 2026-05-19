@@ -24,6 +24,7 @@ export const RoomPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showExitBtn, setShowExitBtn] = useState(false);
+  const [showMusicWidget, setShowMusicWidget] = useState(false);
 
   const studyConfig = location.state as StudyConfig | undefined;
 
@@ -136,10 +137,16 @@ export const RoomPage: React.FC = () => {
     window.addEventListener('pomodoroNotification', handleNotification);
     window.addEventListener('nearExit', handleExitPrompt);
 
+    const handleOpenMusicPlayer = () => {
+      setShowMusicWidget(true);
+    };
+    window.addEventListener('openMusicPlayer', handleOpenMusicPlayer);
+
     return () => {
       window.removeEventListener('nearExit', handleExitPrompt);
       window.removeEventListener('openPomodoro', handleOpenPomodoro);
       window.removeEventListener('pomodoroNotification', handleNotification);
+      window.removeEventListener('openMusicPlayer', handleOpenMusicPlayer);
       if (phaserGameRef.current) {
         phaserGameRef.current.destroy(true);
         phaserGameRef.current = null;
@@ -147,29 +154,120 @@ export const RoomPage: React.FC = () => {
     };
   }, [playPomodoroOpen]);
 
+  useEffect(() => {
+    if (showMusicWidget) {
+      playPomodoroOpen();
+    }
+  }, [showMusicWidget, playPomodoroOpen]);
+
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
-      <aside className="music-panel room-music-panel">
-        <MusicSelector
-          mood={mood}
-          tracks={tracks}
-          selectedTrack={selectedTrack}
-          isLoading={isLoading}
-          onSelectMood={loadMoodTracks}
-          onSelectTrack={selectTrack}
-        />
+      {showMusicWidget && (
+        <div
+          className="pomodoro-modal-overlay"
+          style={{ justifyContent: 'center', alignItems: 'center' }}
+        >
+          <div
+            className="pomodoro-modal"
+            style={{ width: '95%', maxWidth: '1000px' }}
+          >
+            <div className="pixel-border" style={{ padding: '2rem' }}>
+              <div className="pixel-corner tl" />
+              <div className="pixel-corner tr" />
+              <div className="pixel-corner bl" />
+              <div className="pixel-corner br" />
 
-        <MusicPlayer
-          selectedTrack={selectedTrack}
-          isPlaying={isPlaying}
-          volume={volume}
-          error={error}
-          onTogglePlay={togglePlay}
-          onChangeVolume={changeVolume}
-          onNextTrack={playNextTrack}
-        />
-      </aside>
+              <h2
+                style={{
+                  fontFamily: "'Retrobit', 'Courier New', monospace",
+                  fontSize: '1.7rem',
+                  color: '#fef9e7',
+                  textAlign: 'center',
+                  letterSpacing: '3px',
+                  marginBottom: '1.5rem',
+                }}
+              >
+                RADIO DE ESTUDIO
+              </h2>
+
+              {/* Contenedor de dos columnas */}
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '2rem',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* Columna izquierda: Selector */}
+                <div
+                  style={{
+                    flex: '1 1 280px',
+                    minWidth: '260px',
+                    maxWidth: '400px',
+                  }}
+                >
+                  <MusicSelector
+                    mood={mood}
+                    tracks={tracks}
+                    selectedTrack={selectedTrack}
+                    isLoading={isLoading}
+                    onSelectMood={(selectedMood) => {
+                      playClick();
+                      loadMoodTracks(selectedMood);
+                    }}
+                    onSelectTrack={(track) => {
+                      playClick();
+                      selectTrack(track);
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    flex: '1 1 280px',
+                    minWidth: '260px',
+                    maxWidth: '400px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  <MusicPlayer
+                    selectedTrack={selectedTrack}
+                    isPlaying={isPlaying}
+                    volume={volume}
+                    error={error}
+                    onTogglePlay={() => {
+                      playClick();
+                      togglePlay();
+                    }}
+                    onChangeVolume={(newVolume) => {
+                      changeVolume(newVolume);
+                    }}
+                    onNextTrack={() => {
+                      playClick();
+                      playNextTrack();
+                    }}
+                  />
+                  <div style={{ marginTop: '1rem' }}>
+                    <button
+                      className="close-btn"
+                      onClick={() => {
+                        playClick();
+                        setShowMusicWidget(false);
+                      }}
+                    >
+                      ✖ CERRAR
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showExitBtn && (
         <button onClick={handleExit} className="exit-button-pixel">
