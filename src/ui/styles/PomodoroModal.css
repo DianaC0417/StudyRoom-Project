@@ -1,0 +1,280 @@
+/* PomodoroModal.css - Versión responsiva mejorada */
+.pomodoro-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-family: 'Courier New', monospace;
+  padding: 10px; /* 👈 Espaciado de seguridad perimetral */
+}
+
+.pomodoro-modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 95vh; /* 👈 Evita que el modal supere la altura de la pantalla móvil */
+  background: #1e1a2f;
+  border: 4px solid #e4c766;
+  border-radius: 20px;
+  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.5);
+  animation: pixelFadeIn 0.2s steps(2);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor adaptado para scroll elástico si falta altura */
+.pixel-border {
+  position: relative;
+  padding: 20px;
+  overflow-y: auto; /* 👈 Habilita scroll interno si la pantalla es muy pequeña o está horizontal */
+  max-height: 100%;
+}
+
+/* Cabecera */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  background: #2a2438;
+  gap: 8px;
+}
+
+.modal-header.work-mode {
+  border-left: 8px solid #4caf50;
+}
+.modal-header.break-mode {
+  border-left: 8px solid #ff9800;
+}
+
+.session-indicator,
+.status-badge {
+  background: #0f0c1a;
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.session-label,
+.status-text {
+  font-size: 0.8rem;
+  color: #e4c766;
+  letter-spacing: 1px;
+}
+
+.session-number {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-left: 8px;
+  color: white;
+}
+
+/* Mensaje */
+.modal-message {
+  text-align: center;
+  margin: 15px 0;
+}
+.pixel-text {
+  background: #0f0c1a;
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 1rem;
+  color: #f0f0f0;
+  border-radius: 30px;
+  word-break: break-word; /* 👈 Evita desbordamiento de texto largo */
+}
+
+/* Timer */
+.timer-container {
+  text-align: center;
+  margin: 20px 0;
+}
+.pixel-screen {
+  background: #000000;
+  padding: 20px;
+  border-radius: 20px;
+  border: 3px solid #e4c766;
+  position: relative;
+  margin-bottom: 20px;
+}
+.timer-digits {
+  font-family: 'Courier New', monospace;
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #4caf50;
+  text-shadow: 0 0 5px #4caf50;
+  letter-spacing: 4px;
+}
+
+/* Barra de progreso */
+.progress-container {
+  margin: 15px 0;
+}
+.progress-label {
+  font-size: 0.7rem;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+.pixel-progress-bar {
+  background: #2a2438;
+  height: 20px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid #e4c766;
+}
+.pixel-progress-fill {
+  background: #e4c766;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s steps(10);
+}
+
+/* Botones con soporte Grid Inteligente */
+.modal-controls {
+  display: grid;
+  grid-template-columns: repeat(
+    2,
+    1fr
+  ); /* 👈 En móviles pequeños se acomoda automáticamente */
+  gap: 12px;
+  margin: 25px 0;
+}
+
+/* El botón principal de Empezar/Pausar ocupará todo el ancho para fácil control */
+.pixel-btn-primary {
+  grid-column: span 2;
+  background: #4c6e3c;
+  color: white;
+  justify-content: center;
+}
+
+.pixel-btn {
+  background: #2a2438;
+  border: 3px solid #e4c766;
+  padding: 12px 18px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #e4c766;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.05s linear;
+  box-shadow: 3px 3px 0 #0f0c1a;
+}
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #0f0c1a;
+}
+.pixel-btn-danger {
+  background: #7a2e2e;
+  border-color: #d45;
+}
+
+/* Footer */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 15px;
+  font-size: 0.7rem;
+}
+.pixel-tip {
+  background: #0f0c1a;
+  padding: 6px 12px;
+  border-radius: 15px;
+  color: #ddd;
+  flex: 1; /* Ocupa el espacio disponible */
+  min-width: 180px;
+}
+.close-btn {
+  background: none;
+  border: 2px solid #e4c766;
+  padding: 6px 14px;
+  color: #e4c766;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Animación */
+@keyframes pixelFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* MEDIA QUERIES RESPONSIVAS */
+@media (max-width: 480px) {
+  .pixel-border {
+    padding: 14px;
+  }
+  .modal-header {
+    padding: 8px;
+  }
+  .timer-digits {
+    font-size: 2.3rem; /* 👈 Letras legibles pero compactas para que no rompan la pantalla digital */
+    letter-spacing: 2px;
+  }
+  .pixel-screen {
+    padding: 12px;
+  }
+  .pixel-btn {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+  .session-number {
+    font-size: 1.1rem;
+  }
+  .status-text,
+  .session-label {
+    font-size: 0.65rem;
+  }
+  .pixel-text {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+  .modal-footer {
+    flex-direction: column; /* 👈 Alineación vertical limpia en pantallas súper pequeñas */
+    align-items: stretch;
+    text-align: center;
+  }
+  .close-btn {
+    width: 100%;
+  }
+}
+
+/* Optimización extra para teléfonos de baja resolución o Modo Horizontal */
+@media (max-height: 500px) {
+  .timer-container {
+    margin: 8px 0;
+  }
+  .pixel-screen {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  .timer-digits {
+    font-size: 2rem;
+  }
+  .modal-controls {
+    margin: 10px 0;
+  }
+}

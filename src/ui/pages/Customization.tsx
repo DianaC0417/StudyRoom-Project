@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
-import './CustomizationPage.css';
+import '../styles/CustomizationPage.css';
 
 const PETS: { id: Character; label: string; img: string }[] = [
   { id: 'gatito', label: 'CAT', img: '/assets/personajes/gatito.png' },

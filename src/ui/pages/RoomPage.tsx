@@ -10,6 +10,7 @@ import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useSound } from '../hooks/useSound';
 import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
+import { OrientationWarning } from '../components/OrientationWarning';
 
 export const RoomPage: React.FC = () => {
   const gameRef = useRef<HTMLDivElement>(null);
@@ -147,8 +148,7 @@ export const RoomPage: React.FC = () => {
       {/* Botón SALIR*/}
       {showExitBtn && (
         <button onClick={handleExit} className="exit-button-pixel">
-          <span className="exit-icon"></span>
-          <span>SALIR</span>
+          SALIR
         </button>
       )}
 
@@ -166,6 +166,7 @@ export const RoomPage: React.FC = () => {
         onSkip={handleSkip}
         onClose={handleCloseModal}
       />
+      <OrientationWarning />
     </div>
   );
 };
