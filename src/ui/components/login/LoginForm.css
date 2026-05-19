@@ -1,20 +1,20 @@
 @font-face {
   font-family: 'Retrobit';
-  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf')
+  src: url('../../../../assets/fonts/retrobit-pixel-font/retrobit.ttf')
     format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'GamePaused';
-  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf')
+  src: url('../../../../assets/fonts/game_paused/Game Paused DEMO.otf')
     format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'Comfortaa';
-  src: url('../../../../public/assets/fonts/comfortaa/Comfortaa-VariableFont_wght.ttf')
+  src: url('../../../../assets/fonts/comfortaa/Comfortaa-VariableFont_wght.ttf')
     format('truetype');
   font-weight: normal;
   font-style: normal;
