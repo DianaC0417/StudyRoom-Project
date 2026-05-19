@@ -257,7 +257,8 @@ export class StudyRoomScene extends Phaser.Scene {
       this.todoZone.y
     );
 
-    if (distTodo < 80) { // Distancia de activación
+    if (distTodo < 80) {
+      // Distancia de activación
       if (!this.showTodoList) {
         this.showTodoList = true;
         window.dispatchEvent(new CustomEvent('openTodoList'));
