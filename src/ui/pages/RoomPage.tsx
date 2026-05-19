@@ -11,6 +11,7 @@ import { useSound } from '../hooks/useSound';
 import { useMusic } from '../hooks/useMusic';
 import { MusicPlayer } from '../components/music/MusicPlayer';
 import { MusicSelector } from '../components/music/MusicSelector';
+import { TodoList } from '../components/todo/TodoList';
 import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
 import '../components/music/MusicPlayer.css';
@@ -25,6 +26,7 @@ export const RoomPage: React.FC = () => {
   const location = useLocation();
   const [showExitBtn, setShowExitBtn] = useState(false);
   const [showMusicWidget, setShowMusicWidget] = useState(false);
+  const [showTodoWidget, setShowTodoWidget] = useState(false);
 
   const studyConfig = location.state as StudyConfig | undefined;
 
@@ -142,11 +144,17 @@ export const RoomPage: React.FC = () => {
     };
     window.addEventListener('openMusicPlayer', handleOpenMusicPlayer);
 
+    const handleOpenTodoList = () => {
+      setShowTodoWidget(true);
+    };
+    window.addEventListener('openTodoList', handleOpenTodoList);
+
     return () => {
       window.removeEventListener('nearExit', handleExitPrompt);
       window.removeEventListener('openPomodoro', handleOpenPomodoro);
       window.removeEventListener('pomodoroNotification', handleNotification);
       window.removeEventListener('openMusicPlayer', handleOpenMusicPlayer);
+      window.removeEventListener('openTodoList', handleOpenTodoList);
       if (phaserGameRef.current) {
         phaserGameRef.current.destroy(true);
         phaserGameRef.current = null;
@@ -159,6 +167,12 @@ export const RoomPage: React.FC = () => {
       playPomodoroOpen();
     }
   }, [showMusicWidget, playPomodoroOpen]);
+
+  useEffect(() => {
+    if (showTodoWidget) {
+      playPomodoroOpen();
+    }
+  }, [showTodoWidget, playPomodoroOpen]);
 
   return (
     <div className="room-page">
@@ -263,6 +277,40 @@ export const RoomPage: React.FC = () => {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showTodoWidget && (
+        <div
+          className="pomodoro-modal-overlay"
+          style={{ justifyContent: 'center', alignItems: 'center' }}
+        >
+          <div
+            className="pomodoro-modal"
+            style={{ width: '95%', maxWidth: '450px' }} // Hecho más angosto para que calce bien tu To-Do
+          >
+            <div className="pixel-border" style={{ padding: '1.5rem' }}>
+              <div className="pixel-corner tl" />
+              <div className="pixel-corner tr" />
+              <div className="pixel-corner bl" />
+              <div className="pixel-corner br" />
+
+              
+              <TodoList />
+
+              <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+                <button
+                  className="close-btn"
+                  onClick={() => {
+                    playClick();
+                    setShowTodoWidget(false);
+                  }}
+                >
+                  ✖ CERRAR
+                </button>
               </div>
             </div>
           </div>

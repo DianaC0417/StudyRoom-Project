@@ -17,6 +17,8 @@ export class StudyRoomScene extends Phaser.Scene {
   private showPomodoro: boolean = false;
   private musicZone!: Phaser.GameObjects.Zone;
   private showMusicPlayer: boolean = false;
+  private todoZone!: Phaser.GameObjects.Zone;
+  private showTodoList: boolean = false;
   private currentDirection: string = 'down';
   private characterKey: string = 'gatito';
   private salaKey: string = 'salaestudio1';
@@ -80,6 +82,7 @@ export class StudyRoomScene extends Phaser.Scene {
 
     this.clockZone = this.add.zone(width * 0.75, height * 0.15, 150, 150);
     this.musicZone = this.add.zone(width * 0.1, height - 40, 100, 100);
+    this.todoZone = this.add.zone(width * 0.25, height * 0.5, 150, 150);
 
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
@@ -245,6 +248,22 @@ export class StudyRoomScene extends Phaser.Scene {
       }
     } else {
       this.showMusicPlayer = false;
+    }
+
+    const distTodo = Phaser.Math.Distance.Between(
+      this.player.x,
+      this.player.y,
+      this.todoZone.x,
+      this.todoZone.y
+    );
+
+    if (distTodo < 80) { // Distancia de activación
+      if (!this.showTodoList) {
+        this.showTodoList = true;
+        window.dispatchEvent(new CustomEvent('openTodoList'));
+      }
+    } else {
+      this.showTodoList = false;
     }
   }
 }

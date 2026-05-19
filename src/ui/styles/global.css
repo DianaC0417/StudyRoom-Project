@@ -20,3 +20,201 @@ html, body, #root {
   width: 100%;
   background-color: #fef9e7;
 }
+
+/*TO DO CSS*/
+
+.todo-panel {
+  width: 100%;
+  max-width: 430px;
+  background: rgba(71, 68, 68, 0.92);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 1rem;
+  border: 3px solid #222222;
+  font-family: "Retrobit", "GamePaused", "Courier New", monospace;
+  box-sizing: border-box;
+}
+
+.todo-section-title {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: #fef9e7;
+  font-family: "GamePaused", "Courier New", monospace;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.todo-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.todo-input {
+  flex: 1;
+  background: #fffaf2;
+  color: #222222;
+  border: 3px solid #d4c5b2;
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.75rem;
+  outline: none;
+}
+
+.todo-input:focus {
+  border-color: #b8a590;
+}
+
+.todo-button-add {
+  background: #141414;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.45rem 1rem;
+  font-family: "Retrobit", "GamePaused", "Courier New", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.todo-button-add:hover {
+  background: #3d3d3d;
+}
+
+.todo-track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 190px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+/* Personalización de la barra de desplazamiento (Scrollbar) */
+.todo-track-list::-webkit-scrollbar {
+  width: 6px;
+}
+.todo-track-list::-webkit-scrollbar-thumb {
+  background: #d4c5b2;
+  border-radius: 4px;
+}
+
+.todo-track-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  background: #fffaf2;
+  color: #222222;
+  border: 3px solid #d4c5b2;
+  border-radius: 10px;
+  padding: 0.55rem;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.todo-track-card:hover {
+  border-color: #b8a590;
+}
+
+.todo-track-card--selected {
+  background: #e0ecda; /* Tono verde del reproductor */
+  border-color: #202020;
+}
+
+.todo-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0; /* Evita que el texto rompa el layout */
+}
+
+.todo-checkbox {
+  cursor: pointer;
+  accent-color: #202020;
+  width: 16px;
+  height: 16px;
+}
+
+.todo-track-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.todo-track-info strong {
+  font-family: "Retrobit", "Courier New", monospace;
+  font-size: 0.75rem;
+  color: #222222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.todo-text--completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.todo-button-delete {
+  background: none;
+  border: none;
+  color: #ff5252;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  font-family: monospace;
+}
+
+.todo-button-delete:hover {
+  transform: scale(1.1);
+}
+
+.todo-button-clear {
+  margin-top: 1rem;
+  background: #141414;
+  color: #ff6b6b;
+  border: 3px solid #222222;
+  border-radius: 10px;
+  padding: 0.5rem;
+  font-family: "Retrobit", "Courier New", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background 0.15s ease;
+}
+
+.todo-button-clear:hover {
+  background: #222222;
+}
+
+.todo-message {
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 650px) {
+  .todo-panel {
+    max-width: 310px;
+    padding: 0.85rem;
+    border-radius: 12px;
+  }
+
+  .todo-track-list {
+    max-height: 170px;
+  }
+}
