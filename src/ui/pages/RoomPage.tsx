@@ -299,7 +299,6 @@ export const RoomPage: React.FC = () => {
               <div className="pixel-corner bl" />
               <div className="pixel-corner br" />
 
-              
               <TodoList />
 
               <div style={{ marginTop: '1rem', textAlign: 'center' }}>
