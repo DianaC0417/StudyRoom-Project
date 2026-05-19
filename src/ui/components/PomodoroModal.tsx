@@ -1,6 +1,6 @@
 // ui/components/PomodoroModal.tsx
 import React from 'react';
-import './PomodoroModal.css';
+import '../styles/PomodoroModal.css';
 
 interface PomodoroModalProps {
   show: boolean;

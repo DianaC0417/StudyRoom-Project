@@ -1,6 +1,6 @@
 // game/scenes/StudyRoomScene.ts
 import * as Phaser from 'phaser';
-import { studyConfigService } from '../../config/dependencies'; // 👈 CAMBIO
+import { studyConfigService } from '../../config/dependencies';
 
 interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
@@ -23,15 +23,15 @@ export class StudyRoomScene extends Phaser.Scene {
   private nickname: string = 'Estudiante';
   private nameText!: Phaser.GameObjects.Text;
 
-  private exitZone!: Phaser.GameObjects.Zone; // +nueva zona pa salir
-  private showExitPrompt: boolean = false; // +pa salir
+  private exitZone!: Phaser.GameObjects.Zone;
+  private showExitPrompt: boolean = false;
+  private exitVisualText!: Phaser.GameObjects.Text; // 👈 Texto nativo en Phaser para la salida
 
   constructor() {
     super({ key: 'StudyRoomScene' });
   }
 
   preload() {
-    // USAMOS EL SERVICIO en lugar de localStorage directo
     const config = studyConfigService.loadConfig();
     this.characterKey = config.personaje;
     this.salaKey = config.sala;
@@ -44,20 +44,50 @@ export class StudyRoomScene extends Phaser.Scene {
       `/assets/personajes/${this.characterKey}.json`
     );
   }
+
   create() {
+    // Dentro de create()
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
+    // Fondo que cubra toda la escena sin distorsión
     const background = this.add.image(width / 2, height / 2, 'study-room');
-    const scale = Math.max(
-      width / background.width,
-      height / background.height
-    );
+    const scaleX = width / background.width;
+    const scaleY = height / background.height;
+    const scale = Math.max(scaleX, scaleY);
     background.setScale(scale).setScrollFactor(0);
-
+    background.setDepth(-1);
     this.createAnimations();
 
-    this.exitZone = this.add.zone(width / 2, height - 80, width, 100); //+ zona en la parte inferior
+    // Zona de salida (Borde inferior)
+    this.exitZone = this.add.zone(width / 2, height - 50, width, 100);
+
+    // 👈 CREACIÓN DEL BOTÓN DE SALIDA ESTILIZADO (Invisible al inicio)
+    this.exitVisualText = this.add
+      .text(
+        width / 2,
+        height - 110,
+        '🚪 Presiona [ ESPACIO ] o Toca aquí para Salir',
+        {
+          fontFamily: 'monospace',
+          fontSize: '18px',
+          color: '#1a1a1a',
+          backgroundColor: '#e4c766',
+          stroke: '#222222',
+          strokeThickness: 5,
+          padding: { x: 14, y: 10 },
+        }
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(100)
+      .setVisible(false)
+      .setInteractive({ useHandCursor: true }); // Hace que reaccione al clic/toque
+
+    // Evento al hacer clic en el botón de salida (para PC y Móvil)
+    this.exitVisualText.on('pointerdown', () => {
+      this.executeExit();
+    });
 
     this.player = this.add.sprite(
       width / 2,
@@ -89,6 +119,13 @@ export class StudyRoomScene extends Phaser.Scene {
         left: Phaser.Input.Keyboard.KeyCodes.A,
         right: Phaser.Input.Keyboard.KeyCodes.D,
       }) as WASDKeys;
+
+      // Si presiona espacio cerca de la puerta, sale
+      this.input.keyboard.on('keydown-SPACE', () => {
+        if (this.showExitPrompt) {
+          this.executeExit();
+        }
+      });
     }
 
     this.player.anims.play('idle_frente');
@@ -130,33 +167,73 @@ export class StudyRoomScene extends Phaser.Scene {
   }
 
   private handleMovement() {
-    if (!this.cursors || !this.wasd) return;
-
     const speed = 300;
     let vx = 0;
     let vy = 0;
     let moving = false;
 
-    if (this.cursors.left.isDown || this.wasd.left.isDown) {
-      vx = -speed;
-      this.currentDirection = 'left';
-      this.player.setFlipX(true);
-      moving = true;
-    } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
-      vx = speed;
-      this.currentDirection = 'right';
-      this.player.setFlipX(false);
-      moving = true;
-    }
+    const pointer = this.input.activePointer;
 
-    if (this.cursors.up.isDown || this.wasd.up.isDown) {
-      vy = -speed;
-      this.currentDirection = 'up';
-      moving = true;
-    } else if (this.cursors.down.isDown || this.wasd.down.isDown) {
-      vy = speed;
-      this.currentDirection = 'down';
-      moving = true;
+    // 👈 DETECCIÓN PARA MÓVIL (Touch / Pointer)
+    if (pointer.isDown && !this.showExitPrompt) {
+      // Calculamos la distancia entre el toque y el jugador
+      const angle = Phaser.Math.Angle.Between(
+        this.player.x,
+        this.player.y,
+        pointer.x,
+        pointer.y
+      );
+      const distance = Phaser.Math.Distance.Between(
+        this.player.x,
+        this.player.y,
+        pointer.x,
+        pointer.y
+      );
+
+      // Solo mover si el toque no está encima del propio jugador (evita temblores)
+      if (distance > 20) {
+        vx = Math.cos(angle) * speed;
+        vy = Math.sin(angle) * speed;
+        moving = true;
+
+        // Determinar animación según el ángulo dominante
+        const angleDeg = Phaser.Math.RadToDeg(angle);
+        if (angleDeg >= -45 && angleDeg < 45) {
+          this.currentDirection = 'right';
+          this.player.setFlipX(false);
+        } else if (angleDeg >= 45 && angleDeg < 135) {
+          this.currentDirection = 'down';
+        } else if (angleDeg >= -135 && angleDeg < -45) {
+          this.currentDirection = 'up';
+        } else {
+          this.currentDirection = 'left';
+          this.player.setFlipX(true);
+        }
+      }
+    }
+    // 👈 DETECCIÓN PARA PC (Teclado)
+    else if (this.cursors && this.wasd) {
+      if (this.cursors.left.isDown || this.wasd.left.isDown) {
+        vx = -speed;
+        this.currentDirection = 'left';
+        this.player.setFlipX(true);
+        moving = true;
+      } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
+        vx = speed;
+        this.currentDirection = 'right';
+        this.player.setFlipX(false);
+        moving = true;
+      }
+
+      if (this.cursors.up.isDown || this.wasd.up.isDown) {
+        vy = -speed;
+        this.currentDirection = 'up';
+        moving = true;
+      } else if (this.cursors.down.isDown || this.wasd.down.isDown) {
+        vy = speed;
+        this.currentDirection = 'down';
+        moving = true;
+      }
     }
 
     const dt = this.game.loop.delta / 1000;
@@ -188,6 +265,7 @@ export class StudyRoomScene extends Phaser.Scene {
   }
 
   private checkCollision() {
+    // Colisión Pomodoro
     const distance = Phaser.Math.Distance.Between(
       this.player.x,
       this.player.y,
@@ -208,6 +286,7 @@ export class StudyRoomScene extends Phaser.Scene {
       this.showPomodoro = false;
     }
 
+    // Colisión Zona de Salida
     const distExit = Phaser.Math.Distance.Between(
       this.player.x,
       this.player.y,
@@ -215,9 +294,10 @@ export class StudyRoomScene extends Phaser.Scene {
       this.exitZone.y
     );
 
-    if (distExit < 60) {
+    if (distExit < 70) {
       if (!this.showExitPrompt) {
         this.showExitPrompt = true;
+        this.exitVisualText.setVisible(true); // 👈 Muestra el nuevo cartel en Phaser
         window.dispatchEvent(
           new CustomEvent('nearExit', { detail: { show: true } })
         );
@@ -225,6 +305,7 @@ export class StudyRoomScene extends Phaser.Scene {
     } else {
       if (this.showExitPrompt) {
         this.showExitPrompt = false;
+        this.exitVisualText.setVisible(false); // 👈 Oculta el cartel en Phaser
         window.dispatchEvent(
           new CustomEvent('nearExit', { detail: { show: false } })
         );
@@ -246,5 +327,12 @@ export class StudyRoomScene extends Phaser.Scene {
     } else {
       this.showMusicPlayer = false;
     }
+  }
+
+  // Método centralizado para cambiar de escena o salir
+  private executeExit() {
+    console.log('Saliendo de la sala...');
+    // Aquí puedes añadir: this.scene.start('SiguienteEscenaKey');
+    window.dispatchEvent(new CustomEvent('exitRoom'));
   }
 }
