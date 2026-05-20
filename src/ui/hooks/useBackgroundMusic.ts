@@ -14,7 +14,7 @@ export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
   const safePlay = useCallback((audio: HTMLAudioElement) => {
     const promise = audio.play();
     playPromiseRef.current = promise;
-    
+
     if (promise !== undefined) {
       promise
         .then(() => {
@@ -22,7 +22,9 @@ export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
         })
         .catch((err) => {
           if (err.name === 'NotAllowedError') {
-            console.log('useBackgroundMusic: Esperando interacción del usuario para reproducir audio (política de autoplay).');
+            console.log(
+              'useBackgroundMusic: Esperando interacción del usuario para reproducir audio (política de autoplay).'
+            );
           } else if (err.name === 'AbortError') {
             // Ignorar AbortError, es normal si se pausó antes de que empezara
           } else {
@@ -33,15 +35,20 @@ export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
   }, []);
 
   const safePause = useCallback((audio: HTMLAudioElement) => {
-    if (playPromiseRef.current !== undefined && playPromiseRef.current !== null) {
-      playPromiseRef.current.then(() => {
-        audio.pause();
-        setIsPlaying(false);
-      }).catch(() => {
-        // Ignorar errores del play abortado
-        audio.pause();
-        setIsPlaying(false);
-      });
+    if (
+      playPromiseRef.current !== undefined &&
+      playPromiseRef.current !== null
+    ) {
+      playPromiseRef.current
+        .then(() => {
+          audio.pause();
+          setIsPlaying(false);
+        })
+        .catch(() => {
+          // Ignorar errores del play abortado
+          audio.pause();
+          setIsPlaying(false);
+        });
     } else {
       audio.pause();
       setIsPlaying(false);

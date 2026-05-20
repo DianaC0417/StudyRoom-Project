@@ -29,8 +29,9 @@ const AboutPage = () => {
               BitStudy nacio con la mision de fomentar la productividad
               estudiantil de manera acogedora y colaborativa. Queremos crear
               espacios de estudio virtuales donde los estudiantes se sientan
-              motivados, junto a sus mascotas ideales, y puedan alcanzar sus metas
-              sin sentirse solos. Creemos en la Interactividad y la comunidad.
+              motivados, junto a sus mascotas ideales, y puedan alcanzar sus
+              metas sin sentirse solos. Creemos en la Interactividad y la
+              comunidad.
             </p>
             <Link to="/join" className="about-join-btn">
               ¿QUIERES UNIRTE?

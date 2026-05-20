@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
-import { useEffect } from 'react';
 import { useBackgroundMusic } from '../../ui/hooks/useBackgroundMusic';
 import './CustomizationPage.css';
 

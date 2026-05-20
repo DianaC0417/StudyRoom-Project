@@ -4,7 +4,8 @@ import { useSound } from '../../hooks/useSound';
 import '../../styles/global.css';
 
 export const TodoList: React.FC = () => {
-  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } = useTodoList();
+  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } =
+    useTodoList();
   const [inputValue, setInputValue] = useState('');
 
   const playAdd = useSound('/assets/sounds/inputclick.mp3');
@@ -39,7 +40,7 @@ export const TodoList: React.FC = () => {
   return (
     <div className="todo-panel">
       <h3 className="todo-section-title">MIS TAREAS</h3>
-      
+
       <form onSubmit={handleSubmit} className="todo-form">
         <input
           type="text"
@@ -48,7 +49,9 @@ export const TodoList: React.FC = () => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <button type="submit" className="todo-button-add">AÑADIR</button>
+        <button type="submit" className="todo-button-add">
+          AÑADIR
+        </button>
       </form>
 
       <div className="todo-track-list">
@@ -56,11 +59,14 @@ export const TodoList: React.FC = () => {
           <p className="todo-message">¡No hay tareas pendientes!</p>
         ) : (
           tasks.map((task) => (
-            <div 
-              key={task.id} 
+            <div
+              key={task.id}
               className={`todo-track-card ${task.completed ? 'todo-track-card--selected' : ''}`}
             >
-              <div className="todo-item-left" onClick={() => handleToggleTask(task.id)}>
+              <div
+                className="todo-item-left"
+                onClick={() => handleToggleTask(task.id)}
+              >
                 <input
                   type="checkbox"
                   checked={task.completed}
@@ -68,12 +74,17 @@ export const TodoList: React.FC = () => {
                   className="todo-checkbox"
                 />
                 <div className="todo-track-info">
-                  <strong className={task.completed ? 'todo-text--completed' : ''}>
+                  <strong
+                    className={task.completed ? 'todo-text--completed' : ''}
+                  >
                     {task.text}
                   </strong>
                 </div>
               </div>
-              <button className="todo-button-delete" onClick={() => handleDeleteTask(task.id)}>
+              <button
+                className="todo-button-delete"
+                onClick={() => handleDeleteTask(task.id)}
+              >
                 ✕
               </button>
             </div>
@@ -81,7 +92,7 @@ export const TodoList: React.FC = () => {
         )}
       </div>
 
-      {tasks.some(t => t.completed) && (
+      {tasks.some((t) => t.completed) && (
         <button className="todo-button-clear" onClick={handleClearCompleted}>
           LIMPIAR COMPLETADAS
         </button>

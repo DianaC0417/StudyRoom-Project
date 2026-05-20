@@ -62,8 +62,8 @@ const HomePage = () => {
         </div>
 
         <p className="home-footer-text">Tu sala, tus reglas, tus amigos.</p>
-        <a 
-          href="/about" 
+        <a
+          href="/about"
           className="home-link"
           onClick={(e) => {
             e.preventDefault();
