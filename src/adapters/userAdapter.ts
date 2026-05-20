@@ -30,7 +30,7 @@ export const userAdapter: UserRepository = {
   login: async (username, password): Promise<User> => {
     try {
       // Hacemos el POST /login usando el apiClient hacia el backend
-      const data = await apiClient('/login', {
+      const data = await apiClient('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ username, password }),
       });
