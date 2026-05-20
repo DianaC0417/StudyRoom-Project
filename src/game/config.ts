@@ -1,15 +1,12 @@
-// game/config.ts
 import * as Phaser from 'phaser';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 1024,
-  height: 768,
+  width: window.innerWidth,
+  height: window.innerHeight,
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.RESIZE, // Cambia dinámicamente según el monitor
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 1024,
-    height: 768,
   },
   physics: {
     default: 'arcade',

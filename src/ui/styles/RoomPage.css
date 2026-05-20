@@ -1,3 +1,30 @@
+/* RoomPage.css */
+.room-page {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: #1a1a2e;
+  margin: 0;
+  padding: 0;
+}
+
+.game-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Forzar al canvas de Phaser a estirarse limpiamente */
+.game-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover; /* 🟢 Cambiado a cover para rellenar los bordes negros */
+}
+
 /* Advertencia de orientación para móvil */
 .orientation-warning-overlay {
   position: fixed;
@@ -38,7 +65,8 @@
   font-weight: bold;
   cursor: pointer;
 }
-/* RoomPage.css - Botón de salida estilo puerta */
+
+/* Botón de salida estilo puerta */
 .exit-button-pixel {
   position: fixed;
   bottom: 30px;
@@ -88,28 +116,4 @@
   .exit-button-pixel::before {
     font-size: 1.2rem;
   }
-}
-/* RoomPage.css */
-.room-page {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background: #1a1a2e;
-}
-
-.game-container {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-/* El canvas se ajustará automáticamente gracias a Phaser.Scale.FIT */
-.game-container canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain; /* o cover, según prefieras */
 }

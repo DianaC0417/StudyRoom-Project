@@ -1,4 +1,3 @@
-// game/scenes/StudyRoomScene.ts
 import * as Phaser from 'phaser';
 import { studyConfigService } from '../../config/dependencies';
 
@@ -7,6 +6,13 @@ interface WASDKeys {
   down: Phaser.Input.Keyboard.Key;
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
+}
+
+interface MobileMoveEvent extends CustomEvent {
+  detail: {
+    direction: 'up' | 'down' | 'left' | 'right';
+    pressed: boolean;
+  };
 }
 
 export class StudyRoomScene extends Phaser.Scene {
@@ -23,13 +29,23 @@ export class StudyRoomScene extends Phaser.Scene {
 
   private exitZone!: Phaser.GameObjects.Zone;
   private showExitPrompt: boolean = false;
-  private exitVisualText!: Phaser.GameObjects.Text; // 👈 Texto nativo en Phaser para la salida
+  private exitVisualText!: Phaser.GameObjects.Text;
+
+  // Controles móviles táctiles
+  private touchLeft: boolean = false;
+  private touchRight: boolean = false;
+  private touchUp: boolean = false;
+  private touchDown: boolean = false;
+
+  private boundHandleMobileMove = (e: Event) =>
+    this.handleMobileMove(e as MobileMoveEvent);
 
   constructor() {
     super({ key: 'StudyRoomScene' });
   }
 
   preload() {
+    // 🔐 Tu customización recuperada del localStorage sigue intacta aquí
     const config = studyConfigService.loadConfig();
     this.characterKey = config.personaje;
     this.salaKey = config.sala;
@@ -44,23 +60,21 @@ export class StudyRoomScene extends Phaser.Scene {
   }
 
   create() {
-    // Dentro de create()
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
 
-    // Fondo que cubra toda la escena sin distorsión
+    // 🟢 ESCALADO TOTAL: La sala ahora usa el ancho y alto completo del navegador
     const background = this.add.image(width / 2, height / 2, 'study-room');
-    const scaleX = width / background.width;
-    const scaleY = height / background.height;
-    const scale = Math.max(scaleX, scaleY);
-    background.setScale(scale).setScrollFactor(0);
+    background.setDisplaySize(width, height);
+    background.setScrollFactor(0);
     background.setDepth(-1);
+
     this.createAnimations();
 
-    // Zona de salida (Borde inferior)
+    // Redefinición de hitboxes adaptadas a pantallas completas
     this.exitZone = this.add.zone(width / 2, height - 50, width, 100);
+    this.clockZone = this.add.zone(width * 0.75, height * 0.15, 150, 150);
 
-    // 👈 CREACIÓN DEL BOTÓN DE SALIDA ESTILIZADO (Invisible al inicio)
     this.exitVisualText = this.add
       .text(
         width / 2,
@@ -80,9 +94,8 @@ export class StudyRoomScene extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(100)
       .setVisible(false)
-      .setInteractive({ useHandCursor: true }); // Hace que reaccione al clic/toque
+      .setInteractive({ useHandCursor: true });
 
-    // Evento al hacer clic en el botón de salida (para PC y Móvil)
     this.exitVisualText.on('pointerdown', () => {
       this.executeExit();
     });
@@ -106,8 +119,6 @@ export class StudyRoomScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.clockZone = this.add.zone(width * 0.75, height * 0.15, 150, 150);
-
     if (this.input.keyboard) {
       this.cursors = this.input.keyboard.createCursorKeys();
       this.wasd = this.input.keyboard.addKeys({
@@ -117,7 +128,6 @@ export class StudyRoomScene extends Phaser.Scene {
         right: Phaser.Input.Keyboard.KeyCodes.D,
       }) as WASDKeys;
 
-      // Si presiona espacio cerca de la puerta, sale
       this.input.keyboard.on('keydown-SPACE', () => {
         if (this.showExitPrompt) {
           this.executeExit();
@@ -125,7 +135,19 @@ export class StudyRoomScene extends Phaser.Scene {
       });
     }
 
+    window.addEventListener('mobile-move', this.boundHandleMobileMove);
+
     this.player.anims.play('idle_frente');
+  }
+
+  private handleMobileMove(e: MobileMoveEvent) {
+    const { direction, pressed } = e.detail;
+    switch (direction) {
+      case 'up': this.touchUp = pressed; break;
+      case 'down': this.touchDown = pressed; break;
+      case 'left': this.touchLeft = pressed; break;
+      case 'right': this.touchRight = pressed; break;
+    }
   }
 
   update() {
@@ -134,6 +156,10 @@ export class StudyRoomScene extends Phaser.Scene {
     if (this.nameText && this.player) {
       this.nameText.setPosition(this.player.x, this.player.y - 60);
     }
+  }
+
+  shutdown() {
+    window.removeEventListener('mobile-move', this.boundHandleMobileMove);
   }
 
   private createAnimations() {
@@ -164,73 +190,43 @@ export class StudyRoomScene extends Phaser.Scene {
   }
 
   private handleMovement() {
-    const speed = 300;
-    let vx = 0;
-    let vy = 0;
+    let vx = 0, vy = 0;
     let moving = false;
 
-    const pointer = this.input.activePointer;
-
-    // 👈 DETECCIÓN PARA MÓVIL (Touch / Pointer)
-    if (pointer.isDown && !this.showExitPrompt) {
-      // Calculamos la distancia entre el toque y el jugador
-      const angle = Phaser.Math.Angle.Between(
-        this.player.x,
-        this.player.y,
-        pointer.x,
-        pointer.y
-      );
-      const distance = Phaser.Math.Distance.Between(
-        this.player.x,
-        this.player.y,
-        pointer.x,
-        pointer.y
-      );
-
-      // Solo mover si el toque no está encima del propio jugador (evita temblores)
-      if (distance > 20) {
-        vx = Math.cos(angle) * speed;
-        vy = Math.sin(angle) * speed;
-        moving = true;
-
-        // Determinar animación según el ángulo dominante
-        const angleDeg = Phaser.Math.RadToDeg(angle);
-        if (angleDeg >= -45 && angleDeg < 45) {
-          this.currentDirection = 'right';
-          this.player.setFlipX(false);
-        } else if (angleDeg >= 45 && angleDeg < 135) {
-          this.currentDirection = 'down';
-        } else if (angleDeg >= -135 && angleDeg < -45) {
-          this.currentDirection = 'up';
-        } else {
-          this.currentDirection = 'left';
-          this.player.setFlipX(true);
-        }
-      }
+    let leftPressed = false, rightPressed = false, upPressed = false, downPressed = false;
+    if (this.cursors && this.wasd) {
+      leftPressed = this.cursors.left.isDown || this.wasd.left.isDown;
+      rightPressed = this.cursors.right.isDown || this.wasd.right.isDown;
+      upPressed = this.cursors.up.isDown || this.wasd.up.isDown;
+      downPressed = this.cursors.down.isDown || this.wasd.down.isDown;
     }
-    // 👈 DETECCIÓN PARA PC (Teclado)
-    else if (this.cursors && this.wasd) {
-      if (this.cursors.left.isDown || this.wasd.left.isDown) {
-        vx = -speed;
-        this.currentDirection = 'left';
-        this.player.setFlipX(true);
-        moving = true;
-      } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
-        vx = speed;
-        this.currentDirection = 'right';
-        this.player.setFlipX(false);
-        moving = true;
-      }
 
-      if (this.cursors.up.isDown || this.wasd.up.isDown) {
-        vy = -speed;
-        this.currentDirection = 'up';
-        moving = true;
-      } else if (this.cursors.down.isDown || this.wasd.down.isDown) {
-        vy = speed;
-        this.currentDirection = 'down';
-        moving = true;
-      }
+    const finalLeft = leftPressed || this.touchLeft;
+    const finalRight = rightPressed || this.touchRight;
+    const finalUp = upPressed || this.touchUp;
+    const finalDown = downPressed || this.touchDown;
+
+    const speed = 300;
+    if (finalLeft) {
+      vx = -speed;
+      this.currentDirection = 'left';
+      this.player.setFlipX(true);
+      moving = true;
+    } else if (finalRight) {
+      vx = speed;
+      this.currentDirection = 'right';
+      this.player.setFlipX(false);
+      moving = true;
+    }
+
+    if (finalUp) {
+      vy = -speed;
+      this.currentDirection = 'up';
+      moving = true;
+    } else if (finalDown) {
+      vy = speed;
+      this.currentDirection = 'down';
+      moving = true;
     }
 
     const dt = this.game.loop.delta / 1000;
@@ -238,20 +234,10 @@ export class StudyRoomScene extends Phaser.Scene {
     this.player.y += vy * dt;
 
     if (moving) {
-      const animKey =
-        this.currentDirection === 'up'
-          ? 'walk_up'
-          : this.currentDirection === 'down'
-            ? 'walk_down'
-            : 'walk_side';
+      const animKey = this.currentDirection === 'up' ? 'walk_up' : this.currentDirection === 'down' ? 'walk_down' : 'walk_side';
       this.player.anims.play(animKey, true);
     } else {
-      const idleKey =
-        this.currentDirection === 'up'
-          ? 'idle_espalda'
-          : this.currentDirection === 'down'
-            ? 'idle_frente'
-            : 'idle_perfil';
+      const idleKey = this.currentDirection === 'up' ? 'idle_espalda' : this.currentDirection === 'down' ? 'idle_frente' : 'idle_perfil';
       this.player.anims.play(idleKey, true);
     }
 
@@ -262,58 +248,33 @@ export class StudyRoomScene extends Phaser.Scene {
   }
 
   private checkCollision() {
-    // Colisión Pomodoro
-    const distance = Phaser.Math.Distance.Between(
-      this.player.x,
-      this.player.y,
-      this.clockZone.x,
-      this.clockZone.y
-    );
-
+    const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.clockZone.x, this.clockZone.y);
     if (distance < 80) {
       if (!this.showPomodoro) {
         this.showPomodoro = true;
-        window.dispatchEvent(
-          new CustomEvent('openPomodoro', {
-            detail: { message: '¡Es hora de concentrarse!' },
-          })
-        );
+        window.dispatchEvent(new CustomEvent('openPomodoro', { detail: { message: '¡Es hora de concentrarse!' } }));
       }
     } else {
       this.showPomodoro = false;
     }
 
-    // Colisión Zona de Salida
-    const distExit = Phaser.Math.Distance.Between(
-      this.player.x,
-      this.player.y,
-      this.exitZone.x,
-      this.exitZone.y
-    );
-
+    const distExit = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.exitZone.x, this.exitZone.y);
     if (distExit < 70) {
       if (!this.showExitPrompt) {
         this.showExitPrompt = true;
-        this.exitVisualText.setVisible(true); // 👈 Muestra el nuevo cartel en Phaser
-        window.dispatchEvent(
-          new CustomEvent('nearExit', { detail: { show: true } })
-        );
+        this.exitVisualText.setVisible(true);
+        window.dispatchEvent(new CustomEvent('nearExit', { detail: { show: true } }));
       }
     } else {
       if (this.showExitPrompt) {
         this.showExitPrompt = false;
-        this.exitVisualText.setVisible(false); // 👈 Oculta el cartel en Phaser
-        window.dispatchEvent(
-          new CustomEvent('nearExit', { detail: { show: false } })
-        );
+        this.exitVisualText.setVisible(false);
+        window.dispatchEvent(new CustomEvent('nearExit', { detail: { show: false } }));
       }
     }
   }
 
-  // Método centralizado para cambiar de escena o salir
   private executeExit() {
-    console.log('Saliendo de la sala...');
-    // Aquí puedes añadir: this.scene.start('SiguienteEscenaKey');
     window.dispatchEvent(new CustomEvent('exitRoom'));
   }
 }
