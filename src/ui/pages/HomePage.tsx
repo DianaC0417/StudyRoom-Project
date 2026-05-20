@@ -1,3 +1,4 @@
+import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import PublicLayout from '../components/PublicLayout';
 import { useSound } from '../hooks/useSound';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import './NavPages.css';
 const HomePage = () => {
   const playClick = useSound('/assets/sounds/select_personaje.mp3');
   const navigate = useNavigate();
+  useBackgroundMusic('/assets/sounds/background_music.mp3', true);
 
   const handleLinkClick = (path: string) => {
     playClick();

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { useSound } from '../hooks/useSound';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import PublicLayout from '../components/PublicLayout';
@@ -10,29 +9,10 @@ interface Props {
 
 const LoginPage = ({ onLogin }: Props) => {
   const playLogin = useSound('assets/sounds/start.mp3');
-  const musicSrc = 'assets/sounds/background_music.mp3';
-  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(musicSrc);
-  const musicStartedRef = useRef(false);
-
-  useEffect(() => {
-    const startMusic = () => {
-      if (musicStartedRef.current) return;
-      musicStartedRef.current = true;
-      playMusic();
-    };
-    window.addEventListener('click', startMusic);
-    return () => {
-      window.removeEventListener('click', startMusic);
-      pauseMusic();
-    };
-  }, [playMusic, pauseMusic]);
+  useBackgroundMusic('/assets/sounds/background_music.mp3', true);
 
   const handleLoginWithSound = (username: string) => {
     playLogin();
-    if (!musicStartedRef.current) {
-      musicStartedRef.current = true;
-      playMusic();
-    }
     onLogin?.(username);
   };
 

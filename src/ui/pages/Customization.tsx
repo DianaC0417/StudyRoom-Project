@@ -42,12 +42,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
   const playStart = useSound('/assets/sounds/start.mp3');
 
   const musicSrc = '/assets/sounds/background_music.mp3';
-  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(musicSrc);
-
-  useEffect(() => {
-    playMusic();
-    return () => pauseMusic();
-  }, [playMusic, pauseMusic]);
+  useBackgroundMusic(musicSrc, true);
 
   const updateConfig = <K extends keyof StudyConfig>(
     key: K,

@@ -59,13 +59,14 @@ export const RoomPage: React.FC = () => {
 
   // Música de fondo por sala
   const musicMap: Record<Room, string> = {
-    salaestudio1: 'assets/sounds/sala1.mp3',
-    salaestudio2: 'assets/sounds/sala2.mp3',
-    salaestudio3: 'assets/sounds/sala3.mp3',
+    salaestudio1: '/assets/sounds/sala1.mp3',
+    salaestudio2: '/assets/sounds/sala2.mp3',
+    salaestudio3: '/assets/sounds/sala3.mp3',
   };
   const musicSrc = studyConfig?.sala ? musicMap[studyConfig.sala] : null;
   const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
-    musicSrc || 'assets/sounds/sala1.mp3'
+    musicSrc || '/assets/sounds/sala1.mp3',
+    !isPlaying // Auto-play if the radio isn't playing
   );
 
   useEffect(() => {
@@ -76,8 +77,7 @@ export const RoomPage: React.FC = () => {
     } else {
       playMusic();
     }
-
-    return () => pauseMusic();
+    // No devolvemos cleanup aquí porque useBackgroundMusic ya lo hace internamente
   }, [musicSrc, isPlaying, playMusic, pauseMusic]);
 
   // Sonidos
