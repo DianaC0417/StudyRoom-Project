@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 /**
  * Hook para manejar música de fondo en bucle.
@@ -21,22 +21,29 @@ export const useBackgroundMusic = (src: string) => {
     };
   }, [src]);
 
-  const play = () => {
+  const play = useCallback(() => {
     audioRef.current
       ?.play()
       .then(() => setIsPlaying(true))
       .catch(() => {});
-  };
+  }, []);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     audioRef.current?.pause();
     setIsPlaying(false);
-  };
+  }, []);
 
-  const toggle = () => {
-    if (isPlaying) pause();
-    else play();
-  };
+  const toggle = useCallback(() => {
+    setIsPlaying((prev) => {
+      if (prev) {
+        audioRef.current?.pause();
+        return false;
+      } else {
+        audioRef.current?.play().catch(() => {});
+        return true;
+      }
+    });
+  }, []);
 
   return { play, pause, toggle, isPlaying };
 };

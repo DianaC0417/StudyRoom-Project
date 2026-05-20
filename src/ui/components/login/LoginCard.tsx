@@ -35,6 +35,7 @@ const LoginCard = ({ onLogin }: Props) => {
       // 🚀 AQUÍ ESTÁ EL CAMBIO CLAVE: Agregamos await y pasamos el password
       const user = await userService.login(username.trim(), password, false);
       console.log('Usuario logueado exitosamente:', user);
+      
       setLoading(false);
       setSuccess(true);
 
