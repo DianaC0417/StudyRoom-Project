@@ -2,8 +2,14 @@ import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
+<<<<<<< HEAD
 import { useBackgroundMusic } from '../../ui/hooks/useBackgroundMusic';
 import '../styles/CustomizationPage.css';
+=======
+import { useEffect } from 'react';
+import { useBackgroundMusic } from '../../ui/hooks/useBackgroundMusic';
+import './CustomizationPage.css';
+>>>>>>> origin/main
 
 const PETS: { id: Character; label: string; img: string }[] = [
   { id: 'gatito', label: 'CAT', img: '/assets/personajes/gatito.png' },
@@ -31,17 +37,32 @@ const ROOMS: { id: Room; label: string; img: string }[] = [
 
 interface CustomizationPageProps {
   onStart: (config: StudyConfig) => void;
+<<<<<<< HEAD
   onLogout: () => void;
 }
 
 const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
+=======
+}
+
+const CustomizationPage = ({ onStart }: CustomizationPageProps) => {
+>>>>>>> origin/main
   const [config, setConfig] = useState<StudyConfig>(DEFAULT_CONFIG);
   const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
   const playStart = useSound('/assets/sounds/start.mp3');
 
   const musicSrc = '/assets/sounds/background_music.mp3';
+<<<<<<< HEAD
   useBackgroundMusic(musicSrc, true);
+=======
+  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(musicSrc);
+
+  useEffect(() => {
+    playMusic();
+    return () => pauseMusic();
+  }, [playMusic, pauseMusic]);
+>>>>>>> origin/main
 
   const updateConfig = <K extends keyof StudyConfig>(
     key: K,
@@ -55,12 +76,16 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 
   return (
     <div className="page">
+<<<<<<< HEAD
       <div className="title-bar">
         <span>Personaliza tu experiencia</span>
         <button className="btn-logout" onClick={onLogout}>
           VOLVER
         </button>
       </div>
+=======
+      <div className="title-bar">Personaliza tu experiencia</div>
+>>>>>>> origin/main
 
       <h2 className="subtitle">BIENVENIDO ESTUDIANTE!</h2>
 

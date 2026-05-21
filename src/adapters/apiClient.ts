@@ -1,6 +1,10 @@
 // src/adapters/apiClient.ts
 
+<<<<<<< HEAD
 export const API_BASE_URL = 'http://localhost:3000/api';
+=======
+export const API_BASE_URL = 'http://localhost:3000';
+>>>>>>> origin/main
 
 export const apiClient = async (
   endpoint: string,

@@ -10,7 +10,11 @@ const PublicLayout = ({ children }: Props) => {
     <div className="login-page">
       <nav className="login-navbar">
         <img
+<<<<<<< HEAD
           src="/assets/extras/BIT_STUDY_WHITE.png"
+=======
+          src="/assets/BIT_STUDY_WHITE.png"
+>>>>>>> origin/main
           alt="BitStudy"
           className="navbar-logo"
         />

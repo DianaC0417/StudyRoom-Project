@@ -1,4 +1,8 @@
 // adapters/studyConfigAdapter.ts
+<<<<<<< HEAD
+=======
+// adapters/studyConfigAdapter.ts
+>>>>>>> origin/main
 import type { StudyConfigRepository } from '../aplication/ports/StudyConfigRepository';
 import type { StudyConfig } from '../domain/StudyConfig';
 

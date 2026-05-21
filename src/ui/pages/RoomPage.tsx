@@ -8,6 +8,7 @@ import { PomodoroModal } from '../components/PomodoroModal';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useSound } from '../hooks/useSound';
+<<<<<<< HEAD
 import { useMusic } from '../hooks/useMusic';
 import { MusicPlayer } from '../components/music/MusicPlayer';
 import { MusicSelector } from '../components/music/MusicSelector';
@@ -16,20 +17,32 @@ import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
 import '../components/music/MusicPlayer.css';
 import { OrientationWarning } from '../components/OrientationWarning';
+=======
+import type { Room, StudyConfig } from '../../domain/StudyConfig';
+import '../styles/RoomPage.css';
+>>>>>>> origin/main
 
 export const RoomPage: React.FC = () => {
   const gameRef = useRef<HTMLDivElement>(null);
   const phaserGameRef = useRef<Phaser.Game | null>(null);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const [showExitBtn, setShowExitBtn] = useState(false);
+<<<<<<< HEAD
   const [showMusicWidget, setShowMusicWidget] = useState(false);
   const [showTodoWidget, setShowTodoWidget] = useState(false);
 
   const studyConfig = location.state as StudyConfig | undefined;
+=======
+
+  const config = location.state as StudyConfig | undefined;
+>>>>>>> origin/main
 
   const {
     timeDisplay,
@@ -43,6 +56,7 @@ export const RoomPage: React.FC = () => {
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
 
+<<<<<<< HEAD
   const {
     mood,
     tracks,
@@ -80,6 +94,25 @@ export const RoomPage: React.FC = () => {
     }
     // No devolvemos cleanup aquí porque useBackgroundMusic ya lo hace internamente
   }, [musicSrc, isPlaying, playMusic, pauseMusic]);
+=======
+  // Música de fondo por sala
+  const musicMap: Record<Room, string> = {
+    salaestudio1: 'assets/sounds/sala1.mp3',
+    salaestudio2: 'assets/sounds/sala2.mp3',
+    salaestudio3: 'assets/sounds/sala3.mp3',
+  };
+  const musicSrc = config?.sala ? musicMap[config.sala] : null;
+  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
+    musicSrc || 'assets/sounds/sala1.mp3'
+  );
+
+  useEffect(() => {
+    if (musicSrc) {
+      playMusic();
+    }
+    return () => pauseMusic();
+  }, [musicSrc, playMusic, pauseMusic]);
+>>>>>>> origin/main
 
   // Sonidos
   const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
@@ -140,6 +173,7 @@ export const RoomPage: React.FC = () => {
     window.addEventListener('pomodoroNotification', handleNotification);
     window.addEventListener('nearExit', handleExitPrompt);
 
+<<<<<<< HEAD
     const handleOpenMusicPlayer = () => {
       setShowMusicWidget(true);
     };
@@ -150,12 +184,17 @@ export const RoomPage: React.FC = () => {
     };
     window.addEventListener('openTodoList', handleOpenTodoList);
 
+=======
+>>>>>>> origin/main
     return () => {
       window.removeEventListener('nearExit', handleExitPrompt);
       window.removeEventListener('openPomodoro', handleOpenPomodoro);
       window.removeEventListener('pomodoroNotification', handleNotification);
+<<<<<<< HEAD
       window.removeEventListener('openMusicPlayer', handleOpenMusicPlayer);
       window.removeEventListener('openTodoList', handleOpenTodoList);
+=======
+>>>>>>> origin/main
       if (phaserGameRef.current) {
         phaserGameRef.current.destroy(true);
         phaserGameRef.current = null;
@@ -163,6 +202,7 @@ export const RoomPage: React.FC = () => {
     };
   }, [playPomodoroOpen]);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (showMusicWidget) {
       playPomodoroOpen();
@@ -320,6 +360,16 @@ export const RoomPage: React.FC = () => {
       {showExitBtn && (
         <button onClick={handleExit} className="exit-button-pixel">
           SALIR
+=======
+  return (
+    <div className="room-page">
+      <div id="game-container" ref={gameRef} className="game-container"></div>
+
+      {showExitBtn && (
+        <button onClick={handleExit} className="exit-button-pixel">
+          <span className="exit-icon"></span>
+          <span>SALIR</span>
+>>>>>>> origin/main
         </button>
       )}
 
@@ -337,7 +387,10 @@ export const RoomPage: React.FC = () => {
         onSkip={handleSkip}
         onClose={handleCloseModal}
       />
+<<<<<<< HEAD
       <OrientationWarning />
+=======
+>>>>>>> origin/main
     </div>
   );
 };

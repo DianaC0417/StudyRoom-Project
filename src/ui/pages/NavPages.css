@@ -24,7 +24,10 @@
 
 /* ---------- FRASE INSPIRADORA ---------- */
 .home-idea {
+<<<<<<< HEAD
   font-family: 'Comfortaa', 'Courier New', monospace;
+=======
+>>>>>>> origin/main
   font-size: 1rem;
   color: #4b4b4b;
   letter-spacing: 0.04em;
@@ -181,7 +184,11 @@
   padding: 2rem;
   gap: 2rem;
   color: #2d2d2d;
+<<<<<<< HEAD
   font-family: 'Comfortaa', 'Courier New', monospace;
+=======
+  font-family: 'GamePaused', 'Courier New', monospace;
+>>>>>>> origin/main
 }
 
 .about-heading {

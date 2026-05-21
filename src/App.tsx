@@ -29,20 +29,27 @@ function AppRoutes() {
     navigate('/customization');
   };
 
+<<<<<<< HEAD
   const handleLogout = () => {
     console.log('Regresando al login...');
     navigate('/login');
   };
 
+=======
+>>>>>>> origin/main
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
       <Route
         path="/customization"
+<<<<<<< HEAD
         element={
           <CustomizationPage onStart={handleStart} onLogout={handleLogout} />
         }
+=======
+        element={<CustomizationPage onStart={handleStart} />}
+>>>>>>> origin/main
       />
       <Route path="/room" element={<RoomPage />} />
       <Route path="*" element={<Navigate to="/login" replace />} />

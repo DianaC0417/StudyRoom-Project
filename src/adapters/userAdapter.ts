@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // src/adapters/userAdapter.ts
+=======
+//src/adapters/userAdapter.ts
+>>>>>>> origin/main
 import { type UserRepository } from '../aplication/ports/UserRepository';
 import type { User } from '../domain/User';
 import { apiClient } from './apiClient';
@@ -24,13 +28,20 @@ export const userAdapter: UserRepository = {
   clear: (): void => {
     localStorage.removeItem(USER_KEY);
     sessionStorage.removeItem(USER_KEY);
+<<<<<<< HEAD
     localStorage.removeItem('auth_token');
+=======
+>>>>>>> origin/main
   },
   //esta es la función que se conectará al backend para hacer login
   login: async (username, password): Promise<User> => {
     try {
       // Hacemos el POST /login usando el apiClient hacia el backend
+<<<<<<< HEAD
       const data = await apiClient('/auth/login', {
+=======
+      const data = await apiClient('/login', {
+>>>>>>> origin/main
         method: 'POST',
         body: JSON.stringify({ username, password }),
       });

@@ -19,6 +19,7 @@ html, body, #root {
   height: 100%;
   width: 100%;
   background-color: #fef9e7;
+<<<<<<< HEAD
 }
 
 /*TO DO CSS*/
@@ -217,4 +218,6 @@ html, body, #root {
   .todo-track-list {
     max-height: 170px;
   }
+=======
+>>>>>>> origin/main
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ======================================================= */
 /* 1. DECLARACIÓN DE FUENTES (RUTAS CORREGIDAS)           */
 /* ======================================================= */
@@ -11,10 +12,24 @@
 @font-face {
   font-family: 'GamePaused';
   src: url('../../../../assets/fonts/game_paused/Game Paused DEMO.otf') format('opentype');
+=======
+@font-face {
+  font-family: 'Retrobit';
+  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GamePaused';
+  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf')
+    format('opentype');
+>>>>>>> origin/main
   font-weight: normal;
   font-style: normal;
 }
 
+<<<<<<< HEAD
 /* Corregido para que lea tu archivo exacto en public/assets */
 @font-face {
   font-family: 'Comfortaa';
@@ -26,6 +41,8 @@
 /* ======================================================= */
 /* RESET Y CONFIGURACIÓN BASE                              */
 /* ======================================================= */
+=======
+>>>>>>> origin/main
 *::before,
 *::after {
   margin: 0;
@@ -40,7 +57,10 @@ body,
   padding: 0;
   overflow-x: hidden;
   background-color: #efe8e2;
+<<<<<<< HEAD
   font-family: 'Comfortaa', 'Courier New', monospace;
+=======
+>>>>>>> origin/main
 }
 
 .login-page {
@@ -49,6 +69,7 @@ body,
   background-color: #efe8e2;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   /* Mantenemos el estilo para la estructura externa de la página */
   font-family: 'GamePaused', 'Courier New', monospace;
 }
@@ -56,6 +77,11 @@ body,
 /* ======================================================= */
 /* NAVBAR                                                 */
 /* ======================================================= */
+=======
+  font-family: 'GamePaused', 'Courier New', monospace;
+}
+
+>>>>>>> origin/main
 .login-navbar {
   width: 100%;
   background-color: #000000;
@@ -93,7 +119,10 @@ body,
   color: #c9a227;
 }
 
+<<<<<<< HEAD
 /* MENÚ HAMBURGUESA */
+=======
+>>>>>>> origin/main
 .hamburger-btn {
   display: none;
   background: none;
@@ -110,7 +139,13 @@ body,
   background-color: #ffffff;
   margin: 5px 0;
   border-radius: 2px;
+<<<<<<< HEAD
   transition: transform 0.3s, opacity 0.3s;
+=======
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+>>>>>>> origin/main
 }
 
 .hamburger-btn.open span:nth-child(1) {
@@ -159,9 +194,12 @@ body,
   color: #c9a227;
 }
 
+<<<<<<< HEAD
 /* ======================================================= */
 /* CONTENIDO PRINCIPAL E ILUSTRACIONES                     */
 /* ======================================================= */
+=======
+>>>>>>> origin/main
 .login-content {
   flex: 1;
   display: flex;
@@ -197,8 +235,15 @@ body,
   position: absolute;
   width: 190px;
   height: auto;
+<<<<<<< HEAD
   bottom: 15px;
   right: 120px;
+=======
+
+  bottom: 15px;
+  right: 120px;
+
+>>>>>>> origin/main
   image-rendering: pixelated;
   transform: rotate(-30deg);
   transform-origin: center;
@@ -206,9 +251,12 @@ body,
   z-index: 10;
 }
 
+<<<<<<< HEAD
 /* ======================================================= */
 /* TARJETA DE LOGIN GRIS                                   */
 /* ======================================================= */
+=======
+>>>>>>> origin/main
 .login-card {
   background-color: rgba(71, 68, 68, 0.92);
   border-radius: 16px;
@@ -224,6 +272,10 @@ body,
     opacity: 0;
     transform: translateY(25px) scale(0.97);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -247,7 +299,10 @@ body,
   margin-bottom: 1rem;
 }
 
+<<<<<<< HEAD
 /* ENTRADAS DE TEXTO - CORREGIDO CON !important PARA DETENER LA HERENCIA */
+=======
+>>>>>>> origin/main
 .study-input {
   width: 100%;
   padding: 0.7rem 1rem;
@@ -255,6 +310,7 @@ body,
   border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 50px;
   color: #ffffff;
+<<<<<<< HEAD
   font-family: 'Comfortaa', sans-serif !important; /* Fuerza la fuente redonda */
   font-size: 0.85rem;
   outline: none;
@@ -265,6 +321,19 @@ body,
 .study-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
   font-family: 'Comfortaa', sans-serif !important; /* Fuerza la fuente redonda */
+=======
+  font-family: 'Comfortaa';
+  font-size: 0.85rem;
+  outline: none;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+
+.study-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Comfortaa';
+>>>>>>> origin/main
 }
 
 .study-input:focus {
@@ -282,10 +351,16 @@ body,
   padding-left: 1rem;
   margin-top: 0.25rem;
   display: block;
+<<<<<<< HEAD
   font-family: 'Comfortaa', sans-serif !important;
 }
 
 /* CASILLAS DE OPCIONES Y BOTONES SECUNDARIOS */
+=======
+  font-family: 'Comfortaa', 'Courier New', monospace;
+}
+
+>>>>>>> origin/main
 .options-row {
   display: flex;
   justify-content: flex-start;
@@ -298,7 +373,11 @@ body,
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.6);
+<<<<<<< HEAD
   font-family: 'Comfortaa', sans-serif !important; /* Cambiado a Comfortaa */
+=======
+  font-family: 'Comfortaa', 'Courier New', monospace;
+>>>>>>> origin/main
   font-size: 0.72rem;
   cursor: pointer;
   transition: color 0.2s;
@@ -308,7 +387,10 @@ body,
   color: #ffffff;
 }
 
+<<<<<<< HEAD
 /* BOTÓN PRINCIPAL (LOGIN) - Mantiene su estilo pixelado rudo original */
+=======
+>>>>>>> origin/main
 .btn-enter {
   width: 100%;
   padding: 0.75rem;
@@ -321,7 +403,14 @@ body,
   font-weight: 800;
   letter-spacing: 0.08em;
   cursor: pointer;
+<<<<<<< HEAD
   transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+=======
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+>>>>>>> origin/main
   box-shadow: 0 0px 1px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
 }
@@ -341,20 +430,31 @@ body,
   cursor: not-allowed;
 }
 
+<<<<<<< HEAD
 /* FILA DE REGISTRO */
+=======
+>>>>>>> origin/main
 .register-row {
   text-align: center;
   margin-top: 1.2rem;
   color: rgba(255, 255, 255, 0.4);
   font-size: 0.72rem;
+<<<<<<< HEAD
   font-family: 'Comfortaa', sans-serif !important; /* Cambiado a Comfortaa */
+=======
+  font-family: 'Comfortaa', 'Courier New', monospace;
+>>>>>>> origin/main
 }
 
 .register-row button {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.7);
+<<<<<<< HEAD
   font-family: 'Comfortaa', sans-serif !important; /* Cambiado a Comfortaa */
+=======
+  font-family: 'Comfortaa', 'Courier New', monospace;
+>>>>>>> origin/main
   font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
@@ -366,7 +466,10 @@ body,
   color: #ffffff;
 }
 
+<<<<<<< HEAD
 /* EFECTOS DE CARGA */
+=======
+>>>>>>> origin/main
 .spin {
   display: inline-block;
   width: 14px;
@@ -380,10 +483,18 @@ body,
 }
 
 @keyframes rotate {
+<<<<<<< HEAD
   to { transform: rotate(360deg); }
 }
 
 /* ESTADOS DE ÉXITO */
+=======
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+>>>>>>> origin/main
 .success-message {
   text-align: center;
   color: #ffffff;
@@ -398,8 +509,18 @@ body,
 }
 
 @keyframes popIn {
+<<<<<<< HEAD
   from { transform: scale(0); }
   to { transform: scale(1); }
+=======
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+>>>>>>> origin/main
 }
 
 .success-message h3 {
@@ -413,9 +534,12 @@ body,
   font-size: 0.82rem;
 }
 
+<<<<<<< HEAD
 /* ======================================================= */
 /* MEDIA QUERIES (RESPONSIVO)                              */
 /* ======================================================= */
+=======
+>>>>>>> origin/main
 @media (max-width: 1200px) {
   .room-logo-diagonal {
     width: 170px;
@@ -436,14 +560,26 @@ body,
   .room-logo-diagonal {
     display: none;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
   .login-content {
     flex-direction: column;
     padding: 1.5rem;
     gap: 1.5rem;
   }
+<<<<<<< HEAD
   .room-illustration {
     max-width: 80%;
   }
+=======
+
+  .room-illustration {
+    max-width: 80%;
+  }
+
+>>>>>>> origin/main
   .login-card {
     max-width: 380px;
   }
@@ -453,6 +589,7 @@ body,
   .login-navbar {
     padding: 0.5rem 1rem;
   }
+<<<<<<< HEAD
   .navbar-logo {
     height: 32px;
   }
@@ -462,6 +599,21 @@ body,
   .hamburger-btn {
     display: block;
   }
+=======
+
+  .navbar-logo {
+    height: 32px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: block;
+  }
+
+>>>>>>> origin/main
   .login-content {
     flex-direction: column;
     padding: 1rem;
@@ -469,27 +621,51 @@ body,
     justify-content: flex-start;
     padding-top: 0.5rem;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
   .room-illustration {
     max-width: 70%;
     margin: 0 auto;
   }
+<<<<<<< HEAD
   .room-illustration img {
     max-width: 100%;
   }
+=======
+
+  .room-illustration img {
+    max-width: 100%;
+  }
+
+>>>>>>> origin/main
   .login-card {
     max-width: 100%;
     padding: 1.5rem 1.2rem;
     background-color: rgba(55, 55, 55, 0.6);
     border-radius: 12px;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
   .card-title {
     font-size: 1.1rem;
     margin-bottom: 1.2rem;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
   .study-input {
     padding: 0.6rem 0.9rem;
     font-size: 0.8rem;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
   .btn-enter {
     padding: 0.65rem;
     font-size: 0.9rem;
@@ -500,6 +676,7 @@ body,
   .login-navbar {
     padding: 0.4rem 0.8rem;
   }
+<<<<<<< HEAD
   .navbar-logo {
     height: 28px;
   }
@@ -516,3 +693,26 @@ body,
     font-size: 1rem;
   }
 }
+=======
+
+  .navbar-logo {
+    height: 28px;
+  }
+
+  .login-content {
+    padding: 0.8rem;
+  }
+
+  .room-illustration {
+    max-width: 85%;
+  }
+
+  .login-card {
+    padding: 1.2rem 1rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+}
+>>>>>>> origin/main
