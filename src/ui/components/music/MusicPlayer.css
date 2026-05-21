@@ -1,12 +1,18 @@
+/* Se añade box-sizing para que el padding y los bordes no sumen ancho extra */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 .music-panel {
   width: 100%;
-  max-width: 430px;
+  max-width: 430px; /* Ancho máximo en PC */
   background: rgba(71, 68, 68, 0.92);
   color: #ffffff;
   border-radius: 16px;
   padding: 1rem;
   border: 3px solid #222222;
   font-family: "Retrobit", "GamePaused", "Courier New", monospace;
+  margin: 0 auto; /* Centra el panel si el contenedor es más grande */
 }
 
 .music-selector,
@@ -83,6 +89,9 @@
   max-height: 190px;
   overflow-y: auto;
   padding-right: 0.2rem;
+  /* Mejoras para scroll en móviles */
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch; 
 }
 
 .music-track-card {
@@ -115,13 +124,14 @@
   border-radius: 6px;
   border: 2px solid #222222;
   image-rendering: auto;
+  flex-shrink: 0; /* Evita que la imagen se aplaste si el texto es largo */
 }
 
 .music-track-info {
   display: flex;
   flex-direction: column;
   gap: 0.18rem;
-  min-width: 0;
+  min-width: 0; /* Crucial para que el text-overflow funcione en flexbox */
 }
 
 .music-track-info strong {
@@ -200,6 +210,9 @@
   font-size: 0.78rem;
   letter-spacing: 2px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .music-play-button {
@@ -247,22 +260,49 @@
   text-align: center;
 }
 
-@media (max-width: 650px) {
+/* =========================================
+   MEDIA QUERIES PARA CELULAR
+   ========================================= */
+@media (max-width: 480px) {
   .music-panel {
-    max-width: 310px;
+    /* En lugar de 310px fijos, toma el 100% del espacio disponible */
+    max-width: 100%; 
     padding: 0.85rem;
     border-radius: 12px;
+    border-width: 2px; /* Borde ligeramente más fino en móvil */
   }
 
   .music-mood-grid {
+    /* Pasa a 1 columna en pantallas muy estrechas */
     grid-template-columns: 1fr;
+    gap: 0.4rem;
   }
 
   .music-track-list {
-    max-height: 170px;
+    max-height: 160px; /* Un poco más corto para que quepa en la pantalla del celular sin esconder el reproductor */
+  }
+
+  .music-now-playing {
+    /* Reorganizamos el reproductor en horizontal para ahorrar espacio vertical */
+    flex-direction: row; 
+    padding: 0.75rem;
+    text-align: left;
+    align-items: center;
+  }
+
+  .music-player-cover {
+    width: 60px;
+    height: 60px;
+    border-width: 2px;
+  }
+
+  .music-player-info {
+    text-align: left;
+    align-items: flex-start;
   }
 
   .music-player-actions {
+    /* Apilamos los botones solo en pantallas realmente pequeñas */
     flex-direction: column;
   }
 

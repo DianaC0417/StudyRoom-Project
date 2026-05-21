@@ -1,6 +1,6 @@
 //ui/components/music/MusicSelector.tsx
 import type { MusicMood, MusicTrack } from '../../../domain/MusicTrack';
-
+import '../music/MusicPlayer.css';
 type MusicSelectorProps = {
   mood: MusicMood;
   tracks: MusicTrack[];

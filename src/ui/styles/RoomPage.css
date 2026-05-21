@@ -1,12 +1,10 @@
+/* RoomPage.css */
 .room-page {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* Eliminamos el gradiente de fondo para que no se vea si la imagen carga lento */
-  background: #000;
   overflow: hidden;
+  position: relative;
+  background: #1a1a2e;
   margin: 0;
   padding: 0;
 }
@@ -14,209 +12,92 @@
 .game-container {
   width: 100%;
   height: 100%;
-  display: flex;
-  overflow: hidden;
-  /* Quitamos bordes redondeados y sombras para que sea Full Screen total */
-  border-radius: 0;
-  box-shadow: none;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* Estilos del modal */
-.modal-overlay {
+/* Forzar al canvas de Phaser a estirarse limpiamente */
+.game-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover; /* 🟢 Cambiado a cover para rellenar los bordes negros */
+}
+
+/* Advertencia de orientación para móvil */
+.orientation-warning-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  z-index: 3000;
+  font-family: 'Courier New', monospace;
 }
 
-.modal-content {
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  min-width: 400px;
-  max-width: 500px;
+.orientation-warning-box {
+  background: #fef9e7;
+  border: 6px solid #222;
+  border-radius: 24px;
+  padding: 24px;
   text-align: center;
-  animation: slideIn 0.3s ease;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 280px;
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.3);
 }
 
-.modal-content h2 {
-  color: #333;
-  margin-bottom: 15px;
-  font-size: 28px;
+.orientation-warning-box p {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+  color: #1a1a1a;
 }
 
-.modal-content p {
-  color: #666;
-  margin-bottom: 20px;
-}
-
-.pomodoro-placeholder {
-  background: #f5f5f5;
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px 0;
-  border: 2px dashed #ddd;
-}
-
-.close-modal-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 10px 30px;
-  border-radius: 25px;
+.orientation-warning-box button {
+  margin: 8px;
+  padding: 8px 16px;
+  border: 2px solid #222;
+  background: #e4c766;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
-  transition: transform 0.2s;
 }
 
-.close-modal-btn:hover {
-  transform: scale(1.05);
-}
-
-.pomodoro-timer-container {
-    background: #00000000;
-    color: rgb(0, 37, 118); /* Verde estilo terminal vieja */
-    padding: 10px 20px;
-    border: 4px solid #fff;
-    margin: 15px 0;
-    display: inline-block;
-}
-
-.control-btn {
-    /* Estética Pixel Art */
-    image-rendering: pixelated;
-    cursor: pointer;
-    
-    /* Colores y Fuente */
-    background-color: #73d2d1; /* Negro suave */
-    color: #ffffff;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-
-    /* El truco del borde de píxel: Borde doble */
-    border: 4px solid #000000;
-    outline: 2px solid #ffffff;
-    outline-offset: -6px;
-
-    /* Sombra sólida (le da profundidad) */
-    box-shadow: 6px 6px 0px #888888;
-    
-    padding: 12px 24px;
-    position: relative;
-    transition: all 0.1s;
-    display: inline-block;
-}
-
-/* Efecto Hover (cuando pasas el mouse) */
-.control-btn:hover {
-    background-color: #70b1e7;
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px #666666;
-}
-
-/* Efecto Click (cuando presionas) */
-.control-btn:active {
-    background-color: #00809a;
-    box-shadow: 0px 0px 0px #888888; /* Desaparece la sombra */
-    transform: translate(6px, 6px); /* Se mueve hacia la posición de la sombra */
-}
-
-/* Estilo especial para el botón de RESET (Rojo) */
-.control-btn.secondary {
-    background-color: #dd77a8;
-    color: #fff;
-}
-
-.control-btn.secondary:hover {
-    background-color: #c05a5a;
-}
-
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-
+/* Botón de salida estilo puerta */
 .exit-button-pixel {
-    position: absolute;
-    /* Subimos la puerta para que no toque la barra negra y se vea el borde */
-    bottom: 115px; 
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    
-    min-width: 120px;
-    height: 160px;
-    
-    /* Color que combina con las 3 salas (un púrpura/gris neutro) */
-    background-color: #5d4d7a; 
-    color: #fdf6e3;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-
-    /* MARCO COMPLETO: Ahora con borde en los 4 lados */
-    border: 4px solid #2a1f3d;
-    
-    /* Sombras para dar volumen y que no parezca plana */
-    box-shadow: 
-        0px 8px 0px 0px #1a1525, /* Sombra exterior inferior */
-        inset -6px -6px 0px 0px #45385d, /* Sombra interna */
-        inset 6px 6px 0px 0px #7b66a0;  /* Brillo interno */
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    transition: all 0.1s ease;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #8b5a2b;
+  border: 4px solid #5c3a1e;
+  border-radius: 8px 8px 4px 4px;
+  padding: 12px 24px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #f5deb3;
+  text-shadow: 2px 2px 0 #3a1f0b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.1s ease;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
+  z-index: 150;
 }
 
-/* El Pomo */
-.exit-button-pixel::after {
-    content: '';
-    width: 12px;
-    height: 12px;
-    background-color: #ffd700;
-    border: 2px solid #000;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+.exit-button-pixel::before {
+  content: '🚪';
+  font-size: 1.5rem;
+  filter: drop-shadow(2px 2px 0 #3a1f0b);
 }
 
 .exit-button-pixel:hover {
-    transform: translateX(-50%) translateY(-5px); /* Se eleva un poquito */
-    filter: brightness(1.1);
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 .exit-button-pixel:active {
@@ -239,5 +120,20 @@
     top: auto;
     right: auto;
     margin: 1rem auto;
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Para móviles */
+@media (max-width: 768px) {
+  .exit-button-pixel {
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .exit-button-pixel::before {
+    font-size: 1.2rem;
   }
 }
