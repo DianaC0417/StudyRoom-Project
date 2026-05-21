@@ -1,0 +1,290 @@
+@font-face {
+  font-family: 'Retrobit';
+  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GamePaused';
+  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ============================= */
+/* TOKENS MANTENIENDO EL PLOMO */
+/* ============================= */
+:root {
+  --bs-canvas: #efe8e2;
+  --bs-canvas-soft: #fef9e7;
+  --bs-card-cream: #fffaf2;
+  --bs-option-selected: #e0ecda;
+
+  /* Volvemos al esquema Plomo / Gris de tu captura original */
+  --bs-panel-dark: #474444;       /* Plomo base original del Pomodoro */
+  --bs-panel-border-inner: #d4c5b2; /* Borde crema suave */
+  --bs-overlay-dark: rgba(0, 0, 0, 0.65);
+  --bs-screen-dark: #141414;      /* Fondo de pantalla negro pixelado */
+
+  --bs-white: #ffffff;
+  --bs-white-soft: rgba(255, 255, 255, 0.72);
+  --bs-white-muted: rgba(255, 255, 255, 0.55);
+
+  --bs-border-dark: #222222;      /* Bordes negros definidos de los pixeles */
+  --bs-border-soft: #d4c5b2;
+
+  /* Botones Temáticos del Universo de tu App */
+  --bs-btn-start: #618c56;     /* Verde orgánico para Empezar/Pausar */
+  --bs-btn-skip: #e4c766;      /* Amarillo/Crema para Saltar */
+  --bs-btn-restart: #6d527d;   /* Púrpura apagado para Reiniciar */
+  
+  --bs-radius-sm: 6px;
+  --bs-radius-md: 8px;
+  --bs-radius-lg: 10px;
+  --bs-radius-panel: 16px;
+  --bs-radius-pill: 50px;
+
+  --bs-font-pixel-primary: 'Retrobit', 'Courier New', monospace;
+  --bs-font-pixel-secondary: 'GamePaused', 'Courier New', monospace;
+  --bs-font-readable: 'Comfortaa', 'Courier New', monospace;
+
+  --bs-shadow-pixel: 6px 6px 0 rgba(0, 0, 0, 0.35);
+  --bs-shadow-button: 4px 4px 0 #222222;
+  --bs-shadow-button-active: 1px 1px 0 #222222;
+}
+
+/* ============================= */
+/* OVERLAY */
+/* ============================= */
+.pomodoro-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bs-overlay-dark);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: bitstudyFadeIn 0.2s steps(4);
+}
+
+@keyframes bitstudyFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================= */
+/* MODAL COMPACTO EN PLOMO */
+/* ============================= */
+.pomodoro-modal {
+  width: 440px;
+  max-width: 92vw;
+  image-rendering: pixelated;
+  font-family: var(--bs-font-pixel-primary);
+}
+
+.pixel-border {
+  position: relative;
+  background: var(--bs-panel-dark);
+  border: 4px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-panel);
+  padding: 1.25rem;
+  box-shadow: var(--bs-shadow-pixel);
+  animation: modalReveal 0.25s steps(5);
+}
+
+@keyframes modalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Detalles dorados en las esquinas del plomo */
+.pixel-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #c9a227; /* Detalles dorados de la app */
+  border: 2px solid var(--bs-border-dark);
+}
+.pixel-corner.tl { top: 6px; left: 6px; }
+.pixel-corner.tr { top: 6px; right: 6px; }
+.pixel-corner.bl { bottom: 6px; left: 6px; }
+.pixel-corner.br { bottom: 6px; right: 6px; }
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-lg);
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.session-indicator {
+  display: flex;
+  flex-direction: column;
+}
+.session-label {
+  font-size: 11px;
+  color: var(--bs-panel-border-inner);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.session-number {
+  font-size: 1.4rem;
+  color: var(--bs-white);
+  font-family: var(--bs-font-pixel-secondary);
+}
+
+.status-badge {
+  background: var(--bs-card-cream);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-md);
+  padding: 0.35rem 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.status-text {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--bs-border-dark);
+}
+
+/* ============================= */
+/* PANTALLA CRONÓMETRO */
+/* ============================= */
+.timer-container {
+  margin: 1rem 0;
+}
+
+.pixel-screen {
+  background: var(--bs-screen-dark);
+  border: 4px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-lg);
+  padding: 1.2rem 1rem;
+  text-align: center;
+}
+
+.timer-digits {
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 4rem;
+  color: var(--bs-canvas-soft);
+  text-shadow: 3px 3px 0 #000;
+  letter-spacing: 2px;
+}
+
+/* ============================= */
+/* BARRA DE PROGRESO DE TU APP */
+/* ============================= */
+.progress-container {
+  margin-top: 0.8rem;
+}
+.pixel-progress-bar {
+  height: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-sm);
+  padding: 2px;
+  overflow: hidden;
+}
+.pixel-progress-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #b2533e 0px,
+    #b2533e 6px,
+    #cd664d 6px,
+    #cd664d 12px
+  );
+  transition: width 0.2s ease-out;
+}
+
+/* ============================= */
+/* BOTONES EN COLORES */
+/* ============================= */
+.modal-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 1.2rem 0 0.5rem 0;
+}
+
+.pixel-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0.4rem;
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-md);
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 12px;
+  color: var(--bs-white);
+  cursor: pointer;
+  box-shadow: var(--bs-shadow-button);
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--bs-shadow-button-active);
+}
+
+.pixel-btn-primary { background: var(--bs-btn-start); }
+.pixel-btn-secondary { background: var(--bs-btn-skip); color: #222222; }
+.pixel-btn-danger { background: var(--bs-btn-restart); }
+
+/* ============================= */
+/* MENSAJE DE TIP ESTILO PERGAMINO */
+/* ============================= */
+.modal-message {
+  background: #fcf1d2; /* Fondo pergamino claro de las notas */
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-md);
+  padding: 0.5rem;
+  text-align: center;
+  margin-top: 0.8rem;
+}
+.pixel-text {
+  font-family: var(--bs-font-readable);
+  font-size: 12px;
+  color: #4a3319;
+  margin: 0;
+}
+
+.close-btn-container {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: flex-end;
+}
+.close-btn {
+  background: transparent;
+  color: var(--bs-panel-border-inner);
+  border: 2px solid var(--bs-border-dark);
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  font-size: 11px;
+}
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .pomodoro-modal { width: 100%; }
+  .timer-digits { font-size: 3rem; }
+  .modal-controls { flex-direction: column; }
+}

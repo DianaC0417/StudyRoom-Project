@@ -1,0 +1,312 @@
+/* Se añade box-sizing para que el padding y los bordes no sumen ancho extra */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.music-panel {
+  width: 100%;
+  max-width: 430px; /* Ancho máximo en PC */
+  background: rgba(71, 68, 68, 0.92);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 1rem;
+  border: 3px solid #222222;
+  font-family: "Retrobit", "GamePaused", "Courier New", monospace;
+  margin: 0 auto; /* Centra el panel si el contenedor es más grande */
+}
+
+.music-selector,
+.music-player {
+  width: 100%;
+}
+
+.music-player {
+  margin-top: 1rem;
+}
+
+.music-section-title {
+  margin-bottom: 0.8rem;
+  color: #fef9e7;
+  font-family: "GamePaused", "Courier New", monospace;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.music-mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.music-mood-card {
+  background: #fffaf2;
+  color: #222222;
+  border: 3px solid #d4c5b2;
+  border-radius: 10px;
+  padding: 0.55rem 0.45rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.music-mood-card:hover {
+  border-color: #b8a590;
+  transform: translateY(-1px);
+}
+
+.music-mood-card--selected {
+  background: #e0ecda;
+  border-color: #202020;
+}
+
+.music-mood-icon {
+  display: block;
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.music-mood-card strong {
+  display: block;
+  font-family: "Retrobit", "Courier New", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.music-mood-card small {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.62rem;
+  line-height: 1.2;
+}
+
+.music-track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 190px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+  /* Mejoras para scroll en móviles */
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch; 
+}
+
+.music-track-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  background: #fffaf2;
+  color: #222222;
+  border: 3px solid #d4c5b2;
+  border-radius: 10px;
+  padding: 0.45rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.music-track-card:hover {
+  border-color: #b8a590;
+}
+
+.music-track-card--selected {
+  background: #e0ecda;
+  border-color: #202020;
+}
+
+.music-track-cover {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #222222;
+  image-rendering: auto;
+  flex-shrink: 0; /* Evita que la imagen se aplaste si el texto es largo */
+}
+
+.music-track-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0; /* Crucial para que el text-overflow funcione en flexbox */
+}
+
+.music-track-info strong {
+  font-family: "Retrobit", "Courier New", monospace;
+  font-size: 0.7rem;
+  color: #222222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-track-info small {
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.62rem;
+  color: #333333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-now-playing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fffaf2;
+  color: #222222;
+  border: 3px solid #d4c5b2;
+  border-radius: 10px;
+  padding: 0.9rem;
+}
+
+.music-player-cover {
+  width: 82px;
+  height: 82px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 3px solid #222222;
+}
+
+.music-player-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+
+.music-player-info strong {
+  font-family: "Retrobit", "Courier New", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  color: #222222;
+}
+
+.music-player-info span {
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.72rem;
+  color: #333333;
+}
+
+.music-player-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.music-play-button,
+.music-next-button {
+  background: #141414;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem;
+  font-family: "Retrobit", "GamePaused", "Courier New", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-play-button {
+  flex: 1;
+}
+
+.music-next-button {
+  width: 80px;
+}
+
+.music-play-button:hover,
+.music-next-button:hover {
+  background: #3d3d3d;
+}
+
+.music-volume {
+  width: 100%;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: "Retrobit", "Courier New", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.music-volume input {
+  width: 100%;
+  cursor: pointer;
+}
+
+.music-message {
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.music-error {
+  margin-top: 0.8rem;
+  color: #ff6b6b;
+  font-family: "Comfortaa", "Courier New", monospace;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+/* =========================================
+   MEDIA QUERIES PARA CELULAR
+   ========================================= */
+@media (max-width: 480px) {
+  .music-panel {
+    /* En lugar de 310px fijos, toma el 100% del espacio disponible */
+    max-width: 100%; 
+    padding: 0.85rem;
+    border-radius: 12px;
+    border-width: 2px; /* Borde ligeramente más fino en móvil */
+  }
+
+  .music-mood-grid {
+    /* Pasa a 1 columna en pantallas muy estrechas */
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .music-track-list {
+    max-height: 160px; /* Un poco más corto para que quepa en la pantalla del celular sin esconder el reproductor */
+  }
+
+  .music-now-playing {
+    /* Reorganizamos el reproductor en horizontal para ahorrar espacio vertical */
+    flex-direction: row; 
+    padding: 0.75rem;
+    text-align: left;
+    align-items: center;
+  }
+
+  .music-player-cover {
+    width: 60px;
+    height: 60px;
+    border-width: 2px;
+  }
+
+  .music-player-info {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .music-player-actions {
+    /* Apilamos los botones solo en pantallas realmente pequeñas */
+    flex-direction: column;
+  }
+
+  .music-next-button {
+    width: 100%;
+  }
+}
