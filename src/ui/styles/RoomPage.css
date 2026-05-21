@@ -1,0 +1,139 @@
+/* RoomPage.css */
+.room-page {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: #1a1a2e;
+  margin: 0;
+  padding: 0;
+}
+
+.game-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Forzar al canvas de Phaser a estirarse limpiamente */
+.game-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover; /* 🟢 Cambiado a cover para rellenar los bordes negros */
+}
+
+/* Advertencia de orientación para móvil */
+.orientation-warning-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  font-family: 'Courier New', monospace;
+}
+
+.orientation-warning-box {
+  background: #fef9e7;
+  border: 6px solid #222;
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  max-width: 280px;
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.orientation-warning-box p {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+  color: #1a1a1a;
+}
+
+.orientation-warning-box button {
+  margin: 8px;
+  padding: 8px 16px;
+  border: 2px solid #222;
+  background: #e4c766;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Botón de salida estilo puerta */
+.exit-button-pixel {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #8b5a2b;
+  border: 4px solid #5c3a1e;
+  border-radius: 8px 8px 4px 4px;
+  padding: 12px 24px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #f5deb3;
+  text-shadow: 2px 2px 0 #3a1f0b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.1s ease;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
+  z-index: 150;
+}
+
+.exit-button-pixel::before {
+  content: '🚪';
+  font-size: 1.5rem;
+  filter: drop-shadow(2px 2px 0 #3a1f0b);
+}
+
+.exit-button-pixel:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+}
+
+.exit-button-pixel:active {
+    transform: translateX(-50%) translateY(2px);
+    box-shadow: 0px 2px 0px 0px #1a1525; /* Se achica la sombra al presionar */
+}
+
+/* Reproductor */
+
+.room-music-panel {
+  position: absolute;
+  top: 90px;
+  right: 24px;
+  z-index: 20;
+}
+
+@media (max-width: 900px) {
+  .room-music-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 1rem auto;
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Para móviles */
+@media (max-width: 768px) {
+  .exit-button-pixel {
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .exit-button-pixel::before {
+    font-size: 1.2rem;
+  }
+}

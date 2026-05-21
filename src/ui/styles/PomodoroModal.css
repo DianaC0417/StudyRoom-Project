@@ -1,0 +1,933 @@
+@font-face {
+  font-family: 'Retrobit';
+  src: url('../../../../public/assets/fonts/retrobit-pixel-font/retrobit.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GamePaused';
+  src: url('../../../../public/assets/fonts/game_paused/Game Paused DEMO.otf')
+    format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ============================= */
+/* TOKENS */
+/* ============================= */
+
+:root {
+  --bs-canvas: #efe8e2;
+  --bs-canvas-soft: #fef9e7;
+  --bs-card-cream: #fffaf2;
+  --bs-option-selected: #e0ecda;
+
+  --bs-black: #000000;
+  --bs-ink: #222222;
+  --bs-ink-strong: #1a1a1a;
+  --bs-panel-dark: rgba(71, 68, 68, 0.94);
+  --bs-overlay-dark: rgba(0, 0, 0, 0.72);
+  --bs-screen-dark: #141414;
+
+  --bs-white: #ffffff;
+  --bs-white-soft: rgba(255, 255, 255, 0.72);
+  --bs-white-muted: rgba(255, 255, 255, 0.55);
+
+  --bs-border-dark: #222222;
+  --bs-border-soft: #d4c5b2;
+  --bs-border-soft-hover: #b8a590;
+
+  --bs-accent-gold: #c9a227;
+  --bs-accent-gold-soft: #e4c766;
+  --bs-success: #e0ecda;
+  --bs-error: #ff6b6b;
+
+  --bs-radius-sm: 6px;
+  --bs-radius-md: 8px;
+  --bs-radius-lg: 10px;
+  --bs-radius-panel: 16px;
+  --bs-radius-pill: 50px;
+
+  --bs-font-pixel-primary: 'Retrobit', 'Courier New', monospace;
+  --bs-font-pixel-secondary: 'GamePaused', 'Courier New', monospace;
+  --bs-font-readable: 'Comfortaa', 'Courier New', monospace;
+
+  --bs-shadow-pixel: 6px 6px 0 rgba(0, 0, 0, 0.28);
+  --bs-shadow-button: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  --bs-shadow-button-active: 2px 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* ============================= */
+/* OVERLAY */
+/* ============================= */
+.pomodoro-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bs-overlay-dark);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: bitstudyFadeIn 0.25s steps(4);
+}
+
+@keyframes bitstudyFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================= */
+/* MODAL */
+/* ============================= */
+
+.pomodoro-modal {
+  width: 520px;
+  max-width: 92vw;
+  image-rendering: pixelated;
+  font-family: var(--bs-font-pixel-secondary);
+}
+
+/* Caja principal pixel */
+.pixel-border {
+  position: relative;
+  background: var(--bs-panel-dark);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-panel);
+  padding: 1.5rem;
+  box-shadow: var(--bs-shadow-pixel);
+  animation: modalReveal 0.35s steps(6);
+}
+
+@keyframes modalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Esquinas decorativas pixel */
+.pixel-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--bs-accent-gold);
+  border: 2px solid var(--bs-border-dark);
+  image-rendering: pixelated;
+}
+
+.pixel-corner.tl {
+  top: -7px;
+  left: -7px;
+}
+
+.pixel-corner.tr {
+  top: -7px;
+  right: -7px;
+}
+
+.pixel-corner.bl {
+  bottom: -7px;
+  left: -7px;
+}
+
+.pixel-corner.br {
+  bottom: -7px;
+  right: -7px;
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  background: rgba(0, 0, 0, 0.38);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
+
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.modal-header.work-mode {
+  border-left: 8px solid var(--bs-accent-gold);
+}
+
+.modal-header.break-mode {
+  border-left: 8px solid var(--bs-option-selected);
+}
+
+/* Sesión */
+.session-indicator {
+  font-family: var(--bs-font-pixel-secondary);
+  color: var(--bs-white);
+}
+
+.session-label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bs-white-muted);
+}
+
+.session-number {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 1.5rem;
+  color: var(--bs-canvas-soft);
+  text-shadow: 2px 2px 0 var(--bs-black);
+}
+
+/* Badge de estado */
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-pill);
+
+  padding: 0.45rem 0.9rem;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.status-icon {
+  font-size: 1.25rem;
+  image-rendering: pixelated;
+}
+
+.status-text {
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--bs-ink);
+  text-transform: uppercase;
+}
+
+/* ============================= */
+/* MENSAJE */
+/* ============================= */
+
+.modal-message {
+  text-align: center;
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+
+  background: rgba(0, 0, 0, 0.28);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
+}
+
+.pixel-text {
+  font-family: var(--bs-font-readable);
+  font-size: 0.85rem;
+  color: var(--bs-white);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ============================= */
+/* TIMER */
+/* ============================= */
+
+.timer-container {
+  margin: 1.3rem 0;
+}
+
+.pixel-screen {
+  position: relative;
+  overflow: hidden;
+
+  background: var(--bs-screen-dark);
+  border: 4px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-lg);
+
+  padding: 1.7rem 1rem;
+  text-align: center;
+
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.06),
+    0 0 0 3px rgba(212, 197, 178, 0.35);
+}
+
+.screen-glare {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 35%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0)
+  );
+  pointer-events: none;
+}
+
+.timer-digits {
+  position: relative;
+  z-index: 1;
+
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 3.9rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+
+  color: var(--bs-canvas-soft);
+  text-shadow:
+    3px 3px 0 var(--bs-black),
+    0 0 10px rgba(201, 162, 39, 0.35);
+}
+
+/* En descanso, el timer se siente más suave */
+.modal-header.break-mode ~ .timer-container .timer-digits {
+  color: var(--bs-option-selected);
+  text-shadow:
+    3px 3px 0 var(--bs-black),
+    0 0 10px rgba(224, 236, 218, 0.35);
+}
+
+/* ============================= */
+/* PROGRESS BAR */
+/* ============================= */
+
+.progress-container {
+  margin-top: 1rem;
+}
+
+.progress-label {
+  font-family: var(--bs-font-pixel-secondary);
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  color: var(--bs-white-soft);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.pixel-progress-bar {
+  height: 22px;
+  padding: 3px;
+
+  background: rgba(0, 0, 0, 0.38);
+  border: 3px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-sm);
+
+  overflow: hidden;
+}
+
+.pixel-progress-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--bs-accent-gold) 0px,
+    var(--bs-accent-gold) 8px,
+    var(--bs-accent-gold-soft) 8px,
+    var(--bs-accent-gold-soft) 16px
+  );
+  transition: width 0.3s steps(20);
+  position: relative;
+}
+
+.modal-header.break-mode ~ .timer-container .pixel-progress-fill {
+  background: repeating-linear-gradient(
+    90deg,
+    #afcda8 0px,
+    #afcda8 8px,
+    var(--bs-option-selected) 8px,
+    var(--bs-option-selected) 16px
+  );
+}
+
+.progress-pixel {
+  position: absolute;
+  top: -3px;
+  right: 0;
+
+  width: 5px;
+  height: 22px;
+
+  background: var(--bs-white);
+  box-shadow: 0 0 8px var(--bs-white);
+  animation: pixelPulse 1s steps(2) infinite;
+}
+
+@keyframes pixelPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ============================= */
+/* BOTONES */
+/* ============================= */
+
+.modal-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.pixel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+
+  min-height: 42px;
+  padding: 0.65rem 1rem;
+
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-lg);
+
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition:
+    transform 0.08s steps(2),
+    box-shadow 0.08s steps(2),
+    background 0.15s linear;
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--bs-shadow-button-active);
+}
+
+.btn-icon {
+  font-size: 1rem;
+}
+
+/* Botón principal */
+.pixel-btn-primary {
+  background: var(--bs-white);
+  color: var(--bs-ink-strong);
+  box-shadow: var(--bs-shadow-button);
+}
+
+.pixel-btn-primary:hover {
+  background: var(--bs-canvas-soft);
+  transform: translateY(-2px);
+}
+
+/* Botón secundario */
+.pixel-btn-secondary {
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border-color: var(--bs-border-soft);
+  box-shadow: var(--bs-shadow-button);
+}
+
+.pixel-btn-secondary:hover {
+  border-color: var(--bs-border-soft-hover);
+  background: var(--bs-canvas-soft);
+  transform: translateY(-2px);
+}
+
+/* Botón reiniciar / peligro suave */
+.pixel-btn-danger {
+  background: var(--bs-ink-strong);
+  color: var(--bs-white);
+  box-shadow: var(--bs-shadow-button);
+}
+
+.pixel-btn-danger:hover {
+  background: #3d3d3d;
+  transform: translateY(-2px);
+}
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+
+  border-top: 2px solid rgba(212, 197, 178, 0.55);
+}
+
+.pixel-tip {
+  font-family: var(--bs-font-readable);
+  font-size: 0.68rem;
+  color: var(--bs-white-soft);
+
+  background: rgba(0, 0, 0, 0.28);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-md);
+
+  padding: 0.45rem 0.6rem;
+  line-height: 1.4;
+}
+
+.close-btn {
+  background: transparent;
+  color: var(--bs-white);
+  border: 2px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-md);
+
+  padding: 0.45rem 0.7rem;
+
+  font-family: var(--bs-font-pixel-secondary);
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+
+  transition:
+    background 0.15s linear,
+    color 0.15s linear,
+    transform 0.08s steps(2);
+}
+
+.close-btn:hover {
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+}
+
+.close-btn:active {
+  transform: translate(2px, 2px);
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 600px) {
+  .pomodoro-modal {
+    width: 100%;
+    max-width: 94vw;
+  }
+
+  .pixel-border {
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.28);
+  }
+
+  .modal-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .status-badge {
+    justify-content: center;
+  }
+
+  .session-number {
+    font-size: 1.25rem;
+  }
+
+  .timer-digits {
+    font-size: 2.4rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pixel-screen {
+    padding: 1.3rem 0.5rem;
+  }
+
+  .modal-controls {
+    gap: 0.5rem;
+  }
+
+  .pixel-btn {
+    flex: 1 1 100%;
+    font-size: 0.68rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .close-btn {
+    width: 100%;
+  }
+
+  .pixel-tip {
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .timer-digits {
+    font-size: 2rem;
+  }
+
+  .status-text {
+    font-size: 0.62rem;
+  }
+
+  .pixel-text {
+    font-size: 0.78rem;
+  }
+}
+
+/* =========================================
+   MUSIC PANEL (Adaptado a los Tokens de BitStudy)
+   ========================================= */
+
+/* Scoped box-sizing: Solo afecta al panel de música para no romper el Pomodoro */
+.music-panel, .music-panel *, .music-panel *::before, .music-panel *::after {
+  box-sizing: border-box;
+}
+
+.music-panel {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  
+  /* Usando tus variables globales */
+  background: var(--bs-panel-dark);
+  color: var(--bs-white);
+  border: 3px solid var(--bs-border-dark);
+  border-radius: var(--bs-radius-panel);
+  padding: 1rem;
+  
+  font-family: var(--bs-font-pixel-primary);
+  box-shadow: var(--bs-shadow-pixel);
+}
+
+.music-selector,
+.music-player {
+  width: 100%;
+}
+
+.music-player {
+  margin-top: 1rem;
+}
+
+.music-section-title {
+  margin-bottom: 0.8rem;
+  color: var(--bs-canvas-soft);
+  font-family: var(--bs-font-pixel-secondary);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* GRIDS Y TARJETAS */
+.music-mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.music-mood-card {
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border: 3px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
+  padding: 0.55rem 0.45rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.music-mood-card:hover {
+  border-color: var(--bs-border-soft-hover);
+  transform: translateY(-2px);
+}
+
+.music-mood-card--selected {
+  background: var(--bs-option-selected);
+  border-color: var(--bs-border-dark);
+}
+
+.music-mood-icon {
+  display: block;
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.music-mood-card strong {
+  display: block;
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.music-mood-card small {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--bs-font-readable);
+  font-size: 0.62rem;
+  line-height: 1.2;
+}
+
+/* LISTA DE CANCIONES */
+.music-track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 190px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch; 
+}
+
+.music-track-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border: 3px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
+  padding: 0.45rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.music-track-card:hover {
+  border-color: var(--bs-border-soft-hover);
+}
+
+.music-track-card--selected {
+  background: var(--bs-option-selected);
+  border-color: var(--bs-border-dark);
+}
+
+.music-track-cover {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: var(--bs-radius-sm);
+  border: 2px solid var(--bs-border-dark);
+  image-rendering: auto;
+  flex-shrink: 0; 
+}
+
+.music-track-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0; 
+}
+
+.music-track-info strong {
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.7rem;
+  color: var(--bs-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-track-info small {
+  font-family: var(--bs-font-readable);
+  font-size: 0.62rem;
+  color: var(--bs-ink-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* REPRODUCTOR ACTUAL */
+.music-now-playing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  
+  background: var(--bs-card-cream);
+  color: var(--bs-ink);
+  border: 3px solid var(--bs-border-soft);
+  border-radius: var(--bs-radius-lg);
+  padding: 0.9rem;
+}
+
+.music-player-cover {
+  width: 82px;
+  height: 82px;
+  object-fit: cover;
+  border-radius: var(--bs-radius-md);
+  border: 3px solid var(--bs-border-dark);
+}
+
+.music-player-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+
+.music-player-info strong {
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  color: var(--bs-ink);
+}
+
+.music-player-info span {
+  font-family: var(--bs-font-readable);
+  font-size: 0.72rem;
+  color: var(--bs-ink-strong);
+}
+
+/* CONTROLES */
+.music-player-actions {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.music-play-button,
+.music-next-button {
+  background: var(--bs-screen-dark);
+  color: var(--bs-white);
+  border: none;
+  border-radius: var(--bs-radius-lg);
+  padding: 0.7rem;
+  font-family: var(--bs-font-pixel-secondary);
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--bs-shadow-button);
+  transition: transform 0.08s steps(2), box-shadow 0.08s steps(2);
+}
+
+.music-play-button {
+  flex: 1;
+}
+
+.music-next-button {
+  width: 80px;
+}
+
+.music-play-button:hover,
+.music-next-button:hover {
+  background: #3d3d3d;
+  transform: translateY(-2px);
+}
+
+.music-play-button:active,
+.music-next-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--bs-shadow-button-active);
+}
+
+.music-volume {
+  width: 100%;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: var(--bs-font-pixel-primary);
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.music-volume input {
+  width: 100%;
+  cursor: pointer;
+}
+
+.music-message {
+  font-family: var(--bs-font-readable);
+  font-size: 0.75rem;
+  color: var(--bs-white-soft);
+  text-align: center;
+}
+
+.music-error {
+  margin-top: 0.8rem;
+  color: var(--bs-error);
+  font-family: var(--bs-font-readable);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+/* =========================================
+   MEDIA QUERIES PARA CELULAR (MUSIC PANEL)
+   ========================================= */
+@media (max-width: 480px) {
+  .music-panel {
+    max-width: 100%; 
+    padding: 0.85rem;
+    border-radius: 12px;
+    border-width: 2px; 
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.28); /* Mismo shadow que el modal en celular */
+  }
+
+  .music-mood-grid {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .music-track-list {
+    max-height: 160px; 
+  }
+
+  .music-now-playing {
+    flex-direction: row; 
+    padding: 0.75rem;
+    text-align: left;
+    align-items: center;
+  }
+
+  .music-player-cover {
+    width: 60px;
+    height: 60px;
+    border-width: 2px;
+  }
+
+  .music-player-info {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .music-player-actions {
+    flex-direction: column;
+  }
+
+  .music-next-button {
+    width: 100%;
+  }
+}
