@@ -43,45 +43,4 @@ export const MobileControls: React.FC<MobileControlsProps> = ({ isMobile }) => {
   }, []);
 
   if (!isMobile) return null;
-
-  return (
-    <div className="mobile-controls-panel">
-      <div className="dpad">
-        <button
-          className="ctrl-btn up"
-          onTouchStart={handleTouchStart('up')}
-          onTouchEnd={handleTouchEnd('up')}
-          onTouchCancel={handleTouchEnd('up')}
-        >
-          ▲
-        </button>
-        <div className="mid-row">
-          <button
-            className="ctrl-btn left"
-            onTouchStart={handleTouchStart('left')}
-            onTouchEnd={handleTouchEnd('left')}
-            onTouchCancel={handleTouchEnd('left')}
-          >
-            ◀
-          </button>
-          <button
-            className="ctrl-btn down"
-            onTouchStart={handleTouchStart('down')}
-            onTouchEnd={handleTouchEnd('down')}
-            onTouchCancel={handleTouchEnd('down')}
-          >
-            ▼
-          </button>
-          <button
-            className="ctrl-btn right"
-            onTouchStart={handleTouchStart('right')}
-            onTouchEnd={handleTouchEnd('right')}
-            onTouchCancel={handleTouchEnd('right')}
-          >
-            ▶
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 };
