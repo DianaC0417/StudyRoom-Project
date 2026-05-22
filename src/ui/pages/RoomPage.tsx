@@ -16,6 +16,7 @@ import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
 import '../components/music/MusicPlayer.css';
 import { OrientationWarning } from '../components/OrientationWarning';
+import { MobileControls } from '../components/MobileControls';
 
 export const RoomPage: React.FC = () => {
   const gameRef = useRef<HTMLDivElement>(null);
@@ -58,7 +59,6 @@ export const RoomPage: React.FC = () => {
     playNextTrack,
   } = useMusic();
 
-  // Música de fondo por sala
   const musicMap: Record<Room, string> = {
     salaestudio1: '/assets/sounds/sala1.mp3',
     salaestudio2: '/assets/sounds/sala2.mp3',
@@ -67,21 +67,18 @@ export const RoomPage: React.FC = () => {
   const musicSrc = studyConfig?.sala ? musicMap[studyConfig.sala] : null;
   const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
     musicSrc || '/assets/sounds/sala1.mp3',
-    !isPlaying // Auto-play if the radio isn't playing
+    !isPlaying
   );
 
   useEffect(() => {
     if (!musicSrc) return;
-
     if (isPlaying) {
       pauseMusic();
     } else {
       playMusic();
     }
-    // No devolvemos cleanup aquí porque useBackgroundMusic ya lo hace internamente
   }, [musicSrc, isPlaying, playMusic, pauseMusic]);
 
-  // Sonidos
   const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
   const playClick = useSound('assets/sounds/select_personaje.mp3');
   const playExit = useSound('assets/sounds/close.mp3');
@@ -102,6 +99,21 @@ export const RoomPage: React.FC = () => {
     playClick();
     setShowModal(false);
   };
+
+  const getIsMobile = () =>
+    Math.min(window.innerWidth, window.innerHeight) <= 768 ||
+    'ontouchstart' in window;
+
+  const [isMobile, setIsMobile] = useState(getIsMobile());
+  useEffect(() => {
+    const handleResize = () => setIsMobile(getIsMobile());
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
+  }, []);
 
   const handleExit = () => {
     playExit();
@@ -140,14 +152,10 @@ export const RoomPage: React.FC = () => {
     window.addEventListener('pomodoroNotification', handleNotification);
     window.addEventListener('nearExit', handleExitPrompt);
 
-    const handleOpenMusicPlayer = () => {
-      setShowMusicWidget(true);
-    };
+    const handleOpenMusicPlayer = () => setShowMusicWidget(true);
     window.addEventListener('openMusicPlayer', handleOpenMusicPlayer);
 
-    const handleOpenTodoList = () => {
-      setShowTodoWidget(true);
-    };
+    const handleOpenTodoList = () => setShowTodoWidget(true);
     window.addEventListener('openTodoList', handleOpenTodoList);
 
     return () => {
@@ -164,30 +172,40 @@ export const RoomPage: React.FC = () => {
   }, [playPomodoroOpen]);
 
   useEffect(() => {
-    if (showMusicWidget) {
-      playPomodoroOpen();
-    }
+    if (showMusicWidget) playPomodoroOpen();
   }, [showMusicWidget, playPomodoroOpen]);
 
   useEffect(() => {
-    if (showTodoWidget) {
-      playPomodoroOpen();
-    }
+    if (showTodoWidget) playPomodoroOpen();
   }, [showTodoWidget, playPomodoroOpen]);
 
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
+
       {showMusicWidget && (
         <div
           className="pomodoro-modal-overlay"
-          style={{ justifyContent: 'center', alignItems: 'center' }}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflowY: 'auto',
+            padding: '10px',
+          }}
         >
           <div
             className="pomodoro-modal"
-            style={{ width: '95%', maxWidth: '1000px' }}
+            style={{
+              width: '100%',
+              maxWidth: '900px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+            }}
           >
-            <div className="pixel-border" style={{ padding: '2rem' }}>
+            <div
+              className="pixel-border"
+              style={{ padding: isMobile ? '1rem' : '2rem' }}
+            >
               <div className="pixel-corner tl" />
               <div className="pixel-corner tr" />
               <div className="pixel-corner bl" />
@@ -196,7 +214,7 @@ export const RoomPage: React.FC = () => {
               <h2
                 style={{
                   fontFamily: "'Retrobit', 'Courier New', monospace",
-                  fontSize: '1.7rem',
+                  fontSize: isMobile ? '1.3rem' : '1.7rem',
                   color: '#fef9e7',
                   textAlign: 'center',
                   letterSpacing: '3px',
@@ -206,23 +224,15 @@ export const RoomPage: React.FC = () => {
                 RADIO DE ESTUDIO
               </h2>
 
-              {/* Contenedor de dos columnas */}
               <div
                 style={{
                   display: 'flex',
-                  gap: '2rem',
+                  gap: isMobile ? '1rem' : '2rem',
                   flexWrap: 'wrap',
                   justifyContent: 'center',
                 }}
               >
-                {/* Columna izquierda: Selector */}
-                <div
-                  style={{
-                    flex: '1 1 280px',
-                    minWidth: '260px',
-                    maxWidth: '400px',
-                  }}
-                >
+                <div style={{ flex: '1 1 260px', maxWidth: '400px' }}>
                   <MusicSelector
                     mood={mood}
                     tracks={tracks}
@@ -241,8 +251,7 @@ export const RoomPage: React.FC = () => {
 
                 <div
                   style={{
-                    flex: '1 1 280px',
-                    minWidth: '260px',
+                    flex: '1 1 260px',
                     maxWidth: '400px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -258,9 +267,7 @@ export const RoomPage: React.FC = () => {
                       playClick();
                       togglePlay();
                     }}
-                    onChangeVolume={(newVolume) => {
-                      changeVolume(newVolume);
-                    }}
+                    onChangeVolume={(newVolume) => changeVolume(newVolume)}
                     onNextTrack={() => {
                       playClick();
                       playNextTrack();
@@ -287,11 +294,20 @@ export const RoomPage: React.FC = () => {
       {showTodoWidget && (
         <div
           className="pomodoro-modal-overlay"
-          style={{ justifyContent: 'center', alignItems: 'center' }}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '10px',
+          }}
         >
           <div
             className="pomodoro-modal"
-            style={{ width: '95%', maxWidth: '450px' }} // Hecho más angosto para que calce bien tu To-Do
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+            }}
           >
             <div className="pixel-border" style={{ padding: '1.5rem' }}>
               <div className="pixel-corner tl" />
@@ -338,6 +354,11 @@ export const RoomPage: React.FC = () => {
         onClose={handleCloseModal}
       />
       <OrientationWarning />
+      <MobileControls
+        isMobile={
+          isMobile && !showModal && !showMusicWidget && !showTodoWidget
+        }
+      />
     </div>
   );
 };

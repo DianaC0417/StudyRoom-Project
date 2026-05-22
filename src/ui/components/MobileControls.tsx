@@ -1,5 +1,5 @@
 // ui/components/MobileControls.tsx
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import '../styles/MobileControls.css';
 
 interface MobileControlsProps {
@@ -7,7 +7,10 @@ interface MobileControlsProps {
 }
 
 export const MobileControls: React.FC<MobileControlsProps> = ({ isMobile }) => {
-  const activeTouches = useRef<Set<string>>(new Set());
+  // Guardamos las coordenadas donde el usuario inicia el toque
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  // Guardamos las direcciones que están activas actualmente para no repetir eventos redundantes
+  const activeDirections = useRef<Set<string>>(new Set());
 
   const sendMoveEvent = useCallback((direction: string, pressed: boolean) => {
     window.dispatchEvent(
@@ -17,75 +20,86 @@ export const MobileControls: React.FC<MobileControlsProps> = ({ isMobile }) => {
     );
   }, []);
 
-  const handleTouchStart = useCallback(
-    (direction: string) => (e: React.TouchEvent) => {
-      e.preventDefault();
-      if (!activeTouches.current.has(direction)) {
-        activeTouches.current.add(direction);
-        sendMoveEvent(direction, true);
-      }
-    },
-    [sendMoveEvent]
-  );
-
-  const handleTouchEnd = useCallback(
-    (direction: string) => (e: React.TouchEvent) => {
-      e.preventDefault();
-      if (activeTouches.current.has(direction)) {
-        activeTouches.current.delete(direction);
-        sendMoveEvent(direction, false);
-      }
-    },
-    [sendMoveEvent]
-  );
-
-  // Liberar todos los botones si el componente se desmonta
-  useEffect(() => {
-    return () => {
-      ['up', 'down', 'left', 'right'].forEach((dir) => {
-        sendMoveEvent(dir, false);
-      });
-    };
+  const clearAllMoves = useCallback(() => {
+    activeDirections.current.forEach((dir) => {
+      sendMoveEvent(dir, false);
+    });
+    activeDirections.current.clear();
   }, [sendMoveEvent]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const touch = e.touches[0];
+    touchStart.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!touchStart.current) return;
+
+    const touch = e.touches[0];
+    // Calculamos la distancia (delta) entre el inicio y la posición actual del dedo
+    const deltaX = touch.clientX - touchStart.current.x;
+    const deltaY = touch.clientY - touchStart.current.y;
+
+    // Umbral mínimo de píxeles para registrar movimiento (evita micro-temblores del dedo)
+    const threshold = 15;
+
+    const newDirections = new Set<string>();
+
+    // Evaluación del eje Horizontal (Izquierda / Derecha)
+    if (Math.abs(deltaX) > threshold) {
+      if (deltaX > 0) {
+        newDirections.add('right');
+      } else {
+        newDirections.add('left');
+      }
+    }
+
+    // Evaluación del Eje Vertical (Arriba / Abajo)
+    if (Math.abs(deltaY) > threshold) {
+      if (deltaY > 0) {
+        newDirections.add('down');
+      } else {
+        newDirections.add('up');
+      }
+    }
+
+    // Apagamos las direcciones que el dedo dejó de presionar
+    activeDirections.current.forEach((dir) => {
+      if (!newDirections.has(dir)) {
+        sendMoveEvent(dir, false);
+      }
+    });
+
+    // Encendemos las nuevas direcciones hacia donde se desplaza el dedo
+    newDirections.forEach((dir) => {
+      if (!activeDirections.current.has(dir)) {
+        sendMoveEvent(dir, true);
+      }
+    });
+
+    activeDirections.current = newDirections;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    touchStart.current = null;
+    clearAllMoves(); // Al levantar el dedo el estudiante se detiene por completo
+  };
 
   if (!isMobile) return null;
 
   return (
-    <div className="mobile-controls-panel">
-      <div className="dpad">
-        <button
-          className="ctrl-btn up"
-          onTouchStart={handleTouchStart('up')}
-          onTouchEnd={handleTouchEnd('up')}
-          onTouchCancel={handleTouchEnd('up')}
-        ></button>
-        <div className="mid-row">
-          <button
-            className="ctrl-btn left"
-            onTouchStart={handleTouchStart('left')}
-            onTouchEnd={handleTouchEnd('left')}
-            onTouchCancel={handleTouchEnd('left')}
-          >
-            ◀
-          </button>
-          <button
-            className="ctrl-btn down"
-            onTouchStart={handleTouchStart('down')}
-            onTouchEnd={handleTouchEnd('down')}
-            onTouchCancel={handleTouchEnd('down')}
-          >
-            ▼
-          </button>
-          <button
-            className="ctrl-btn right"
-            onTouchStart={handleTouchStart('right')}
-            onTouchEnd={handleTouchEnd('right')}
-            onTouchCancel={handleTouchEnd('right')}
-          >
-            ▶
-          </button>
-        </div>
-      </div>
-    </div>
+    <div
+      className="mobile-touch-zone"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+    />
   );
 };

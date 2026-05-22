@@ -6,7 +6,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   parent: 'game-container',
   backgroundColor: 0x2d2d4a,
   scale: {
-    mode: Phaser.Scale.FIT, // Escala el juego para que encaje en el contenedor
+    mode: Phaser.Scale.RESIZE, // Escala el juego para que encaje en el contenedor
     autoCenter: Phaser.Scale.CENTER_BOTH, // Centra el canvas
   },
   physics: {

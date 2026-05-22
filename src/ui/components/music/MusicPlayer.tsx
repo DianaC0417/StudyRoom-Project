@@ -1,6 +1,6 @@
-/// Componente para mostrar el reproductor de música
 import type { MusicTrack } from '../../../domain/MusicTrack';
 import '../music/MusicPlayer.css';
+
 type MusicPlayerProps = {
   selectedTrack: MusicTrack | null;
   isPlaying: boolean;

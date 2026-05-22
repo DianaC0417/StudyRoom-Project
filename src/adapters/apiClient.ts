@@ -1,5 +1,10 @@
 // src/adapters/apiClient.ts
-
+//Si quieren entrar y hacer la preuba en el celu:
+//1. primero asegurense de que corran el backend
+//2. Luego corran el forntend con npm run dev -- --host
+//3. entren a la segunda ip que les aparezca en la terminal pero antes cambien la IP que esta abajo:
+//export const API_BASE_URL = 'http://192.168.26.5:3000/api';
+//si lo quieren probar en local dejenlo como localhost
 export const API_BASE_URL = 'http://localhost:3000/api';
 
 export const apiClient = async (

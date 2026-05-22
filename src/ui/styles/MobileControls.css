@@ -1,63 +1,11 @@
-/* ui/styles/MobileControls.css */
-.mobile-controls-panel {
+/* MobileControls.css */
+.mobile-touch-zone {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 200;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(4px);
-  border-radius: 60px;
-  padding: 12px;
-  border: 2px solid #e4c766;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
-}
-
-.dpad {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.mid-row {
-  display: flex;
-  gap: 16px;
-}
-
-.ctrl-btn {
-  width: 60px;
-  height: 60px;
-  background: #2a2a3e;
-  border: 3px solid #e4c766;
-  border-radius: 20px;
-  font-size: 28px;
-  font-weight: bold;
-  color: #fdf6e3;
-  text-shadow: 2px 2px 0 #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
-  transition: all 0.05s linear;
-  box-shadow: 0 5px 0 #8b6b42;
-}
-
-.ctrl-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #8b6b42;
-}
-
-@media (max-width: 600px) {
-  .ctrl-btn {
-    width: 55px;
-    height: 55px;
-    font-size: 24px;
-  }
-  .mobile-controls-panel {
-    bottom: 12px;
-    left: 12px;
-    padding: 8px;
-  }
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 999; /* Por encima de Phaser, pero por debajo de los modales (Radio/To-Do) y el botón salir */
+  touch-action: none; /* Evita que el navegador haga scroll o zoom nativo al arrastrar el dedo */
 }

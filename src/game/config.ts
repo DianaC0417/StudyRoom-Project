@@ -5,7 +5,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   width: window.innerWidth,
   height: window.innerHeight,
   scale: {
-    mode: Phaser.Scale.RESIZE, // Cambia dinámicamente según el monitor
+    mode: Phaser.Scale.FIT, // Cambia dinámicamente según el monitor
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   physics: {

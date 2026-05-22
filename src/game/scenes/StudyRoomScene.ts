@@ -69,11 +69,10 @@ export class StudyRoomScene extends Phaser.Scene {
     const background = this.add.image(width / 2, height / 2, 'study-room');
     // 💡 TIP: En lugar de setDisplaySize que deforma la imagen,
     // calculamos la escala para que cubra toda la pantalla sin achatarse
-    const scale = Math.max(
-      width / background.width,
-      height / background.height
-    );
-    background.setScale(scale).setScrollFactor(0).setDepth(-1);
+    const scaleX = width / background.width;
+    const scaleY = height / background.height;
+    const scale = Math.max(scaleX, scaleY); // cover
+    background.setScale(scale).setScrollFactor(0);
 
     this.createAnimations();
 
@@ -84,20 +83,15 @@ export class StudyRoomScene extends Phaser.Scene {
     this.todoZone = this.add.zone(width * 0.25, height * 0.5, 150, 150);
 
     this.exitVisualText = this.add
-      .text(
-        width / 2,
-        height - 110,
-        '🚪 Presiona [ ESPACIO ] o Toca aquí para Salir',
-        {
-          fontFamily: 'monospace',
-          fontSize: '18px',
-          color: '#1a1a1a',
-          backgroundColor: '#e4c766',
-          stroke: '#222222',
-          strokeThickness: 5,
-          padding: { x: 14, y: 10 },
-        }
-      )
+      .text(width / 2, height - 110, '🚪 Presiona para Salir', {
+        fontFamily: 'monospace',
+        fontSize: '18px',
+        color: '#1a1a1a',
+        backgroundColor: '#e4c766',
+        stroke: '#222222',
+        strokeThickness: 5,
+        padding: { x: 14, y: 10 },
+      })
       .setOrigin(0.5)
       .setScrollFactor(0)
       .setDepth(100)
@@ -338,7 +332,6 @@ export class StudyRoomScene extends Phaser.Scene {
       this.showMusicPlayer = false;
     }
 
-    // 👇 LO QUE FALTABA: 4. Lista de Tareas
     const distTodo = Phaser.Math.Distance.Between(
       this.player.x,
       this.player.y,
