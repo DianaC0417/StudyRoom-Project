@@ -176,7 +176,7 @@ export const RoomPage: React.FC = () => {
         phaserGameRef.current = null;
       }
     };
-  }, [playPomodoroOpen]);
+  }, [playPomodoroOpen, navigate, playExit]);
 
   useEffect(() => {
     if (showMusicWidget) playPomodoroOpen();
