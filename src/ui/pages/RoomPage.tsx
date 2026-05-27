@@ -148,9 +148,15 @@ export const RoomPage: React.FC = () => {
       setShowExitBtn(customEvent.detail.show);
     };
 
+    const handleExitRoom = () => {
+      playExit();
+      navigate('/customization');
+    };
+
     window.addEventListener('openPomodoro', handleOpenPomodoro);
     window.addEventListener('pomodoroNotification', handleNotification);
     window.addEventListener('nearExit', handleExitPrompt);
+    window.addEventListener('exitRoom', handleExitRoom);
 
     const handleOpenMusicPlayer = () => setShowMusicWidget(true);
     window.addEventListener('openMusicPlayer', handleOpenMusicPlayer);
@@ -164,6 +170,7 @@ export const RoomPage: React.FC = () => {
       window.removeEventListener('pomodoroNotification', handleNotification);
       window.removeEventListener('openMusicPlayer', handleOpenMusicPlayer);
       window.removeEventListener('openTodoList', handleOpenTodoList);
+      window.removeEventListener('exitRoom', handleExitRoom);
       if (phaserGameRef.current) {
         phaserGameRef.current.destroy(true);
         phaserGameRef.current = null;
@@ -355,9 +362,7 @@ export const RoomPage: React.FC = () => {
       />
       <OrientationWarning />
       <MobileControls
-        isMobile={
-          isMobile && !showModal && !showMusicWidget && !showTodoWidget
-        }
+        isMobile={isMobile && !showModal && !showMusicWidget && !showTodoWidget}
       />
     </div>
   );

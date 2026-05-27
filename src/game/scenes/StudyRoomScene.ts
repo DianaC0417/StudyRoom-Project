@@ -1,3 +1,4 @@
+// src/game/scenes/StudyRoomScene.ts
 import * as Phaser from 'phaser';
 import { studyConfigService } from '../../config/dependencies';
 
