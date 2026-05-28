@@ -105,13 +105,24 @@ export const RoomPage: React.FC = () => {
     'ontouchstart' in window;
 
   const [isMobile, setIsMobile] = useState(getIsMobile());
+
   useEffect(() => {
-    const handleResize = () => setIsMobile(getIsMobile());
+    let timeoutId: number;
+
+    const handleResize = () => {
+      setIsMobile(getIsMobile());
+      clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        window.location.reload();
+      }, 200); // 200 milisegundos de retardo
+    };
+
     window.addEventListener('resize', handleResize);
     window.addEventListener('orientationchange', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleResize);
+      clearTimeout(timeoutId);
     };
   }, []);
 
