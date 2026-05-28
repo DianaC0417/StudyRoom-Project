@@ -1,36 +1,26 @@
-// application/userService.ts
-import { type User, validateUsername } from '../domain/User';
 import type { UserRepository } from './ports/UserRepository';
+import type { User } from '../domain/User';
 
-export const createUserService = (userRepo: UserRepository) => {
+export interface UserService {
+  login(username: string, password: string, remember: boolean): Promise<User>;
+  register(username: string, email: string, password: string, remember: boolean): Promise<User>;
+  logout(): void;
+  getCurrentUser(): User | null;
+}
+
+export function createUserService(repo: UserRepository): UserService {
   return {
-    // 1. Convertimos la función en async porque ahora hará una llamada al backend
-    login: async (
-      username: string,
-      password: string,
-      remember: boolean
-    ): Promise<User> => {
-      if (!validateUsername(username)) {
-        throw new Error('Nombre de usuario inválido');
-      }
-      // 2. Llamamos a la nueva función de login del UserRepository que se conecta al backend
-      const userFromBackend = await userRepo.login(username, password);
-      // 3. Le agregamos el flag de 'remember' para tu lógica local
-      const finalUser: User = { ...userFromBackend, remember };
-      // 4. Guardamos la sesión (localStorage/sessionStorage)
-      userRepo.save(finalUser);
-
-      return finalUser;
+    async login(username, password, remember) {
+      return repo.login(username, password, remember);
     },
-
-    getCurrentUser: (): User | null => {
-      return userRepo.get();
+    async register(username, email, password, remember) {
+      return repo.register(username, email, password, remember);
     },
-
-    logout: (): void => {
-      userRepo.clear();
+    logout() {
+      repo.clear();
+    },
+    getCurrentUser() {
+      return repo.get();
     },
   };
-};
-
-export type UserService = ReturnType<typeof createUserService>;
+}

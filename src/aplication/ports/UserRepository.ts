@@ -6,5 +6,11 @@ export interface UserRepository {
   get(): User | null;
   clear(): void;
   //  línea para definir la función de login que se conectará al backend:
-  login(username: string, password: string): Promise<User>;
+  login(email: string, password: string): Promise<User>;
+  register(
+    username: string,
+    email: string,
+    password: string,
+    remember: boolean
+  ): Promise<User>;
 }

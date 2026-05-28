@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useSound } from '../hooks/useSound';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import PublicLayout from '../components/PublicLayout';
 import LoginCard from '../components/login/LoginCard';
+import RegisterCard from '../components/register/RegisterCard';
 
 interface Props {
   onLogin?: (username: string) => void;
@@ -10,8 +12,17 @@ interface Props {
 const LoginPage = ({ onLogin }: Props) => {
   const playLogin = useSound('assets/sounds/start.mp3');
   useBackgroundMusic('/assets/sounds/background_music.mp3', true);
+  const [showRegister, setShowRegister] = useState(false);
 
   const handleLoginWithSound = (username: string) => {
+    playLogin();
+    onLogin?.(username);
+  };
+
+  const handleSwitchToRegister = () => setShowRegister(true);
+  const handleSwitchToLogin = () => setShowRegister(false);
+
+  const handleRegister = (username: string) => {
     playLogin();
     onLogin?.(username);
   };
@@ -35,8 +46,18 @@ const LoginPage = ({ onLogin }: Props) => {
           </div>
         </div>
 
-        {/* Tarjeta de login */}
-        <LoginCard onLogin={handleLoginWithSound} />
+        {/* Tarjeta de login / register */}
+        {showRegister ? (
+          <RegisterCard
+            onRegister={handleRegister}
+            onSwitchToLogin={handleSwitchToLogin}
+          />
+        ) : (
+          <LoginCard
+            onLogin={handleLoginWithSound}
+            onSwitchToRegister={handleSwitchToRegister}
+          />
+        )}
       </div>
     </PublicLayout>
   );

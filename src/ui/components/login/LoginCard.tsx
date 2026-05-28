@@ -4,13 +4,14 @@ import { userService } from '../../../config/dependencies';
 
 interface Props {
   onLogin?: (username: string) => void;
+  onSwitchToRegister?: () => void;
 }
 
-const LoginCard = ({ onLogin }: Props) => {
-  const [username, setUsername] = useState('');
+const LoginCard = ({ onLogin, onSwitchToRegister }: Props) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{
-    username?: string;
+    email?: string;
     password?: string;
   }>({});
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ const LoginCard = ({ onLogin }: Props) => {
 
   const validate = () => {
     const e: typeof errors = {};
-    if (!username.trim()) e.username = 'Escribe tu nombre de usuario';
+    if (!email.trim()) e.email = 'Escribe tu correo electrónico';
     if (!password) e.password = 'Escribe tu contraseña';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -29,22 +30,19 @@ const LoginCard = ({ onLogin }: Props) => {
     if (!validate()) return;
     setLoading(true);
 
-    // Eliminamos el Promise tonto (delay falso) porque ahora tenemos un delay real de red
-
     try {
-      // 🚀 AQUÍ ESTÁ EL CAMBIO CLAVE: Agregamos await y pasamos el password
-      const user = await userService.login(username.trim(), password, false);
+      const user = await userService.login(email.trim(), password, false);
       console.log('Usuario logueado exitosamente:', user);
 
       setLoading(false);
       setSuccess(true);
 
       setTimeout(() => {
-        onLogin?.(username.trim()); // Esto es lo que le avisa a App.tsx que te mande a Customización
+        onLogin?.(email.trim());
       }, 1200);
     } catch (error) {
       setErrors({
-        username:
+        email:
           error instanceof Error
             ? error.message
             : 'Usuario o contraseña incorrectos',
@@ -58,7 +56,7 @@ const LoginCard = ({ onLogin }: Props) => {
       {success ? (
         <div className="success-message">
           <span className="success-icon">📖</span>
-          <h3>¡Bienvenido, {username}!</h3>
+          <h3>¡Bienvenido!</h3>
           <p>Entrando a tu sala de estudio...</p>
         </div>
       ) : (
@@ -71,25 +69,25 @@ const LoginCard = ({ onLogin }: Props) => {
           <form onSubmit={handleSubmit} noValidate>
             <div className="input-group">
               <input
-                className={`study-input ${errors.username ? 'error' : ''}`}
-                type="text"
-                placeholder="Username"
-                value={username}
+                className={`study-input ${errors.email ? 'error' : ''}`}
+                type="email"
+                placeholder="Correo electrónico"
+                value={email}
                 onChange={(e) => {
-                  setUsername(e.target.value);
-                  setErrors((prev) => ({ ...prev, username: undefined }));
+                  setEmail(e.target.value);
+                  setErrors((prev) => ({ ...prev, email: undefined }));
                 }}
-                autoComplete="username"
+                autoComplete="email"
               />
-              {errors.username && (
-                <span className="input-error">{errors.username}</span>
+              {errors.email && (
+                <span className="input-error">{errors.email}</span>
               )}
             </div>
             <div className="input-group">
               <input
                 className={`study-input ${errors.password ? 'error' : ''}`}
                 type="password"
-                placeholder="Password"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -108,16 +106,13 @@ const LoginCard = ({ onLogin }: Props) => {
             </div>
             <button type="submit" className="btn-enter" disabled={loading}>
               {loading && <span className="spin" />}
-              {loading ? 'Entering...' : 'LOGIN'}
+              {loading ? 'Entrando...' : 'LOGIN'}
             </button>
           </form>
           <div className="register-row">
-            Don't have an account?{' '}
-            <button
-              type="button"
-              onClick={() => console.log('→ ir a registro')}
-            >
-              Register
+            ¿No tienes cuenta?{' '}
+            <button type="button" onClick={() => onSwitchToRegister?.()}>
+              Registrarse
             </button>
           </div>
         </>

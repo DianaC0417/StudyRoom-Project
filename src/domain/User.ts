@@ -1,6 +1,9 @@
 // domain/User.ts - SIN importaciones externas
 export interface User {
+  id: string;
+  email: string;
   username: string;
+  token: string; // ← JWT del backend
   remember: boolean;
 }
 
