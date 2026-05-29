@@ -1,5 +1,5 @@
 //src/adapters/musicAdapter.ts
-import type { MusicRepository } from '../aplication/ports/MusicRepository';
+import type { MusicRepository } from '../application/ports/MusicRepository';
 import type { MusicMood, MusicTrack } from '../domain/MusicTrack';
 
 type ApiMusicResponse = {

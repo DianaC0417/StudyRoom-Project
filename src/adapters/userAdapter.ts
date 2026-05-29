@@ -1,4 +1,4 @@
-import { type UserRepository } from '../aplication/ports/UserRepository';
+import { type UserRepository } from '../application/ports/UserRepository';
 import type { User } from '../domain/User';
 import { apiClient } from './apiClient';
 

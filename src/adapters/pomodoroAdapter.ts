@@ -1,4 +1,4 @@
-import type { PomodoroRepository } from '../aplication/ports/PomodoroRepository';
+import type { PomodoroRepository } from '../application/ports/PomodoroRepository';
 
 const POMODORO_KEY = 'pomodoro_time';
 

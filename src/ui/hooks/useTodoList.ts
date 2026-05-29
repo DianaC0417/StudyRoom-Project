@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
+import { todoService } from '../../config/dependencies';
+import type { Task } from '../../domain/Task';
 
-export interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+export type { Task };
 
 export const useTodoList = () => {
   const [tasks, setTasks] = useState<Task[]>(() => {
-    const savedTasks = localStorage.getItem('studyroom_tasks');
-    return savedTasks ? JSON.parse(savedTasks) : [];
+    return todoService.getTasks();
   });
 
   useEffect(() => {
-    localStorage.setItem('studyroom_tasks', JSON.stringify(tasks));
+    todoService.saveTasks(tasks);
   }, [tasks]);
 
   const addTask = (text: string) => {

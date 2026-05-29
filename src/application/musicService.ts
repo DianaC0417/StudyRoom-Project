@@ -9,3 +9,5 @@ export function createMusicService(repository: MusicRepository) {
     },
   };
 }
+
+export type MusicService = ReturnType<typeof createMusicService>;

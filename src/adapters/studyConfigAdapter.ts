@@ -1,6 +1,6 @@
 // adapters/studyConfigAdapter.ts
 
-import type { StudyConfigRepository } from '../aplication/ports/StudyConfigRepository';
+import type { StudyConfigRepository } from '../application/ports/StudyConfigRepository';
 import type { StudyConfig } from '../domain/StudyConfig';
 
 const CONFIG_KEY = 'user_study_config';

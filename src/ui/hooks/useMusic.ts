@@ -1,10 +1,7 @@
 // ui/hooks/useMusic.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MusicMood, MusicTrack } from '../../domain/MusicTrack';
-import { createMusicService } from '../../aplication/musicService';
-import { musicAdapter } from '../../adapters/musicAdapter';
-
-const musicService = createMusicService(musicAdapter);
+import { musicService } from '../../config/dependencies';
 
 export function useMusic() {
   const audioRef = useRef<HTMLAudioElement | null>(null);

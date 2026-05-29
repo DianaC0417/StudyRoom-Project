@@ -2,17 +2,19 @@
 //src/ui/pages/StudyRoom.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { studyConfigService } from '../../config/dependencies';
+import type { StudyConfig } from '../../domain/StudyConfig';
 
 const StudyRoom = () => {
   const navigate = useNavigate();
-  const [config, setConfig] = useState<any>(null);
+  const [config, setConfig] = useState<StudyConfig | null>(null);
 
   useEffect(() => {
-    // Recuperamos la configuración que guardamos en la página anterior
-    const data = localStorage.getItem('user_study_config');
+    // Recuperamos la configuración a través de nuestro servicio
+    const data = studyConfigService.loadConfig();
 
-    if (data) {
-      setConfig(JSON.parse(data));
+    if (data && data.nombre) {
+      setConfig(data);
     } else {
       // Si alguien intenta entrar a la sala sin configurarse, lo mandamos de vuelta
       navigate('/');
@@ -42,6 +44,7 @@ const StudyRoom = () => {
           padding: '20px',
           borderRadius: '10px',
           textAlign: 'center',
+          textTransform: 'uppercase',
         }}
       >
         <p>
