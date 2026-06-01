@@ -1,4 +1,4 @@
-// domain/User.ts - SIN importaciones externas
+//src/domain/User.ts
 export interface User {
   id: string;
   email: string;

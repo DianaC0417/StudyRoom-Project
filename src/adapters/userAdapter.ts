@@ -1,3 +1,4 @@
+// src/adapters/userAdapter.ts
 import { type UserRepository } from '../aplication/ports/UserRepository';
 import type { User } from '../domain/User';
 import { apiClient } from './apiClient';
@@ -5,11 +6,28 @@ import { apiClient } from './apiClient';
 const USER_KEY = 'studyroom_user';
 const TOKEN_KEY = 'auth_token';
 
+const getStorageForCurrentUser = (): Storage => {
+  const localUser = localStorage.getItem(USER_KEY);
+  const localToken = localStorage.getItem(TOKEN_KEY);
+
+  if (localUser || localToken) {
+    return localStorage;
+  }
+
+  return sessionStorage;
+};
+
 export const userAdapter: UserRepository = {
   save: (user: User): void => {
     const storage = user.remember ? localStorage : sessionStorage;
+
+    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+
     storage.setItem(USER_KEY, JSON.stringify(user));
-    // Si el usuario tiene token, también lo guardamos
+
     if (user.token) {
       storage.setItem(TOKEN_KEY, user.token);
     }
@@ -18,8 +36,10 @@ export const userAdapter: UserRepository = {
   get: (): User | null => {
     const local = localStorage.getItem(USER_KEY);
     if (local) return JSON.parse(local);
+
     const session = sessionStorage.getItem(USER_KEY);
     if (session) return JSON.parse(session);
+
     return null;
   },
 
@@ -30,7 +50,6 @@ export const userAdapter: UserRepository = {
     sessionStorage.removeItem(TOKEN_KEY);
   },
 
-  // 🆕 REGISTRO
   register: async (
     username: string,
     email: string,
@@ -42,20 +61,19 @@ export const userAdapter: UserRepository = {
       body: JSON.stringify({ username, email, password }),
     });
 
-    // data debe contener: { id, email, user|username, token }
     const user: User = {
       id: data.id,
       email: data.email,
       username: data.user ?? data.username ?? email,
       token: data.token,
-      remember: remember,
+      remember,
     };
-    // Guardar automáticamente
+
     userAdapter.save(user);
+
     return user;
   },
 
-  // 🔐 LOGIN (mejorado)
   login: async (
     email: string,
     password: string,
@@ -71,9 +89,44 @@ export const userAdapter: UserRepository = {
       email: data.email,
       username: data.user ?? data.username ?? data.email,
       token: data.token,
-      remember: remember,
+      remember,
     };
+
     userAdapter.save(user);
+
     return user;
+  },
+
+  updateUsername: async (username: string): Promise<User> => {
+    const currentUser = userAdapter.get();
+
+    if (!currentUser) {
+      throw new Error('No hay un usuario autenticado');
+    }
+
+    const data = await apiClient('/auth/username', {
+      method: 'PATCH',
+      body: JSON.stringify({ username }),
+    });
+
+    const updatedUser: User = {
+      ...currentUser,
+      id: data.id,
+      email: data.email,
+      username: data.user ?? data.username,
+      token: data.token,
+    };
+
+    const storage = getStorageForCurrentUser();
+
+    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+
+    storage.setItem(USER_KEY, JSON.stringify(updatedUser));
+    storage.setItem(TOKEN_KEY, updatedUser.token);
+
+    return updatedUser;
   },
 };

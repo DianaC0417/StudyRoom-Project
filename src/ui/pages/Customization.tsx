@@ -1,9 +1,10 @@
-//src/ui/pages/Customization.tsx
+// src/ui/pages/Customization.tsx
 import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
 import { useBackgroundMusic } from '../../ui/hooks/useBackgroundMusic';
+import { userService } from '../../config/dependencies';
 import UserMenuNavbar from '../components/UserMenuNavBar';
 import '../styles/CustomizationPage.css';
 
@@ -37,7 +38,14 @@ interface CustomizationPageProps {
 }
 
 const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
-  const [config, setConfig] = useState<StudyConfig>(DEFAULT_CONFIG);
+  const currentUser = userService.getCurrentUser();
+  const username = currentUser?.username ?? 'Estudiante';
+
+  const [config, setConfig] = useState<StudyConfig>({
+    ...DEFAULT_CONFIG,
+    nombre: username,
+  });
+
   const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
   const playStart = useSound('/assets/sounds/start.mp3');
@@ -54,6 +62,15 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 
   const selectedPet = PETS.find((p) => p.id === config.personaje);
   const selectedRoom = ROOMS.find((r) => r.id === config.sala);
+
+  const handleStart = () => {
+    playStart();
+
+    onStart({
+      ...config,
+      nombre: username,
+    });
+  };
 
   return (
     <div className="page">
@@ -119,29 +136,20 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
             <img src={selectedRoom?.img} alt="" className="preview-bg" />
             <img src={selectedPet?.img} alt="" className="preview-pet" />
 
-            <span className="preview-name">
-              {config.nombre.trim() || selectedPet?.label}
-            </span>
+            <span className="preview-name">{username}</span>
           </div>
 
           <label className="name-label">TU NOMBRE:</label>
 
-          <input
-            type="text"
-            placeholder="Nickname......"
-            value={config.nombre}
-            onChange={(e) => updateConfig('nombre', e.target.value)}
-            className="name-input"
-          />
+          <div className="locked-name-box">
+            <span className="locked-name-value">{username}</span>
+          </div>
 
-          <button
-            className="btn-go"
-            onClick={() => {
-              playStart();
-              onStart(config);
-            }}
-            type="button"
-          >
+          <p className="locked-name-help">
+            Para cambiar tu nombre de usuario, ve a User Settings.
+          </p>
+
+          <button className="btn-go" onClick={handleStart} type="button">
             EMPEZAR A ESTUDIAR!
           </button>
         </div>

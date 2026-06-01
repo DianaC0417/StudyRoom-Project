@@ -13,4 +13,6 @@ export interface UserRepository {
     password: string,
     remember: boolean
   ): Promise<User>;
+
+  updateUsername(username: string): Promise<User>;
 }

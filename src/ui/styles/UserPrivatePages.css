@@ -1,3 +1,7 @@
+/* ===============================
+   USER SETTINGS - PIXEL STYLE
+================================ */
+
 .private-page {
   width: 100%;
   min-height: 100vh;
@@ -9,58 +13,201 @@
   width: 100%;
   min-height: calc(100vh - 82px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem;
+  padding: 4.5rem 2rem 3rem;
 }
 
-.private-card {
-  width: min(720px, 100%);
-  background-color: rgba(71, 68, 68, 0.9);
-  border-radius: 16px;
-  padding: 2.5rem;
+/* Tarjeta principal */
+.user-settings-card {
+  width: min(680px, 100%);
+  background-color: rgba(71, 68, 68, 0.634);
+  border: 2px solid #2b2b2b;
+  border-radius: 18px;
+  padding: 2.8rem;
   color: #ffffff;
   text-align: center;
-  animation: privateCardReveal 0.6s ease forwards;
+  box-shadow: 9px 9px 0 rgba(43, 43, 43, 0.199);
+  animation: privateCardReveal 0.45s ease forwards;
 }
 
-.private-card h2 {
-  margin: 0 0 1.2rem;
+/* Título */
+.user-settings-card h2 {
+  margin: 0 0 1.3rem;
   font-family: 'Retrobit', 'Courier New', monospace;
-  font-size: 1.7rem;
+  font-size: 1.75rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #fffaf2;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.28);
 }
 
-.private-card p {
-  margin: 0 auto 1.8rem;
-  max-width: 560px;
+/* Descripción */
+.user-settings-card p {
+  margin: 0 auto 2.2rem;
+  max-width: 540px;
   font-family: 'Comfortaa', 'Courier New', monospace;
   font-size: 0.9rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.8;
+  color: rgba(255, 250, 242, 0.82);
 }
 
-.private-placeholder {
+/* Formulario */
+.settings-form {
   width: 100%;
-  min-height: 160px;
-  border: 2px dashed rgba(255, 255, 255, 0.35);
-  border-radius: 14px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  text-align: left;
 }
 
-.private-placeholder span {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
+/* Usuario actual */
+.settings-current-user {
+  width: 100%;
+  background-color: #fffaf2;
+  border: 3px solid #d4c5b2;
+  border-radius: 15px;
+  padding: 1.15rem 1.2rem;
+  color: #2b2b2b;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.16);
 }
 
+.settings-current-user span {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #5e5e5c;
+}
+
+.settings-current-user strong {
+  display: block;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: #2b2b2b;
+  word-break: break-word;
+}
+
+/* Label */
+.settings-label {
+  margin-top: 0.2rem;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 0.82rem;
+  color: #fffaf2;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+/* Input */
+.settings-input {
+  width: 100%;
+  border: 3px solid #2b2b2b;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  background-color: #fffaf2;
+  color: #2b2b2b;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  font-size: 0.95rem;
+  outline: none;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.16);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.settings-input:focus {
+  border-color: #e5c85c;
+  box-shadow:
+    5px 5px 0 rgba(0, 0, 0, 0.16),
+    0 0 0 4px rgba(229, 200, 92, 0.28);
+}
+
+.settings-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Ayuda */
+.settings-help {
+  margin-top: -0.55rem;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  font-size: 0.73rem;
+  line-height: 1.6;
+  color: rgba(255, 250, 242, 0.75);
+}
+
+/* Mensajes */
+.settings-message {
+  width: 100%;
+  border-radius: 13px;
+  padding: 0.95rem 1rem;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-align: center;
+  border: 3px solid #2b2b2b;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.settings-message-error {
+  background-color: #ffe2e2;
+  color: #8f1f1f;
+}
+
+.settings-message-success {
+  background-color: #e0ecda;
+  color: #1f4d2e;
+}
+
+/* Botón */
+.settings-save-button {
+  width: 100%;
+  margin-top: 0.5rem;
+  border: 3px solid #2b2b2b;
+  border-radius: 15px;
+  padding: 1rem 1.2rem;
+  background-color: #e5c85c;
+  color: #2b2b2b;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 0.98rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.settings-save-button:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  filter: brightness(1.05);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+.settings-save-button:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.22);
+}
+
+.settings-save-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Animación */
 @keyframes privateCardReveal {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.98);
+    transform: translateY(18px) scale(0.98);
   }
 
   to {
@@ -69,36 +216,116 @@
   }
 }
 
-@media (max-width: 600px) {
+/* ===============================
+   RESPONSIVE USER SETTINGS
+================================ */
+
+@media (max-width: 900px) {
   .private-page-content {
-    min-height: calc(100vh - 70px);
-    padding: 1.2rem;
+    padding: 3.5rem 1.5rem 2.5rem;
   }
 
-  .private-card {
-    padding: 1.5rem 1.2rem;
+  .user-settings-card {
+    width: min(620px, 100%);
+    padding: 2.2rem;
   }
 
-  .private-card h2 {
-    font-size: 1.25rem;
+  .user-settings-card h2 {
+    font-size: 1.45rem;
   }
 
-  .private-card p {
-    font-size: 0.8rem;
+  .user-settings-card p {
+    font-size: 0.84rem;
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .private-page-content {
-    min-height: calc(100vh - 64px);
-    padding: 1rem;
+    min-height: calc(100vh - 70px);
+    padding: 2.2rem 1rem 2rem;
   }
 
-  .private-card {
-    padding: 1.2rem 1rem;
+  .user-settings-card {
+    width: 100%;
+    padding: 1.6rem 1.15rem;
+    border-width: 3px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 0 rgba(43, 43, 43, 0.22);
   }
 
-  .private-card h2 {
-    font-size: 1.1rem;
+  .user-settings-card h2 {
+    font-size: 1.15rem;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+  }
+
+  .user-settings-card p {
+    margin-bottom: 1.6rem;
+    font-size: 0.76rem;
+    line-height: 1.7;
+  }
+
+  .settings-form {
+    gap: 1rem;
+  }
+
+  .settings-current-user {
+    padding: 0.95rem;
+    border-width: 2px;
+  }
+
+  .settings-current-user span {
+    font-size: 0.65rem;
+  }
+
+  .settings-current-user strong {
+    font-size: 0.85rem;
+  }
+
+  .settings-label {
+    font-size: 0.7rem;
+  }
+
+  .settings-input {
+    padding: 0.85rem 0.9rem;
+    font-size: 0.82rem;
+    border-width: 2px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.14);
+  }
+
+  .settings-help {
+    font-size: 0.66rem;
+  }
+
+  .settings-message {
+    padding: 0.8rem;
+    font-size: 0.68rem;
+    border-width: 2px;
+  }
+
+  .settings-save-button {
+    padding: 0.9rem;
+    font-size: 0.78rem;
+    border-width: 2px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (max-width: 380px) {
+  .private-page-content {
+    padding: 1.6rem 0.75rem 1.5rem;
+  }
+
+  .user-settings-card {
+    padding: 1.25rem 0.9rem;
+  }
+
+  .user-settings-card h2 {
+    font-size: 1rem;
+  }
+
+  .settings-input,
+  .settings-save-button {
+    font-size: 0.7rem;
   }
 }
