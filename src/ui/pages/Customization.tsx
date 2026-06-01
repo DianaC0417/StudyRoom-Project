@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
@@ -12,21 +12,9 @@ const PETS: { id: Character; label: string; img: string }[] = [
 ];
 
 const ROOMS: { id: Room; label: string; img: string }[] = [
-  {
-    id: 'salaestudio1',
-    label: 'SALA 1',
-    img: '/assets/salas/salaestudio1.png',
-  },
-  {
-    id: 'salaestudio2',
-    label: 'SALA 2',
-    img: '/assets/salas/salaestudio2.png',
-  },
-  {
-    id: 'salaestudio3',
-    label: 'SALA 3',
-    img: '/assets/salas/salaestudio3.png',
-  },
+  { id: 'salaestudio1', label: 'SALA 1', img: '/assets/salas/salaestudio1.png' },
+  { id: 'salaestudio2', label: 'SALA 2', img: '/assets/salas/salaestudio2.png' },
+  { id: 'salaestudio3', label: 'SALA 3', img: '/assets/salas/salaestudio3.png' },
 ];
 
 interface CustomizationPageProps {
@@ -36,12 +24,50 @@ interface CustomizationPageProps {
 
 const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
   const [config, setConfig] = useState<StudyConfig>(DEFAULT_CONFIG);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
   const playStart = useSound('/assets/sounds/start.mp3');
 
   const musicSrc = '/assets/sounds/background_music.mp3';
   useBackgroundMusic(musicSrc, true);
+
+  // 1. REQUISITO: Al cargar la página, se cargan los datos previos automáticamente (GET)
+  useEffect(() => {
+    const fetchSavedPreferences = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Recupera el token de sesión
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+        const response = await fetch(`${apiUrl}/api/preferences`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data) {
+            setConfig((prev) => ({
+              ...prev,
+              personaje: (data.selected_character as Character) || prev.personaje,
+              sala: (data.selected_room as Room) || prev.sala,
+              nombre: data.nickname || prev.nombre
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Error al recuperar preferencias del backend:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSavedPreferences();
+  }, []);
 
   const updateConfig = <K extends keyof StudyConfig>(
     key: K,
@@ -50,8 +76,44 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
   };
 
+  // 2. REQUISITO: El usuario guarda sus preferencias al presionar el botón (POST)
+  const handleSaveAndStart = async () => {
+    playStart();
+    try {
+      const token = localStorage.getItem('token');
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      // Disparamos la petición usando los nombres exactos que Esther armó en su modelo
+      await fetch(`${apiUrl}/api/preferences`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          selected_character: config.personaje,
+          selected_room: config.sala,
+          nickname: config.nombre
+        })
+      });
+    } catch (error) {
+      console.error("No se pudieron persistir las preferencias en el servidor:", error);
+    }
+
+    // Cambia a la pantalla del Pomodoro
+    onStart(config);
+  };
+
   const selectedPet = PETS.find((p) => p.id === config.personaje);
   const selectedRoom = ROOMS.find((r) => r.id === config.sala);
+
+  if (loading) {
+    return (
+      <div className="page" style={{ color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'monospace' }}>
+        Cargando tus preferencias de estudio...
+      </div>
+    );
+  }
 
   return (
     <div className="page">
@@ -97,11 +159,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
                     updateConfig('sala', room.id);
                   }}
                 >
-                  <img
-                    src={room.img}
-                    alt={room.label}
-                    className="opt-img-room"
-                  />
+                  <img src={room.img} alt={room.label} className="opt-img-room" />
                   <span>{room.label}</span>
                 </button>
               ))}
@@ -120,21 +178,17 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
           </div>
 
           <label className="name-label">TU NOMBRE:</label>
+          {/* 3. REQUISITO: El nombre de usuario NO se puede modificar desde aquí (Añadido disabled) */}
           <input
             type="text"
             placeholder="Nickname......"
             value={config.nombre}
-            onChange={(e) => updateConfig('nombre', e.target.value)}
+            disabled
+            style={{ cursor: 'not-allowed', opacity: 0.6 }}
             className="name-input"
           />
 
-          <button
-            className="btn-go"
-            onClick={() => {
-              playStart();
-              onStart(config);
-            }}
-          >
+          <button className="btn-go" onClick={handleSaveAndStart}>
             EMPEZAR A ESTUDIAR!
           </button>
         </div>
