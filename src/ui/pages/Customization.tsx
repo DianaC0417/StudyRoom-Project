@@ -33,7 +33,6 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
   const musicSrc = '/assets/sounds/background_music.mp3';
   useBackgroundMusic(musicSrc, true);
 
-  // 1. REQUISITO: Al cargar la página, se cargan los datos previos automáticamente (GET)
   useEffect(() => {
     const fetchSavedPreferences = async () => {
       try {
@@ -76,14 +75,12 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
   };
 
-  // 2. REQUISITO: El usuario guarda sus preferencias al presionar el botón (POST)
   const handleSaveAndStart = async () => {
     playStart();
     try {
       const token = localStorage.getItem('token');
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-      // Disparamos la petición usando los nombres exactos que Esther armó en su modelo
       await fetch(`${apiUrl}/api/preferences`, {
         method: 'POST',
         headers: {
@@ -100,7 +97,6 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
       console.error("No se pudieron persistir las preferencias en el servidor:", error);
     }
 
-    // Cambia a la pantalla del Pomodoro
     onStart(config);
   };
 
@@ -178,7 +174,6 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
           </div>
 
           <label className="name-label">TU NOMBRE:</label>
-          {/* 3. REQUISITO: El nombre de usuario NO se puede modificar desde aquí (Añadido disabled) */}
           <input
             type="text"
             placeholder="Nickname......"
