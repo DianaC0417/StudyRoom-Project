@@ -8,12 +8,14 @@ import {
 import CustomizationPage from './ui/pages/Customization';
 import LoginPage from './ui/pages/LoginPage';
 import { RoomPage } from './ui/pages/RoomPage';
-import { studyConfigService } from './config/dependencies';
-import type { StudyConfig } from './domain/StudyConfig';
 import HomePage from './ui/pages/HomePage';
 import AboutPage from './ui/pages/AboutPage';
 import JoinUsPage from './ui/pages/JoinUsPage';
+import UserSettingsPage from './ui/pages/UserSettingsPage';
+import StatisticsPage from './ui/pages/StatisticsPage';
 
+import { studyConfigService } from './config/dependencies';
+import type { StudyConfig } from './domain/StudyConfig';
 // Componente separado para usar useNavigate
 function AppRoutes() {
   const navigate = useNavigate();
@@ -33,22 +35,38 @@ function AppRoutes() {
     console.log('Regresando al login...');
     navigate('/login');
   };
-
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
+
+      {/* Public pages */}
       <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/join" element={<JoinUsPage />} />
+
+      {/* Private/user pages */}
       <Route
         path="/customization"
         element={
           <CustomizationPage onStart={handleStart} onLogout={handleLogout} />
         }
       />
+
+      <Route
+        path="/user-settings"
+        element={<UserSettingsPage onLogout={handleLogout} />}
+      />
+
+      <Route
+        path="/statistics"
+        element={<StatisticsPage onLogout={handleLogout} />}
+      />
+
       <Route path="/room" element={<RoomPage />} />
+
+      {/* Fallback */}
       <Route path="*" element={<Navigate to="/login" replace />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/join" element={<JoinUsPage />} />
     </Routes>
   );
 }

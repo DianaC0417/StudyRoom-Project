@@ -1,8 +1,10 @@
+//src/ui/pages/Customization.tsx
 import { useState } from 'react';
 import { DEFAULT_CONFIG } from '../../domain/StudyConfig';
 import type { StudyConfig, Character, Room } from '../../domain/StudyConfig';
 import { useSound } from '../../ui/hooks/useSound';
 import { useBackgroundMusic } from '../../ui/hooks/useBackgroundMusic';
+import UserMenuNavbar from '../components/UserMenuNavBar';
 import '../styles/CustomizationPage.css';
 
 const PETS: { id: Character; label: string; img: string }[] = [
@@ -55,12 +57,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 
   return (
     <div className="page">
-      <div className="title-bar">
-        <span>Personaliza tu experiencia</span>
-        <button className="btn-logout" onClick={onLogout}>
-          VOLVER
-        </button>
-      </div>
+      <UserMenuNavbar title="Personaliza tu experiencia" onLogout={onLogout} />
 
       <h2 className="subtitle">BIENVENIDO ESTUDIANTE!</h2>
 
@@ -68,15 +65,19 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
         <div className="left-col">
           <div className="section">
             <h3 className="section-title">1. ELIGE TU COMPAÑERO</h3>
+
             <div className="options">
               {PETS.map((pet) => (
                 <button
                   key={pet.id}
-                  className={`opt ${config.personaje === pet.id ? 'opt-on' : ''}`}
+                  className={`opt ${
+                    config.personaje === pet.id ? 'opt-on' : ''
+                  }`}
                   onClick={() => {
                     playSelectPersonaje();
                     updateConfig('personaje', pet.id);
                   }}
+                  type="button"
                 >
                   <img src={pet.img} alt={pet.label} className="opt-img-pet" />
                   <span>{pet.label}</span>
@@ -87,6 +88,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 
           <div className="section">
             <h3 className="section-title">2. ELIGE TU SALA</h3>
+
             <div className="options">
               {ROOMS.map((room) => (
                 <button
@@ -96,6 +98,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
                     playSelectRoom();
                     updateConfig('sala', room.id);
                   }}
+                  type="button"
                 >
                   <img
                     src={room.img}
@@ -111,15 +114,18 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 
         <div className="right-col">
           <h3 className="preview-title">Vista Previa</h3>
+
           <div className="preview-box">
             <img src={selectedRoom?.img} alt="" className="preview-bg" />
             <img src={selectedPet?.img} alt="" className="preview-pet" />
+
             <span className="preview-name">
               {config.nombre.trim() || selectedPet?.label}
             </span>
           </div>
 
           <label className="name-label">TU NOMBRE:</label>
+
           <input
             type="text"
             placeholder="Nickname......"
@@ -134,6 +140,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
               playStart();
               onStart(config);
             }}
+            type="button"
           >
             EMPEZAR A ESTUDIAR!
           </button>

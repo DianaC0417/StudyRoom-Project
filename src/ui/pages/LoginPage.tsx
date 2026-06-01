@@ -1,3 +1,4 @@
+//src/ui/pages/LoginPage.tsx
 import { useState } from 'react';
 import { useSound } from '../hooks/useSound';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
