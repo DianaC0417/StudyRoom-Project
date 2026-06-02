@@ -1,7 +1,7 @@
 // src/adapters/userAdapter.ts
 import { type UserRepository } from '../aplication/ports/UserRepository';
 import type { User } from '../domain/User';
-import { apiClient } from './apiClient';
+import { apiClient, API_BASE_URL } from './apiClient';
 
 const USER_KEY = 'studyroom_user';
 const TOKEN_KEY = 'auth_token';
@@ -104,10 +104,35 @@ export const userAdapter: UserRepository = {
       throw new Error('No hay un usuario autenticado');
     }
 
-    const data = await apiClient('/auth/username', {
-      method: 'PATCH',
-      body: JSON.stringify({ username }),
-    });
+    const token =
+      localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
+    const url = `${API_BASE_URL}/auth/username`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    const makeRequest = async (method: 'PATCH' | 'PUT') => {
+      return fetch(url, {
+        method,
+        headers,
+        body: JSON.stringify({ username }),
+      });
+    };
+
+    let response = await makeRequest('PATCH');
+    if (response.status === 404 || response.status === 405) {
+      response = await makeRequest('PUT');
+    }
+
+    if (!response.ok) {
+      const rawText = await response.text().catch(() => '');
+      throw new Error(rawText || `Error en la petición (${response.status})`);
+    }
+
+    const data = await response.json();
 
     const updatedUser: User = {
       ...currentUser,

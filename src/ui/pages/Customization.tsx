@@ -45,6 +45,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
     ...DEFAULT_CONFIG,
     nombre: username,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
@@ -82,7 +83,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
       } catch (error) {
         console.error('Error al recuperar preferencias del backend:', error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -127,14 +128,9 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
   const selectedPet = PETS.find((p) => p.id === config.personaje);
   const selectedRoom = ROOMS.find((r) => r.id === config.sala);
 
-  const handleStart = () => {
-    playStart();
-
-    onStart({
-      ...config,
-      nombre: username,
-    });
-  };
+  if (isLoading) {
+    return <div className="page">Cargando preferencias...</div>;
+  }
 
   return (
     <div className="page">
@@ -213,7 +209,7 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
             Para cambiar tu nombre de usuario, ve a User Settings.
           </p>
 
-          <button className="btn-go" onClick={handleStart} type="button">
+          <button className="btn-go" onClick={handleSaveAndStart} type="button">
             EMPEZAR A ESTUDIAR!
           </button>
         </div>
@@ -223,7 +219,3 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 };
 
 export default CustomizationPage;
-
-function setLoading(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
