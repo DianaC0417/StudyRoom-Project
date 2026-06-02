@@ -2,7 +2,11 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { pomodoroService } from '../../config/dependencies';
+import {
+  pomodoroService,
+  pomodoroSessionService,
+  userService,
+} from '../../config/dependencies';
 
 interface PomodoroHook {
   timeDisplay: string;
@@ -27,6 +31,47 @@ export const usePomodoro = (
   const [isBreak, setIsBreak] = useState<boolean>(false);
   const [currentSession, setCurrentSession] = useState<number>(1);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+
+  const createOrResumeSession = useCallback(async () => {
+    if (isBreak || activeSessionId) return;
+
+    const currentUser = userService.getCurrentUser();
+    if (!currentUser) return;
+
+    try {
+      const session = await pomodoroSessionService.startSession(
+        currentUser.id,
+        workMinutes
+      );
+      setActiveSessionId(session.id);
+      localStorage.setItem('pomodoro_session_id', session.id);
+    } catch (error) {
+      console.error('Error al guardar sesión Pomodoro:', error);
+    }
+  }, [activeSessionId, isBreak, workMinutes]);
+
+  const finalizeSession = useCallback(
+    async (status: 'completed' | 'cancelled' | 'interrupted') => {
+      if (!activeSessionId) return;
+
+      try {
+        if (status === 'completed') {
+          await pomodoroSessionService.completeSession(activeSessionId);
+        } else if (status === 'cancelled') {
+          await pomodoroSessionService.cancelSession(activeSessionId);
+        } else {
+          await pomodoroSessionService.interruptSession(activeSessionId);
+        }
+      } catch (error) {
+        console.error('Error al actualizar sesión Pomodoro:', error);
+      } finally {
+        setActiveSessionId(null);
+        localStorage.removeItem('pomodoro_session_id');
+      }
+    },
+    [activeSessionId]
+  );
 
   // Calcular progreso (0-100)
   const progress = isBreak
@@ -50,12 +95,13 @@ export const usePomodoro = (
   );
 
   // 🔧 CORRECCIÓN 2: handleSessionComplete declarada ANTES de usarla en efectos
-  const handleSessionComplete = useCallback(() => {
+  const handleSessionComplete = useCallback(async () => {
     setIsActive(false);
     localStorage.removeItem('pomodoro_target');
 
     if (!isBreak) {
-      // Sesión de trabajo completada
+      await finalizeSession('completed');
+
       const nextBreak =
         currentSession % sessionsUntilLongBreak === 0
           ? longBreakMinutes
@@ -102,6 +148,7 @@ export const usePomodoro = (
     longBreakMinutes,
     sessionsUntilLongBreak,
     showNotification,
+    finalizeSession,
   ]);
 
   // 🔧 CORRECCIÓN 3: Efecto para cargar estado persistente (sin setState sincrónico)
@@ -110,6 +157,7 @@ export const usePomodoro = (
       const savedTarget = localStorage.getItem('pomodoro_target');
       const savedBreak = localStorage.getItem('pomodoro_is_break');
       const savedSession = localStorage.getItem('pomodoro_session');
+      const savedSessionId = localStorage.getItem('pomodoro_session_id');
 
       if (savedTarget) {
         const targetTime = parseInt(savedTarget);
@@ -121,8 +169,10 @@ export const usePomodoro = (
           setIsActive(true);
           if (savedBreak === 'true') setIsBreak(true);
           if (savedSession) setCurrentSession(parseInt(savedSession));
+          if (savedSessionId) setActiveSessionId(savedSessionId);
         } else {
           localStorage.removeItem('pomodoro_target');
+          localStorage.removeItem('pomodoro_session_id');
         }
       }
       setIsInitialized(true);
@@ -169,6 +219,9 @@ export const usePomodoro = (
   // Funciones de control
   const toggleTimer = useCallback(() => {
     if (!isActive) {
+      if (!isBreak) {
+        void createOrResumeSession();
+      }
       const targetTime = Date.now() + seconds * 1000;
       localStorage.setItem('pomodoro_target', targetTime.toString());
       localStorage.setItem('pomodoro_is_break', isBreak.toString());
@@ -178,18 +231,21 @@ export const usePomodoro = (
       setIsActive(false);
       localStorage.removeItem('pomodoro_target');
     }
-  }, [isActive, seconds, isBreak, currentSession]);
+  }, [isActive, seconds, isBreak, currentSession, createOrResumeSession]);
 
-  const resetTimer = useCallback(() => {
+  const resetTimer = useCallback(async () => {
     setIsActive(false);
     setIsBreak(false);
     setCurrentSession(1);
     setSeconds(workMinutes * 60);
-    pomodoroService.saveTime(0);
+    pomodoroService.saveTime(workMinutes);
+    if (activeSessionId) {
+      await finalizeSession('cancelled');
+    }
     localStorage.removeItem('pomodoro_target');
     localStorage.removeItem('pomodoro_is_break');
     localStorage.removeItem('pomodoro_session');
-  }, [workMinutes]);
+  }, [workMinutes, activeSessionId, finalizeSession]);
 
   const skipToNext = useCallback(() => {
     setIsActive(false);
