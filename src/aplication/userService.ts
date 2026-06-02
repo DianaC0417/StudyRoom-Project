@@ -1,3 +1,4 @@
+//src/aplication/userService.ts
 import type { UserRepository } from './ports/UserRepository';
 import type { User } from '../domain/User';
 
@@ -9,6 +10,7 @@ export interface UserService {
     password: string,
     remember: boolean
   ): Promise<User>;
+  updateUsername(username: string): Promise<User>;
   logout(): void;
   getCurrentUser(): User | null;
 }
@@ -20,6 +22,9 @@ export function createUserService(repo: UserRepository): UserService {
     },
     async register(username, email, password, remember) {
       return repo.register(username, email, password, remember);
+    },
+    async updateUsername(username) {
+      return repo.updateUsername(username);
     },
     logout() {
       repo.clear();

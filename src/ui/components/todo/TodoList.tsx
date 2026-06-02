@@ -3,9 +3,17 @@ import { useTodoList } from '../../hooks/useTodoList';
 import { useSound } from '../../hooks/useSound';
 import '../../styles/global.css';
 
+// 1. Importamos el userService desde tus dependencias
+import { userService } from '../../../config/dependencies'; 
+
 export const TodoList: React.FC = () => {
-  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } =
-    useTodoList();
+  // 2. Obtenemos al usuario logueado usando el servicio de tu equipo
+  const currentUser = userService.getCurrentUser();
+  const userId = currentUser?.id;
+
+  // 3. Le pasamos el ID a tu hook (que ya configuramos con fetch)
+  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } = useTodoList(userId);
+
   const [inputValue, setInputValue] = useState('');
 
   const playAdd = useSound('/assets/sounds/inputclick.mp3');
@@ -15,7 +23,8 @@ export const TodoList: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim()) {
+    // Si no hay usuario logueado, podríamos evitar que añada tareas
+    if (inputValue.trim() && userId) { 
       playAdd();
       addTask(inputValue);
       setInputValue('');
@@ -48,14 +57,22 @@ export const TodoList: React.FC = () => {
           placeholder="Escribe una tarea..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          disabled={!userId} // Opcional: deshabilitar si no hay usuario
+          onKeyDown={(e) => e.stopPropagation()}
         />
-        <button type="submit" className="todo-button-add">
+        <button 
+          type="submit" 
+          className="todo-button-add"
+          disabled={!userId}
+        >
           AÑADIR
         </button>
       </form>
 
       <div className="todo-track-list">
-        {tasks.length === 0 ? (
+        {!userId ? (
+           <p className="todo-message">Inicia sesión para ver tus tareas</p>
+        ) : tasks.length === 0 ? (
           <p className="todo-message">¡No hay tareas pendientes!</p>
         ) : (
           tasks.map((task) => (

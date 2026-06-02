@@ -376,3 +376,33 @@ body,
     transform: scale(0.95);
     box-shadow: inset 4px 4px 0px 0px #c0392b;
   }
+  /* ===============================
+   LOCKED USERNAME IN CUSTOMIZATION
+================================ */
+
+.locked-name-box {
+  width: 100%;
+  border: 3px solid #d4c5b2;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  background-color: #e0ecda;
+  color: #222222;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.locked-name-value {
+  display: block;
+  width: 100%;
+  word-break: break-word;
+}
+
+.locked-name-help {
+  margin: 0.45rem 0 1rem;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: #4b4b4b;
+}

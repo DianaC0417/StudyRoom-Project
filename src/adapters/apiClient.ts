@@ -12,17 +12,14 @@ export const apiClient = async (
   endpoint: string,
   options: RequestInit = {}
 ) => {
-  // 1. Intentamos recuperar el token que guardamos al hacer login
   const token =
     localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
 
-  // 2. Preparamos los headers
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string>),
   };
 
-  // 3. Si el token existe, lo añadimos siguiendo el estándar "Bearer"
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -33,10 +30,11 @@ export const apiClient = async (
   });
 
   if (!response.ok) {
-    // Si el servidor responde 401 (No autorizado), limpiamos el token
     if (response.status === 401) {
       localStorage.removeItem('auth_token');
       sessionStorage.removeItem('auth_token');
+      localStorage.removeItem('studyroom_user');
+      sessionStorage.removeItem('studyroom_user');
     }
 
     const rawText = await response.text().catch(() => '');
@@ -44,8 +42,11 @@ export const apiClient = async (
 
     try {
       const errorData = rawText ? JSON.parse(rawText) : null;
+
       if (errorData?.message) {
         errorMessage = errorData.message;
+      } else if (errorData?.error) {
+        errorMessage = errorData.error;
       } else if (rawText) {
         errorMessage = rawText;
       }
