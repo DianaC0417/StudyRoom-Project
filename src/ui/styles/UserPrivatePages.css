@@ -329,3 +329,201 @@
     font-size: 0.7rem;
   }
 }
+
+/* ===============================
+   STATISTICS PAGE – ENHANCED
+================================ */
+
+/* Contenedor principal (más ancho que el settings normal) */
+.stats-full-width {
+  max-width: 880px !important;
+  text-align: left !important;
+}
+
+/* Sección individual (tareas / pomodoro) */
+.stats-section {
+  margin-bottom: 2.8rem;
+}
+
+.stats-section-title {
+  font-family: 'Retrobit', monospace;
+  font-size: 1.5rem;
+  color: #fef9e7;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+  border-bottom: 3px solid rgba(255,255,255,0.2);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Tarjetas de estadísticas */
+.stats-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: rgba(71, 68, 68, 0.92);
+  border: 3px solid #222;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 180px;
+  text-align: center;
+  color: #fef9e7;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.25);
+  transition: transform 0.15s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-family: 'Retrobit', monospace;
+  font-size: 2.5rem;
+  display: block;
+}
+
+.stat-label {
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: block;
+  color: #d4c5b2;
+}
+
+/* Mensajes de carga / error */
+.stats-loading-text {
+  font-family: 'Comfortaa', sans-serif;
+  color: rgba(255,255,255,0.8);
+  text-align: center;
+}
+
+.stats-error-msg {
+  color: #ffffff !important;
+}
+
+/* Lista de tareas */
+.task-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  background: rgba(255,250,242,0.08);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  color: #fff;
+}
+
+.task-pending .task-title {
+  color: #ffffff;
+}
+
+.task-completed .task-title {
+  text-decoration: line-through;
+  color: rgba(255,255,255,0.5);
+}
+
+.task-status {
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* Filtro de sesiones */
+.session-filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filter-btn {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #ffffff;
+  font-family: 'Comfortaa', sans-serif;
+  font-size: 0.8rem;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-btn--active,
+.filter-btn:hover {
+  background: #e5c85c;
+  color: #1a1a1a;
+  border-color: #e5c85c;
+}
+
+/* Lista de sesiones */
+.session-list {
+  list-style: none;
+  padding: 0;
+}
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+
+.session-item.completed .session-date {
+  color: #ffffff;
+}
+
+.session-item.cancelled .session-date {
+  color: #ffaaaa;
+}
+
+.session-status-badge {
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.stats-empty-msg {
+  color: rgba(255,255,255,0.5);
+  font-family: 'Comfortaa', sans-serif;
+  text-align: center;
+}
+
+/* Responsive para las tarjetas */
+@media (max-width: 600px) {
+  .stat-card {
+    width: 140px;
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .session-filter-bar {
+    flex-wrap: wrap;
+  }
+}
