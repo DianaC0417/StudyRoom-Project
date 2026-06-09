@@ -5,7 +5,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const taskAdapter: TaskRepository = {
   getTasksByUser: async (userId: string): Promise<Task[]> => {
-    const response = await fetch(`${API_URL}/user/${userId}`);
+    const response = await fetch(`${API_URL}/api/tasks/user/${userId}`);
+    //const response = await fetch(`${API_URL}/user/${userId}`);
     const data = await response.json();
     return data.map((dbTask: any) => ({
       id: dbTask.id,
@@ -15,7 +16,8 @@ export const taskAdapter: TaskRepository = {
   },
 
   createTask: async (userId: string, text: string): Promise<Task> => {
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}/api/tasks`,{
+    //const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userId, title: text.trim() }),
@@ -29,7 +31,8 @@ export const taskAdapter: TaskRepository = {
   },
 
   updateTaskStatus: async (id: string, isCompleted: boolean): Promise<void> => {
-    await fetch(`${API_URL}/${id}/status`, {
+    await fetch(`${API_URL}/api/tasks/${id}/status`, {
+   // await fetch(`${API_URL}/${id}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ is_completed: isCompleted }),
@@ -37,6 +40,7 @@ export const taskAdapter: TaskRepository = {
   },
 
   deleteTask: async (id: string): Promise<void> => {
-    await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+    await fetch(`${API_URL}/api/tasks/${id}`, { method: 'DELETE' });
+    //await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
   }
 };
