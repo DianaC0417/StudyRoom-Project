@@ -4,7 +4,7 @@ import { useSound } from '../../hooks/useSound';
 import '../../styles/global.css';
 
 // 1. Importamos el userService desde tus dependencias
-import { userService } from '../../../config/dependencies'; 
+import { userService } from '../../../config/dependencies';
 
 export const TodoList: React.FC = () => {
   // 2. Obtenemos al usuario logueado usando el servicio de tu equipo
@@ -12,7 +12,8 @@ export const TodoList: React.FC = () => {
   const userId = currentUser?.id;
 
   // 3. Le pasamos el ID a tu hook (que ya configuramos con fetch)
-  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } = useTodoList(userId);
+  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } =
+    useTodoList(userId);
 
   const [inputValue, setInputValue] = useState('');
 
@@ -24,7 +25,7 @@ export const TodoList: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Si no hay usuario logueado, podríamos evitar que añada tareas
-    if (inputValue.trim() && userId) { 
+    if (inputValue.trim() && userId) {
       playAdd();
       addTask(inputValue);
       setInputValue('');
@@ -60,18 +61,14 @@ export const TodoList: React.FC = () => {
           disabled={!userId} // Opcional: deshabilitar si no hay usuario
           onKeyDown={(e) => e.stopPropagation()}
         />
-        <button 
-          type="submit" 
-          className="todo-button-add"
-          disabled={!userId}
-        >
+        <button type="submit" className="todo-button-add" disabled={!userId}>
           AÑADIR
         </button>
       </form>
 
       <div className="todo-track-list">
         {!userId ? (
-           <p className="todo-message">Inicia sesión para ver tus tareas</p>
+          <p className="todo-message">Inicia sesión para ver tus tareas</p>
         ) : tasks.length === 0 ? (
           <p className="todo-message">¡No hay tareas pendientes!</p>
         ) : (
