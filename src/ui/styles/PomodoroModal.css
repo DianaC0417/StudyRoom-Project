@@ -66,6 +66,7 @@
   inset: 0;
   background: var(--bs-overlay-dark);
   backdrop-filter: blur(3px);
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,14 +74,19 @@
   padding: 1rem;
   animation: bitstudyFadeIn 0.25s steps(4);
   overflow-y: auto;
+  overflow-x: hidden;
   touch-action: auto;
+  scrollbar-width: none;
+}
+.pomodoro-modal-overlay::-webkit-scrollbar {
+  display: none;
 }
 
 .pomodoro-modal {
   width: 520px;
   max-width: 92vw;
-  max-height: calc(100vh - 2rem);
-  overflow-y: auto;
+ 
+  
   touch-action: auto;
   image-rendering: pixelated;
   font-family: var(--bs-font-pixel-secondary);
