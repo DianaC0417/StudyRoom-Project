@@ -376,3 +376,54 @@ body,
     transform: scale(0.95);
     box-shadow: inset 4px 4px 0px 0px #c0392b;
   }
+
+  /* Diseño del mensaje emergente */
+.error-popup {
+  position: absolute;
+  bottom: 100%; /* Aparece justo encima del input */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4d4d; /* Rojo alerta */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+  margin-bottom: 8px; /* Espacio entre el mensaje y el input */
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  z-index: 10;
+}
+
+/* El piquito del globo de diálogo apuntando hacia abajo */
+.error-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #ff4d4d transparent transparent transparent;
+}
+
+/* Animación de entrada fluida */
+@keyframes popIn {
+  0% { opacity: 0; transform: translate(-50%, 10px) scale(0.8); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+/* Clase para que el input se vea 'enojado' o con error */
+.input-error {
+  border: 2px solid #ff4d4d !important;
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Animación de sacudida clásica de error */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}

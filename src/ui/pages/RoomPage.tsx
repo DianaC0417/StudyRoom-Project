@@ -199,6 +199,32 @@ export const RoomPage: React.FC = () => {
 
   return (
     <div className="room-page">
+      <div className="hud-clock-container">
+        <div className="pixel-border hud-clock-box">
+          <div className="pixel-corner tl" />
+          <div className="pixel-corner tr" />
+          <div className="pixel-corner bl" />
+          <div className="pixel-corner br" />
+          
+          <div className="hud-clock-content">
+            {/* Pequeño indicador de estado (Estudio / Descanso) */}
+            <span className={`hud-clock-status ${isBreak ? 'status-break' : 'status-work'}`}>
+              ● {isBreak ? 'DESCANSO' : 'ESTUDIO'}
+            </span>
+            
+            {/* El tiempo transcurriendo */}
+            <h1 className="hud-clock-time">{timeDisplay}</h1>
+            
+            {/* Contador de sesiones actuales */}
+            <span className="hud-clock-sessions">
+              SALA {currentSession}/{totalSessions}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div id="game-container" ref={gameRef} className="game-container"></div>
+
       <div id="game-container" ref={gameRef} className="game-container"></div>
 
       {showMusicWidget && (

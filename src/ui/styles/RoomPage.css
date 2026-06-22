@@ -123,3 +123,83 @@
     font-size: 0.85rem;
   }
 }
+
+/* Contenedor del HUD en la esquina superior izquierda */
+.hud-clock-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 99; /* Por encima de Phaser (que suele usar z-index más bajos) */
+  pointer-events: auto; /* Permite interactuar con él si en el futuro quieres que sea clickeable */
+  min-width: 140px;
+}
+
+/* Caja contenedora que hereda tu estilo pixel-border */
+.hud-clock-box {
+  background-color: rgba(26, 26, 36, 0.85); /* Fondo oscuro semitransparente estilo RPG */
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Alineación interna */
+.hud-clock-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Texto del tiempo principal */
+.hud-clock-time {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.8rem;
+  color: #fef9e7; /* El color crema retro que usas en el título */
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+/* Indicador de estado (Estudio o Descanso) */
+.hud-clock-status {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Color si estás en modo Enfoque/Trabajo */
+.status-work {
+  color: #ff4d4d; /* Rojo/Tomate Pomodoro */
+}
+
+/* Color si estás en modo Descanso */
+.status-break {
+  color: #2ecc71; /* Verde esmeralda relajante */
+}
+
+/* Contador de sesiones pequeñas inferiores */
+.hud-clock-sessions {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 0.65rem;
+  color: #a0a0b8; /* Gris azulado suave */
+  letter-spacing: 1px;
+}
+
+/* Opcional: Si el usuario está en móvil, hacemos el HUD un poco más pequeño */
+@media (max-width: 768px) {
+  .hud-clock-container {
+    top: 10px;
+    left: 10px;
+  }
+  .hud-clock-time {
+    font-size: 1.4rem;
+  }
+  .hud-clock-status {
+    font-size: 0.6rem;
+  }
+}

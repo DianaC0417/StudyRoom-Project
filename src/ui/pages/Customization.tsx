@@ -12,21 +12,9 @@ const PETS: { id: Character; label: string; img: string }[] = [
 ];
 
 const ROOMS: { id: Room; label: string; img: string }[] = [
-  {
-    id: 'salaestudio1',
-    label: 'SALA 1',
-    img: '/assets/salas/salaestudio1.png',
-  },
-  {
-    id: 'salaestudio2',
-    label: 'SALA 2',
-    img: '/assets/salas/salaestudio2.png',
-  },
-  {
-    id: 'salaestudio3',
-    label: 'SALA 3',
-    img: '/assets/salas/salaestudio3.png',
-  },
+  { id: 'salaestudio1', label: 'SALA 1', img: '/assets/salas/salaestudio1.png' },
+  { id: 'salaestudio2', label: 'SALA 2', img: '/assets/salas/salaestudio2.png' },
+  { id: 'salaestudio3', label: 'SALA 3', img: '/assets/salas/salaestudio3.png' },
 ];
 
 interface CustomizationPageProps {
@@ -35,7 +23,10 @@ interface CustomizationPageProps {
 }
 
 const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
-  const [config, setConfig] = useState<StudyConfig>(DEFAULT_CONFIG);
+  const [config, setConfig] = useState<StudyConfig>({...DEFAULT_CONFIG, nombre: ''});
+  // NUEVO: Estado para controlar el mensaje de error
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const playSelectPersonaje = useSound('/assets/sounds/select_personaje.mp3');
   const playSelectRoom = useSound('/assets/sounds/select_room.mp3');
   const playStart = useSound('/assets/sounds/start.mp3');
@@ -52,6 +43,17 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
 
   const selectedPet = PETS.find((p) => p.id === config.personaje);
   const selectedRoom = ROOMS.find((r) => r.id === config.sala);
+
+  // NUEVO: Función para validar antes de empezar
+  const handleStart = () => {
+    if (!config.nombre || config.nombre.trim() === '') {
+      setErrorMsg('¡Hey! Necesitas ingresar un nickname.');
+      return; // Detiene la ejecución si está vacío
+    }
+    
+    playStart();
+    onStart(config);
+  };
 
   return (
     <div className="page">
@@ -119,21 +121,32 @@ const CustomizationPage = ({ onStart, onLogout }: CustomizationPageProps) => {
             </span>
           </div>
 
-          <label className="name-label">TU NOMBRE:</label>
-          <input
-            type="text"
-            placeholder="Nickname......"
-            value={config.nombre}
-            onChange={(e) => updateConfig('nombre', e.target.value)}
-            className="name-input"
-          />
+          <div className="input-container" style={{ position: 'relative' }}>
+            <label className="name-label">TU NOMBRE:</label>
+            <input
+              type="text"
+              placeholder="Nickname"
+              value={config.nombre}
+              onChange={(e) => {
+                updateConfig('nombre', e.target.value);
+                // NUEVO: Limpiar el error cuando el usuario empieza a escribir
+                if (errorMsg) setErrorMsg(null);
+              }}
+              // NUEVO: Agregamos una clase condicional si hay error
+              className={`name-input ${errorMsg ? 'input-error' : ''}`}
+            />
+            
+            
+            {errorMsg && (
+              <div className="error-popup">
+                {errorMsg}
+              </div>
+            )}
+          </div>
 
           <button
             className="btn-go"
-            onClick={() => {
-              playStart();
-              onStart(config);
-            }}
+            onClick={handleStart} // NUEVO: Llamamos a nuestra función validadora
           >
             EMPEZAR A ESTUDIAR!
           </button>
