@@ -90,19 +90,17 @@ html, body, #root {
   flex-direction: column;
   gap: 0.45rem;
   max-height: 190px;
-  
-  /* Permite el scroll vertical pero bloquea el horizontal */
   overflow-y: auto;
-  overflow-x: hidden; 
   padding-right: 0.2rem;
-  
-  /* Oculta la barra en Firefox */
-  scrollbar-width: none; 
 }
 
-/* Oculta la barra en Chrome, Safari, Edge y navegadores móviles */
+/* Personalización de la barra de desplazamiento (Scrollbar) */
 .todo-track-list::-webkit-scrollbar {
-  display: none;
+  width: 6px;
+}
+.todo-track-list::-webkit-scrollbar-thumb {
+  background: #d4c5b2;
+  border-radius: 4px;
 }
 
 .todo-track-card {

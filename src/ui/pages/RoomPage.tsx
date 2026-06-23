@@ -231,10 +231,9 @@ export const RoomPage: React.FC = () => {
         <div
           className="pomodoro-modal-overlay"
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflowY: 'auto',
-            padding: '10px',
+           display: 'grid',
+           placeItems: 'center',
+           padding: '1.5rem',
           }}
         >
           <div
@@ -242,8 +241,7 @@ export const RoomPage: React.FC = () => {
             style={{
               width: '100%',
               maxWidth: '900px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
+              
             }}
           >
             <div
@@ -342,6 +340,7 @@ export const RoomPage: React.FC = () => {
             justifyContent: 'center',
             alignItems: 'center',
             padding: '10px',
+            /* Eliminamos el overflowY de aquí */
           }}
         >
           <div
@@ -350,7 +349,7 @@ export const RoomPage: React.FC = () => {
               width: '100%',
               maxWidth: '400px',
               maxHeight: '90vh',
-              overflowY: 'auto',
+              
             }}
           >
             <div className="pixel-border" style={{ padding: '1.5rem' }}>
