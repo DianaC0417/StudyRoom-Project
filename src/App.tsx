@@ -13,8 +13,10 @@ import type { StudyConfig } from './domain/StudyConfig';
 import HomePage from './ui/pages/HomePage';
 import AboutPage from './ui/pages/AboutPage';
 import JoinUsPage from './ui/pages/JoinUsPage';
+import { TodoProvider } from './ui/context/TodoContext';
+import { MusicProvider } from './ui/context/MusicContext';
 
-// Componente separado para usar useNavigate
+
 function AppRoutes() {
   const navigate = useNavigate();
 
@@ -53,11 +55,16 @@ function AppRoutes() {
   );
 }
 
-// Componente principal sin useNavigate directamente
+
 function App() {
   return (
     <Router>
-      <AppRoutes />
+      {}
+      <TodoProvider>
+        <MusicProvider>
+          <AppRoutes />
+        </MusicProvider>
+      </TodoProvider>
     </Router>
   );
 }
