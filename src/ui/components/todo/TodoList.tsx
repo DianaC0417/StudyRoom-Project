@@ -48,6 +48,9 @@ export const TodoList: React.FC = () => {
           placeholder="Escribe una tarea..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.nativeEvent.stopImmediatePropagation()}
+          onKeyUp={(e) => e.nativeEvent.stopImmediatePropagation()}
+          onKeyPress={(e) => e.nativeEvent.stopImmediatePropagation()}
         />
         <button type="submit" className="todo-button-add">
           AÑADIR
