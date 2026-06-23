@@ -1,0 +1,11 @@
+/* MobileControls.css */
+.mobile-touch-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 999; /* Por encima de Phaser, pero por debajo de los modales (Radio/To-Do) y el botón salir */
+  touch-action: none; /* Evita que el navegador haga scroll o zoom nativo al arrastrar el dedo */
+}

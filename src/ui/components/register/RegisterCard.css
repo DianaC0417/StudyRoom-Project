@@ -1,0 +1,223 @@
+/* src/ui/components/register/RegisterCard.css */
+
+.register-card {
+  background-color: rgba(71, 68, 68, 0.92);
+  border-radius: 16px;
+  padding: 2.5rem 2.2rem;
+  width: 100%;
+  max-width: 360px;
+  flex-shrink: 0;
+  animation: cardReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  margin: 0 auto;
+}
+
+/* Reutiliza la misma animación que el login */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Ajustes específicos para el título */
+.register-card .card-title {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.35rem;
+  font-weight: 400;
+  text-align: center;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.8rem;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Pequeño ajuste para el grupo de inputs */
+.register-card .input-group {
+  margin-bottom: 1rem;
+}
+
+/* Los estilos de .study-input, .btn-enter, .spin, etc. ya están en el CSS global.
+   Si no existieran globalmente, los incluimos como respaldo: */
+.register-card .study-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+  color: #ffffff;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  font-size: 0.85rem;
+  outline: none;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+
+.register-card .study-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Comfortaa', 'Courier New', monospace;
+}
+
+.register-card .study-input:focus {
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.register-card .study-input.error {
+  border-color: #ff4444;
+}
+
+.register-card .input-error {
+  color: #ff6b6b;
+  font-size: 0.72rem;
+  padding-left: 1rem;
+  margin-top: 0.25rem;
+  display: block;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+}
+
+.register-card .btn-enter {
+  width: 100%;
+  padding: 0.75rem;
+  background: #ffffff;
+  border: 2px solid #333;
+  border-radius: 50px;
+  color: #1a1a1a;
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  box-shadow: 0 0px 1px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+}
+
+.register-card .btn-enter:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #f0f0f0;
+}
+
+.register-card .btn-enter:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.register-card .btn-enter:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-card .spin {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(26, 26, 26, 0.3);
+  border-top-color: #1a1a1a;
+  border-radius: 50%;
+  animation: rotate 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.register-card .register-row {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.72rem;
+  font-family: 'Comfortaa', 'Courier New', monospace;
+}
+
+.register-card .register-row button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Comfortaa', 'Courier New', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-decoration: underline;
+}
+
+.register-card .register-row button:hover {
+  color: #ffffff;
+}
+
+.register-card .success-message {
+  text-align: center;
+  color: #ffffff;
+  padding: 1rem 0;
+}
+
+.register-card .success-message .success-icon {
+  font-size: 2.8rem;
+  display: block;
+  margin-bottom: 0.8rem;
+  animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.register-card .success-message h3 {
+  font-family: 'Retrobit', 'Courier New', monospace;
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.register-card .success-message p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.82rem;
+}
+
+/* Responsividad similar al login */
+@media (max-width: 600px) {
+  .register-card {
+    max-width: 100%;
+    padding: 1.5rem 1.2rem;
+    background-color: rgba(55, 55, 55, 0.6);
+    border-radius: 12px;
+  }
+  .register-card .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+  }
+  .register-card .study-input {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.8rem;
+  }
+  .register-card .btn-enter {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .register-card {
+    padding: 1.2rem 1rem;
+  }
+  .register-card .card-title {
+    font-size: 1rem;
+  }
+}
