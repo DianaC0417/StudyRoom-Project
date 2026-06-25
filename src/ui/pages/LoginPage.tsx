@@ -25,7 +25,7 @@ const LoginPage = ({ onLogin }: Props) => {
 
   const handleRegister = (username: string) => {
     playLogin();
-    onLogin?.(username);
+    setShowRegister(false);
   };
 
   return (
