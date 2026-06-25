@@ -11,7 +11,7 @@ export const TodoList: React.FC = () => {
   const currentUser = userService.getCurrentUser();
   const userId = currentUser?.id;
 
-  // 3. Le pasamos el ID a tu hook (que ya configuramos con fetch)
+  // 3. Consumimos directamente el hook con el ID del usuario activo
   const { tasks, addTask, toggleTask, deleteTask, clearCompleted } =
     useTodoList(userId);
 
@@ -24,31 +24,33 @@ export const TodoList: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Si no hay usuario logueado, podríamos evitar que añada tareas
     if (inputValue.trim() && userId) {
       playAdd();
-      addTask(inputValue);
+      addTask(inputValue.trim());
       setInputValue('');
     }
   };
 
-  const handleToggleTask = (id: string) => {
+  const handleToggleTask = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation(); // Evita rebotes de eventos en el árbol de Phaser/DOM
     playToggle();
     toggleTask(id);
   };
 
-  const handleDeleteTask = (id: string) => {
+  const handleDeleteTask = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation(); // Evita activar el toggle de la tarea al intentar eliminarla
     playDelete();
     deleteTask(id);
   };
 
-  const handleClearCompleted = () => {
+  const handleClearCompleted = (e: React.MouseEvent) => {
+    e.stopPropagation();
     playClear();
     clearCompleted();
   };
 
   return (
-    <div className="todo-panel">
+    <div className="todo-panel" onClick={(e) => e.stopPropagation()}>
       <h3 className="todo-section-title">MIS TAREAS</h3>
 
       <form onSubmit={handleSubmit} className="todo-form">
@@ -58,56 +60,64 @@ export const TodoList: React.FC = () => {
           placeholder="Escribe una tarea..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          disabled={!userId} // Opcional: deshabilitar si no hay usuario
-          onKeyDown={(e) => e.stopPropagation()}
+          disabled={!userId} 
+          onKeyDown={(e) => e.stopPropagation()} // Previene interferencias con controles WASD del juego
         />
         <button type="submit" className="todo-button-add" disabled={!userId}>
           AÑADIR
         </button>
       </form>
 
+      {/* Contenedor de la lista con scrollbar activo por CSS */}
       <div className="todo-track-list">
         {!userId ? (
           <p className="todo-message">Inicia sesión para ver tus tareas</p>
         ) : tasks.length === 0 ? (
           <p className="todo-message">¡No hay tareas pendientes!</p>
         ) : (
-          tasks.map((task) => (
-            <div
-              key={task.id}
-              className={`todo-track-card ${task.completed ? 'todo-track-card--selected' : ''}`}
-            >
+          tasks.map((task) => {
+            // Evaluamos con seguridad estricta por elemento único
+            const isCompleted = Boolean(task.completed);
+
+            return (
               <div
-                className="todo-item-left"
-                onClick={() => handleToggleTask(task.id)}
+                key={task.id}
+                className={`todo-track-card ${isCompleted ? 'todo-track-card--selected' : ''}`}
+                onClick={(e) => handleToggleTask(e, task.id)}
+                style={{ cursor: 'pointer' }}
               >
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  readOnly
-                  className="todo-checkbox"
-                />
-                <div className="todo-track-info">
-                  <strong
-                    className={task.completed ? 'todo-text--completed' : ''}
-                  >
-                    {task.text}
-                  </strong>
+                <div className="todo-item-left">
+                  <input
+                    type="checkbox"
+                    checked={isCompleted}
+                    readOnly
+                    className="todo-checkbox"
+                  />
+                  <div className="todo-track-info">
+                    <strong className={isCompleted ? 'todo-text--completed' : ''}>
+                      {task.text || "Tarea sin texto"}
+                    </strong>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  className="todo-button-delete"
+                  onClick={(e) => handleDeleteTask(e, task.id)}
+                >
+                  ✕
+                </button>
               </div>
-              <button
-                className="todo-button-delete"
-                onClick={() => handleDeleteTask(task.id)}
-              >
-                ✕
-              </button>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
       {tasks.some((t) => t.completed) && (
-        <button className="todo-button-clear" onClick={handleClearCompleted}>
+        <button 
+          type="button" 
+          className="todo-button-clear" 
+          onClick={handleClearCompleted}
+        >
           LIMPIAR COMPLETADAS
         </button>
       )}

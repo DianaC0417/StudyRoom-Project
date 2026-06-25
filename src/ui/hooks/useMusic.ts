@@ -1,4 +1,4 @@
-// ui/hooks/useMusic.ts
+// src/ui/hooks/useMusic.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MusicMood, MusicTrack } from '../../domain/MusicTrack';
 import { createMusicService } from '../../aplication/musicService';
@@ -18,11 +18,20 @@ export function useMusic() {
   const [volume, setVolume] = useState(0.5);
   const [error, setError] = useState('');
 
+  // Función interna para avisarle al ambiente qué está haciendo la radio
+  const dispatchRadioStatus = (playing: boolean) => {
+    const event = new CustomEvent('sync_radio_status', {
+      detail: { isRadioPlaying: playing },
+    });
+    window.dispatchEvent(event);
+  };
+
   const loadMoodTracks = useCallback(async (selectedMood: MusicMood) => {
     setIsLoading(true);
     setError('');
     setMood(selectedMood);
     setIsPlaying(false);
+    dispatchRadioStatus(false); // Detiene estado de radio activa al cambiar de vibra
 
     try {
       const result = await musicService.getTracksByMood(selectedMood);
@@ -45,6 +54,7 @@ export function useMusic() {
   const selectTrack = useCallback((track: MusicTrack) => {
     setSelectedTrack(track);
     setIsPlaying(false);
+    dispatchRadioStatus(false);
 
     if (audioRef.current) {
       audioRef.current.pause();
@@ -71,15 +81,24 @@ export function useMusic() {
           audioRef.current.pause();
           audioRef.current.src = nextTrack.audioUrl;
           audioRef.current.volume = volumeRef.current;
+          
+          // Si ya estaba sonando, forzamos que siga reproduciendo la siguiente pista
+          if (isPlaying) {
+            audioRef.current.play()
+              .then(() => dispatchRadioStatus(true))
+              .catch(() => {
+                setIsPlaying(false);
+                dispatchRadioStatus(false);
+              });
+          }
         }
 
-        setIsPlaying(false);
         return nextTrack || currentTrack;
       });
 
       return currentTracks;
     });
-  }, []);
+  }, [isPlaying]);
 
   const togglePlay = useCallback(async () => {
     if (!selectedTrack || !audioRef.current) return;
@@ -88,9 +107,11 @@ export function useMusic() {
       if (isPlaying) {
         audioRef.current.pause();
         setIsPlaying(false);
+        dispatchRadioStatus(false); // Avisamos al ambiente para que regrese
       } else {
         await audioRef.current.play();
         setIsPlaying(true);
+        dispatchRadioStatus(true); // Apagamos el ambiente
       }
     } catch {
       setError('No se pudo reproducir la música.');
@@ -109,11 +130,11 @@ export function useMusic() {
   useEffect(() => {
     const audio = new Audio();
     audio.volume = volumeRef.current;
-
     audioRef.current = audio;
 
     return () => {
       audio.pause();
+      dispatchRadioStatus(false); // Al desmontar la radio, liberamos el ambiente de fondo
       audioRef.current = null;
     };
   }, []);
@@ -122,16 +143,14 @@ export function useMusic() {
     const initialize = async () => {
       await loadMoodTracks('lofi');
     };
-
     void initialize();
   }, [loadMoodTracks]);
+
   useEffect(() => {
     const audio = audioRef.current;
-
     if (!audio) return;
 
     audio.addEventListener('ended', playNextTrack);
-
     return () => {
       audio.removeEventListener('ended', playNextTrack);
     };

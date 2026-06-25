@@ -1,14 +1,6 @@
-//ui/components/music/MusicSelector.tsx
-import type { MusicMood, MusicTrack } from '../../../domain/MusicTrack';
+import { useMusicContext } from '../../context/MusicContext'; // Importamos el contexto global
+import type { MusicMood } from '../../../domain/MusicTrack';
 import '../music/MusicPlayer.css';
-type MusicSelectorProps = {
-  mood: MusicMood;
-  tracks: MusicTrack[];
-  selectedTrack: MusicTrack | null;
-  isLoading: boolean;
-  onSelectMood: (mood: MusicMood) => void;
-  onSelectTrack: (track: MusicTrack) => void;
-};
 
 const moods: {
   id: MusicMood;
@@ -42,14 +34,17 @@ const moods: {
   },
 ];
 
-export function MusicSelector({
-  mood,
-  tracks,
-  selectedTrack,
-  isLoading,
-  onSelectMood,
-  onSelectTrack,
-}: MusicSelectorProps) {
+export function MusicSelector() {
+  // Consumimos el estado global de la radio para que persista entre salas
+  const {
+    mood,
+    tracks,
+    selectedTrack,
+    isLoading,
+    loadMoodTracks,  
+    selectTrack, 
+  } = useMusicContext();
+
   return (
     <section className="music-selector">
       <h3 className="music-section-title">RADIO DE ESTUDIO</h3>
@@ -62,7 +57,7 @@ export function MusicSelector({
             className={`music-mood-card ${
               mood === item.id ? 'music-mood-card--selected' : ''
             }`}
-            onClick={() => onSelectMood(item.id)}
+            onClick={() => loadMoodTracks(item.id)}
           >
             <span className="music-mood-icon">{item.icon}</span>
             <strong>{item.title}</strong>
@@ -71,7 +66,11 @@ export function MusicSelector({
         ))}
       </div>
 
-      <div className="music-track-list">
+      {/* Nota: Añadimos estilos inline temporales o clases para asegurar que no rompa scrollbars */}
+      <div 
+        className="music-track-list" 
+        style={{ scrollbarWidth: 'none' }}
+      >
         {isLoading && <p className="music-message">Cargando estación...</p>}
 
         {!isLoading &&
@@ -85,7 +84,7 @@ export function MusicSelector({
                 className={`music-track-card ${
                   isSelected ? 'music-track-card--selected' : ''
                 }`}
-                onClick={() => onSelectTrack(track)}
+                onClick={() => selectTrack(track)}
               >
                 {track.imageUrl && (
                   <img

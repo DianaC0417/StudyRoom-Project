@@ -1,4 +1,3 @@
-// ui/pages/RoomPage.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import * as Phaser from 'phaser';
 import { StudyRoomScene } from '../../game/scenes/StudyRoomScene';
@@ -8,7 +7,6 @@ import { PomodoroModal } from '../components/PomodoroModal';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useBackgroundMusic } from '../hooks/useBackgroundMusic';
 import { useSound } from '../hooks/useSound';
-import { useMusic } from '../hooks/useMusic';
 import { MusicPlayer } from '../components/music/MusicPlayer';
 import { MusicSelector } from '../components/music/MusicSelector';
 import { TodoList } from '../components/todo/TodoList';
@@ -44,40 +42,18 @@ export const RoomPage: React.FC = () => {
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
 
-  const {
-    mood,
-    tracks,
-    selectedTrack,
-    isPlaying,
-    isLoading,
-    volume,
-    error,
-    loadMoodTracks,
-    selectTrack,
-    togglePlay,
-    changeVolume,
-    playNextTrack,
-  } = useMusic();
-
   const musicMap: Record<Room, string> = {
     salaestudio1: '/assets/sounds/sala1.mp3',
     salaestudio2: '/assets/sounds/sala2.mp3',
     salaestudio3: '/assets/sounds/sala3.mp3',
   };
   const musicSrc = studyConfig?.sala ? musicMap[studyConfig.sala] : null;
-  const { play: playMusic, pause: pauseMusic } = useBackgroundMusic(
+  
+  // Custom hook para música de fondo sin destructuraciones sin usar
+  useBackgroundMusic(
     musicSrc || '/assets/sounds/sala1.mp3',
-    !isPlaying
+    true
   );
-
-  useEffect(() => {
-    if (!musicSrc) return;
-    if (isPlaying) {
-      pauseMusic();
-    } else {
-      playMusic();
-    }
-  }, [musicSrc, isPlaying, playMusic, pauseMusic]);
 
   const playPomodoroOpen = useSound('assets/sounds/inputclick.mp3');
   const playClick = useSound('assets/sounds/select_personaje.mp3');
@@ -114,7 +90,7 @@ export const RoomPage: React.FC = () => {
       clearTimeout(timeoutId);
       timeoutId = window.setTimeout(() => {
         window.location.reload();
-      }, 200); // 200 milisegundos de retardo
+      }, 200);
     };
 
     window.addEventListener('resize', handleResize);
@@ -201,13 +177,74 @@ export const RoomPage: React.FC = () => {
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
 
+      {/* ==========================================================================
+         WIDGET DEL POMODORO FLOTANTE EN LA ESQUINA SUPERIOR DERECHA
+         ========================================================================== */}
+      <div 
+        className="pomodoro-corner-widget pixel-border"
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          background: 'rgba(71, 68, 68, 0.92)',
+          color: '#ffffff',
+          padding: '10px 15px',
+          borderRadius: '8px',
+          border: '3px solid #222222',
+          fontFamily: "'Retrobit', 'Courier New', monospace",
+          zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '4px',
+          minWidth: '140px',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+        }}
+      >
+        <div className="pixel-corner tl" />
+        <div className="pixel-corner tr" />
+        <div className="pixel-corner bl" />
+        <div className="pixel-corner br" />
+
+        <span style={{ fontSize: '0.65rem', color: isBreak ? '#8bd3dd' : '#ffb5a7', letterSpacing: '1px' }}>
+          {isBreak ? '☕ DESCANSO' : '⏱️ ESTUDIO'}
+        </span>
+        
+        <span style={{ fontSize: '1.4rem', fontWeight: 'bold', letterSpacing: '1px', fontFamily: "'GamePaused', monospace" }}>
+          {timeDisplay}
+        </span>
+
+        <span style={{ fontSize: '0.55rem', color: '#fef9e7', opacity: 0.8 }}>
+          SESIÓN: {currentSession}/{totalSessions}
+        </span>
+
+        <button
+          onClick={handleToggle}
+          style={{
+            marginTop: '4px',
+            background: '#141414',
+            color: '#fff',
+            border: '2px solid #222',
+            fontSize: '0.55rem',
+            padding: '2px 8px',
+            cursor: 'pointer',
+            borderRadius: '4px',
+            fontFamily: "'Retrobit', 'Courier New', monospace"
+          }}
+        >
+          {isActive ? 'PAUSA' : 'INICIAR'}
+        </button>
+      </div>
+
+      {/* ==========================================================================
+         RADIO DE ESTUDIO MODAL
+         ========================================================================== */}
       {showMusicWidget && (
         <div
           className="pomodoro-modal-overlay"
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            overflowY: 'auto',
             padding: '10px',
           }}
         >
@@ -217,7 +254,6 @@ export const RoomPage: React.FC = () => {
               width: '100%',
               maxWidth: '900px',
               maxHeight: '90vh',
-              overflowY: 'auto',
             }}
           >
             <div
@@ -251,20 +287,7 @@ export const RoomPage: React.FC = () => {
                 }}
               >
                 <div style={{ flex: '1 1 260px', maxWidth: '400px' }}>
-                  <MusicSelector
-                    mood={mood}
-                    tracks={tracks}
-                    selectedTrack={selectedTrack}
-                    isLoading={isLoading}
-                    onSelectMood={(selectedMood) => {
-                      playClick();
-                      loadMoodTracks(selectedMood);
-                    }}
-                    onSelectTrack={(track) => {
-                      playClick();
-                      selectTrack(track);
-                    }}
-                  />
+                  <MusicSelector />
                 </div>
 
                 <div
@@ -276,21 +299,7 @@ export const RoomPage: React.FC = () => {
                     alignItems: 'center',
                   }}
                 >
-                  <MusicPlayer
-                    selectedTrack={selectedTrack}
-                    isPlaying={isPlaying}
-                    volume={volume}
-                    error={error}
-                    onTogglePlay={() => {
-                      playClick();
-                      togglePlay();
-                    }}
-                    onChangeVolume={(newVolume) => changeVolume(newVolume)}
-                    onNextTrack={() => {
-                      playClick();
-                      playNextTrack();
-                    }}
-                  />
+                  <MusicPlayer />
                   <div style={{ marginTop: '1rem' }}>
                     <button
                       className="close-btn"
@@ -309,6 +318,9 @@ export const RoomPage: React.FC = () => {
         </div>
       )}
 
+      {/* ==========================================================================
+         TODO LIST MODAL
+         ========================================================================== */}
       {showTodoWidget && (
         <div
           className="pomodoro-modal-overlay"
@@ -324,7 +336,6 @@ export const RoomPage: React.FC = () => {
               width: '100%',
               maxWidth: '400px',
               maxHeight: '90vh',
-              overflowY: 'auto',
             }}
           >
             <div className="pixel-border" style={{ padding: '1.5rem' }}>

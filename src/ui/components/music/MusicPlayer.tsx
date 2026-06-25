@@ -1,25 +1,23 @@
-import type { MusicTrack } from '../../../domain/MusicTrack';
+import { useMusicContext } from '../../context/MusicContext'; // Importamos el contexto global
 import '../music/MusicPlayer.css';
 
-type MusicPlayerProps = {
-  selectedTrack: MusicTrack | null;
-  isPlaying: boolean;
-  volume: number;
-  error: string;
-  onTogglePlay: () => void;
-  onChangeVolume: (volume: number) => void;
-  onNextTrack: () => void;
-};
+/*
+  ¡Nota pro! Mantuvimos la definición de Props por si se sigue requiriendo en herencias, 
+  pero ahora el componente se conecta de forma autónoma al MusicProvider global.
+  De esta forma, cuando cambies de sala, el estado persistirá en la app.
+*/
+export function MusicPlayer() {
+  // Consumimos directamente del estado global de música de la aplicación
+  const {
+    selectedTrack,
+    isPlaying,
+    volume,
+    error,
+    togglePlay,
+    changeVolume,
+    playNextTrack,
+  } = useMusicContext();
 
-export function MusicPlayer({
-  selectedTrack,
-  isPlaying,
-  volume,
-  error,
-  onTogglePlay,
-  onChangeVolume,
-  onNextTrack,
-}: MusicPlayerProps) {
   return (
     <section className="music-player">
       <h3 className="music-section-title">REPRODUCTOR</h3>
@@ -45,7 +43,7 @@ export function MusicPlayer({
             <button
               className="music-play-button"
               type="button"
-              onClick={onTogglePlay}
+              onClick={togglePlay}
             >
               {isPlaying ? 'PAUSAR' : 'PLAY'}
             </button>
@@ -53,7 +51,7 @@ export function MusicPlayer({
             <button
               className="music-next-button"
               type="button"
-              onClick={onNextTrack}
+              onClick={playNextTrack}
             >
               SIG.
             </button>
@@ -67,7 +65,7 @@ export function MusicPlayer({
               max="1"
               step="0.05"
               value={volume}
-              onChange={(event) => onChangeVolume(Number(event.target.value))}
+              onChange={(event) => changeVolume(Number(event.target.value))}
             />
           </label>
         </div>

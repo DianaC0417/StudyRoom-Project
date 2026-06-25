@@ -1,17 +1,16 @@
+// src/ui/hooks/useBackgroundMusic.ts
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-/**
- * Hook para manejar música de fondo en bucle.
- * @param src - Ruta del archivo de audio
- * @param autoPlay - Si es true, inicia la reproducción automáticamente y maneja la interacción del usuario si está bloqueada.
- * @returns Objeto con `play`, `pause`, `toggle` y el estado `isPlaying`.
- */
 export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const playPromiseRef = useRef<Promise<void> | null>(null);
+  const isMutedByRadioRef = useRef(false);
 
   const safePlay = useCallback((audio: HTMLAudioElement) => {
+    // Si la radio está activa, bloqueamos que el ambiente se reproduzca solo
+    if (isMutedByRadioRef.current) return;
+
     const promise = audio.play();
     playPromiseRef.current = promise;
 
@@ -23,10 +22,10 @@ export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
         .catch((err) => {
           if (err.name === 'NotAllowedError') {
             console.log(
-              'useBackgroundMusic: Esperando interacción del usuario para reproducir audio (política de autoplay).'
+              'useBackgroundMusic: Esperando interacción del usuario (política de autoplay).'
             );
           } else if (err.name === 'AbortError') {
-            // Ignorar AbortError, es normal si se pausó antes de que empezara
+            // Ignorar AbortError
           } else {
             console.error('useBackgroundMusic: Error de reproducción:', err);
           }
@@ -45,7 +44,6 @@ export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
           setIsPlaying(false);
         })
         .catch(() => {
-          // Ignorar errores del play abortado
           audio.pause();
           setIsPlaying(false);
         });
@@ -75,10 +73,28 @@ export const useBackgroundMusic = (src: string, autoPlay: boolean = false) => {
       window.addEventListener('click', handleInteraction);
     }
 
+    // --- ESCUCHADOR DE LA RADIO ---
+    const handleRadioStatus = (e: Event) => {
+      const customEvent = e as CustomEvent<{ isRadioPlaying: boolean }>;
+      if (audioRef.current) {
+        if (customEvent.detail.isRadioPlaying) {
+          isMutedByRadioRef.current = true;
+          safePause(audioRef.current);
+        } else {
+          isMutedByRadioRef.current = false;
+          // Al apagar la radio, si venía en autoplay, reactivamos el ambiente
+          if (autoPlay) safePlay(audioRef.current);
+        }
+      }
+    };
+
+    window.addEventListener('sync_radio_status', handleRadioStatus);
+
     return () => {
       if (handleInteraction) {
         window.removeEventListener('click', handleInteraction);
       }
+      window.removeEventListener('sync_radio_status', handleRadioStatus);
       safePause(audio);
       audioRef.current = null;
     };

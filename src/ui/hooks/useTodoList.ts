@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import type { Task } from '../../domain/Task';
 import { taskService } from '../../config/dependencies';
 
-export const useTodoList = (userId?: string) => {
+export const useTodoList = (userId: string = 'guest_user') => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
@@ -23,7 +23,8 @@ export const useTodoList = (userId?: string) => {
     if (!text.trim() || !userId) return;
     try {
       const newTask = await taskService.createTask(userId, text);
-      setTasks([...tasks, newTask]);
+      // Usamos callback para evitar problemas de cierres en entornos asíncronos
+      setTasks((prev) => [...prev, newTask]);
     } catch (error) {
       console.error('Error al añadir la tarea:', error);
     }
@@ -33,8 +34,8 @@ export const useTodoList = (userId?: string) => {
     const taskToUpdate = tasks.find((t) => t.id === id);
     if (!taskToUpdate) return;
 
-    setTasks(
-      tasks.map((task) =>
+    setTasks((prev) =>
+      prev.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
@@ -47,7 +48,7 @@ export const useTodoList = (userId?: string) => {
   };
 
   const deleteTask = async (id: string) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    setTasks((prev) => prev.filter((task) => task.id !== id));
     try {
       await taskService.deleteTask(id);
     } catch (error) {
@@ -57,7 +58,7 @@ export const useTodoList = (userId?: string) => {
 
   const clearCompleted = async () => {
     const completedTasks = tasks.filter((task) => task.completed);
-    setTasks(tasks.filter((task) => !task.completed));
+    setTasks((prev) => prev.filter((task) => !task.completed));
 
     try {
       await Promise.all(

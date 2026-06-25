@@ -16,7 +16,11 @@ import StatisticsPage from './ui/pages/StatisticsPage';
 
 import { studyConfigService } from './config/dependencies';
 import type { StudyConfig } from './domain/StudyConfig';
-// Componente separado para usar useNavigate
+
+import { TodoProvider } from './ui/context/TodoContext';
+import { MusicProvider } from './ui/context/MusicContext';
+
+
 function AppRoutes() {
   const navigate = useNavigate();
 
@@ -35,6 +39,7 @@ function AppRoutes() {
     console.log('Regresando al login...');
     navigate('/login');
   };
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
@@ -71,11 +76,20 @@ function AppRoutes() {
   );
 }
 
-// Componente principal sin useNavigate directamente
+// Componente principal con persistencia para salas múltiples
 function App() {
   return (
     <Router>
-      <AppRoutes />
+      {/* Colocamos los Providers aquí arriba. Gracias a esto, la música y las 
+        tareas se quedan grabadas en la memoria global del navegador aunque 
+        cambies de ruta, vayas a configuraciones, estadísticas o entres a 
+        distintas salas de estudio.
+      */}
+      <TodoProvider>
+        <MusicProvider>
+          <AppRoutes />
+        </MusicProvider>
+      </TodoProvider>
     </Router>
   );
 }
