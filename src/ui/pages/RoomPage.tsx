@@ -11,6 +11,7 @@ import { useSound } from '../hooks/useSound';
 import { useMusic } from '../hooks/useMusic';
 import { MusicPlayer } from '../components/music/MusicPlayer';
 import { MusicSelector } from '../components/music/MusicSelector';
+import { MiniPomodoroDisplay } from '../components/MiniPomodoroDisplay';
 import { TodoList } from '../components/todo/TodoList';
 import type { Room, StudyConfig } from '../../domain/StudyConfig';
 import '../styles/RoomPage.css';
@@ -43,6 +44,8 @@ export const RoomPage: React.FC = () => {
     resetTimer,
     skipToNext,
   } = usePomodoro(25, 5, 15, 4);
+
+  const showMiniPomodoro = isActive || isBreak || progress > 0;
 
   const {
     mood,
@@ -200,7 +203,15 @@ export const RoomPage: React.FC = () => {
   return (
     <div className="room-page">
       <div id="game-container" ref={gameRef} className="game-container"></div>
-
+      <MiniPomodoroDisplay
+        show={showMiniPomodoro}
+        timeDisplay={timeDisplay}
+        isActive={isActive}
+        isBreak={isBreak}
+        currentSession={currentSession}
+        totalSessions={totalSessions}
+        progress={progress}
+      />
       {showMusicWidget && (
         <div
           className="pomodoro-modal-overlay"
@@ -334,10 +345,12 @@ export const RoomPage: React.FC = () => {
               <div className="pixel-corner br" />
 
               {/* AQUÍ ESTÁ EL ÚNICO CAMBIO, EL ONCLOSE */}
-              <TodoList onClose={() => {
-                playClick();
-                setShowTodoWidget(false);
-              }} />
+              <TodoList
+                onClose={() => {
+                  playClick();
+                  setShowTodoWidget(false);
+                }}
+              />
 
               <div style={{ marginTop: '1rem', textAlign: 'center' }}>
                 <button

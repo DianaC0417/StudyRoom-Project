@@ -1,3 +1,4 @@
+// src/ui/components/todo/TodoList.tsx
 import React, { useState } from 'react';
 import { useTodoList } from '../../hooks/useTodoList';
 import { useSound } from '../../hooks/useSound';
@@ -15,7 +16,8 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
   // Conexión a Supabase (Mantenemos tu lógica intacta)
   const currentUser = userService.getCurrentUser();
   const userId = currentUser?.id;
-  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } = useTodoList(userId);
+  const { tasks, addTask, toggleTask, deleteTask, clearCompleted } =
+    useTodoList(userId);
 
   // Sonidos
   const playAdd = useSound('/assets/sounds/inputclick.mp3');
@@ -32,13 +34,18 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
   const [selectedColor, setSelectedColor] = useState<string>(TASK_COLORS[0]);
 
   // Navegación del calendario
-  const handlePrevMonth = () => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
-  const handleNextMonth = () => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+  const handlePrevMonth = () =>
+    setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+  const handleNextMonth = () =>
+    setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
 
   const currentMonthName = viewDate.toLocaleString('es-ES', { month: 'long' });
   const currentYear = viewDate.getFullYear();
-  
-  const daysInMonth = new Date(currentYear, viewDate.getMonth() + 1, 0).getDate();
+  const daysInMonth = new Date(
+    currentYear,
+    viewDate.getMonth() + 1,
+    0
+  ).getDate();
   const firstDayIndex = new Date(currentYear, viewDate.getMonth(), 1).getDay();
 
   const blanksArray = Array.from({ length: firstDayIndex }, (_, i) => i);
@@ -50,28 +57,49 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
     addTask(newTaskText);
     setNewTaskText('');
   };
+  const stopKeyboardEvent = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleTaskInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTask();
+    }
+  };
 
   return (
     <div className="todo-modal-overlay">
-      <div className="todo-modal">
-        
+      <div
+        className="todo-modal"
+        onKeyDown={stopKeyboardEvent}
+        onKeyUp={stopKeyboardEvent}
+      >
         <h2 className="todo-header-title">CALENDARIO Y TAREAS</h2>
 
         <div className="todo-layout">
           {/* COLUMNA IZQUIERDA: CALENDARIO */}
           <div className="todo-column">
             <div className="month-nav">
-              <button className="btn-nav" onClick={handlePrevMonth}>&lt;</button>
+              <button className="btn-nav" onClick={handlePrevMonth}>
+                &lt;
+              </button>
               <h3 className="column-title">
                 {currentMonthName.toUpperCase()} {currentYear}
               </h3>
-              <button className="btn-nav" onClick={handleNextMonth}>&gt;</button>
+              <button className="btn-nav" onClick={handleNextMonth}>
+                &gt;
+              </button>
             </div>
 
             <div className="calendar-panel">
               <div className="weekdays-grid">
                 {DIAS_SEMANA.map((dia, index) => (
-                  <span key={index} className="weekday-label">{dia}</span>
+                  <span key={index} className="weekday-label">
+                    {dia}
+                  </span>
                 ))}
               </div>
 
@@ -83,7 +111,7 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
                 {daysArray.map((day) => {
                   const fullDate = `${currentYear}-${String(viewDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                   const isSelected = selectedDate === fullDate;
-                  
+
                   return (
                     <button
                       key={day}
@@ -100,11 +128,12 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
 
           {/* COLUMNA DERECHA: TAREAS */}
           <div className="todo-column">
-            <h3 className="column-title" style={{ visibility: 'hidden' }}>TAREAS</h3>
+            <h3 className="column-title" style={{ visibility: 'hidden' }}>
+              TAREAS
+            </h3>
             <div className="tasks-panel">
-              
               <div className="color-picker">
-                {TASK_COLORS.map(color => (
+                {TASK_COLORS.map((color) => (
                   <button
                     key={color}
                     className={`color-btn ${selectedColor === color ? 'selected' : ''}`}
@@ -118,14 +147,17 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
                 <input
                   type="text"
                   className="task-input"
-                  placeholder={userId ? "Escribe una tarea..." : "Inicia sesión"}
+                  placeholder={
+                    userId ? 'Escribe una tarea...' : 'Inicia sesión'
+                  }
                   value={newTaskText}
                   onChange={(e) => setNewTaskText(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
+                  onKeyDown={handleTaskInputKeyDown}
+                  onKeyUp={stopKeyboardEvent}
                   disabled={!userId}
                 />
-                <button 
-                  className="btn-add" 
+                <button
+                  className="btn-add"
                   onClick={handleAddTask}
                   disabled={!userId}
                 >
@@ -135,13 +167,15 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
 
               <div className="tasks-list">
                 {!userId ? (
-                  <p className="empty-tasks">Inicia sesión para ver tus tareas</p>
+                  <p className="empty-tasks">
+                    Inicia sesión para ver tus tareas
+                  </p>
                 ) : tasks.length === 0 ? (
                   <p className="empty-tasks">¡No hay tareas pendientes!</p>
                 ) : (
                   tasks.map((task) => (
-                    <div 
-                      key={task.id} 
+                    <div
+                      key={task.id}
                       className="task-item"
                       style={{ borderLeft: `4px solid ${selectedColor}` }}
                     >
@@ -155,14 +189,19 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
                             toggleTask(task.id);
                           }}
                         />
-                        <span className={`task-text ${task.completed ? 'completed' : ''}`}>
+                        <span
+                          className={`task-text ${task.completed ? 'completed' : ''}`}
+                        >
                           {task.text}
                         </span>
                       </label>
-                      <button className="btn-delete" onClick={() => {
-                        playDelete();
-                        deleteTask(task.id);
-                      }}>
+                      <button
+                        className="btn-delete"
+                        onClick={() => {
+                          playDelete();
+                          deleteTask(task.id);
+                        }}
+                      >
                         X
                       </button>
                     </div>
@@ -179,16 +218,18 @@ export const TodoList: React.FC<Props> = ({ onClose }) => {
             X CERRAR
           </button>
           {tasks.some((t) => t.completed) && (
-            <button 
-              className="btn-close-modal" 
-              onClick={() => { playClear(); clearCompleted(); }}
+            <button
+              className="btn-close-modal"
+              onClick={() => {
+                playClear();
+                clearCompleted();
+              }}
               style={{ backgroundColor: '#ff4444', marginLeft: '10px' }}
             >
               LIMPIAR
             </button>
           )}
         </div>
-
       </div>
     </div>
   );

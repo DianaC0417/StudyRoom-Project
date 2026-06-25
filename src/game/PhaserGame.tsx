@@ -1,3 +1,4 @@
+// src/game/PhaserGame.tsx
 import { useEffect, useRef } from 'react';
 import * as Phaser from 'phaser';
 import { gameConfig } from './config';

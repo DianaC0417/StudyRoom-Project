@@ -38,7 +38,7 @@ const LoginCard = ({ onLogin, onSwitchToRegister }: Props) => {
       setSuccess(true);
 
       setTimeout(() => {
-        onLogin?.(email.trim());
+        onLogin?.(user.username);
       }, 1200);
     } catch (error) {
       setErrors({
